@@ -49,86 +49,382 @@
 
 ## Frontend Architecture
 
-### Directory Structure
+### Actual Implemented Directory Structure
+
 ```
 ae-infinity-ui/
 ├── src/
-│   ├── components/          # Reusable UI components
-│   │   ├── common/         # Buttons, inputs, modals
-│   │   ├── layout/         # Header, sidebar, footer
-│   │   ├── lists/          # List-related components
-│   │   └── items/          # Item-related components
-│   ├── pages/              # Route-level components
-│   │   ├── Home.tsx
-│   │   ├── ListDetail.tsx
-│   │   ├── Login.tsx
-│   │   └── Profile.tsx
-│   ├── hooks/              # Custom React hooks
-│   │   ├── useAuth.ts
-│   │   ├── useLists.ts
-│   │   ├── useRealtime.ts
-│   │   └── useOptimistic.ts
-│   ├── services/           # API and business logic
-│   │   ├── api/
-│   │   │   ├── authApi.ts
-│   │   │   ├── listsApi.ts
-│   │   │   └── itemsApi.ts
-│   │   ├── signalr/
-│   │   │   └── hubConnection.ts
-│   │   └── storage/
-│   │       └── localStore.ts
-│   ├── context/            # React Context providers
-│   │   ├── AuthContext.tsx
-│   │   ├── ListsContext.tsx
-│   │   └── RealtimeContext.tsx
-│   ├── types/              # TypeScript type definitions
-│   │   ├── api.ts
-│   │   ├── models.ts
-│   │   └── events.ts
-│   ├── utils/              # Helper functions
-│   │   ├── formatters.ts
-│   │   ├── validators.ts
-│   │   └── constants.ts
-│   ├── styles/             # Global styles
-│   ├── App.tsx
-│   └── main.tsx
+│   ├── components/
+│   │   ├── common/
+│   │   │   └── LoadingSpinner.tsx     ✅ Implemented
+│   │   └── layout/
+│   │       ├── AppLayout.tsx          ✅ Implemented
+│   │       ├── AuthLayout.tsx         ✅ Implemented
+│   │       ├── Header.tsx             ✅ Implemented
+│   │       └── Sidebar.tsx            ✅ Implemented
+│   ├── contexts/
+│   │   └── AuthContext.tsx            ✅ Implemented (mock auth)
+│   ├── hooks/
+│   │   ├── useListItems.ts            ✅ Implemented
+│   │   └── useNavigation.ts           ✅ Implemented
+│   ├── pages/
+│   │   ├── auth/
+│   │   │   ├── Login.tsx              ✅ Implemented
+│   │   │   ├── Register.tsx           ✅ Implemented
+│   │   │   └── ForgotPassword.tsx     ✅ Implemented
+│   │   ├── errors/
+│   │   │   ├── NotFound.tsx           ✅ Implemented
+│   │   │   └── Forbidden.tsx          ✅ Implemented
+│   │   ├── lists/
+│   │   │   ├── ListsDashboard.tsx     🟡 Implemented (mock data)
+│   │   │   ├── ListDetail.tsx         🟡 Implemented (mock data)
+│   │   │   ├── CreateList.tsx         🟡 Implemented (mock data)
+│   │   │   ├── ListSettings.tsx       🟡 Implemented (mock data)
+│   │   │   ├── ShareList.tsx          🟡 Implemented (mock data)
+│   │   │   ├── ManageCollaborators.tsx 🟡 Implemented (mock data)
+│   │   │   └── ListHistory.tsx        🟡 Implemented (mock data)
+│   │   ├── profile/
+│   │   │   ├── Profile.tsx            ✅ Implemented
+│   │   │   ├── ProfileSettings.tsx    ✅ Implemented
+│   │   │   └── NotificationSettings.tsx ✅ Implemented
+│   │   ├── AcceptInvite.tsx           ✅ Implemented
+│   │   ├── Activity.tsx               ✅ Implemented (mock data)
+│   │   ├── ArchivedLists.tsx          ✅ Implemented (mock data)
+│   │   ├── Landing.tsx                ✅ Implemented
+│   │   ├── People.tsx                 ✅ Implemented (mock data)
+│   │   └── SharedLists.tsx            ✅ Implemented (mock data)
+│   ├── services/
+│   │   ├── authService.ts             ✅ Implemented
+│   │   ├── listsService.ts            ✅ Implemented
+│   │   ├── itemsService.ts            ✅ Implemented
+│   │   ├── categoriesService.ts       ✅ Implemented
+│   │   ├── searchService.ts           ✅ Implemented
+│   │   └── index.ts                   ✅ Implemented
+│   ├── types/
+│   │   └── index.ts                   ✅ Implemented (326 lines, complete)
+│   ├── utils/
+│   │   ├── apiClient.ts               ✅ Implemented
+│   │   ├── formatters.ts              ✅ Implemented
+│   │   ├── permissions.ts             ✅ Implemented
+│   │   └── index.ts                   ✅ Implemented
+│   ├── App.tsx                        ✅ Implemented
+│   ├── App.css                        ✅ Implemented
+│   ├── main.tsx                       ✅ Implemented
+│   └── index.css                      ✅ Implemented (Tailwind)
 ├── public/
-├── index.html
-├── vite.config.ts
-├── tsconfig.json
-└── package.json
+│   └── vite.svg
+├── index.html                         ✅ Implemented
+├── vite.config.ts                     ✅ Implemented
+├── tsconfig.json                      ✅ Implemented
+├── tsconfig.app.json                  ✅ Implemented
+├── tsconfig.node.json                 ✅ Implemented
+├── tailwind.config.js                 ✅ Implemented
+├── postcss.config.js                  ✅ Implemented
+├── eslint.config.js                   ✅ Implemented
+├── package.json                       ✅ Implemented
+└── package-lock.json                  ✅ Implemented
+
+Legend:
+✅ = Fully implemented and production-ready
+🟡 = Implemented UI with mock data, ready for API integration
+❌ = Not implemented yet
 ```
 
-### State Management Strategy
+### State Management Strategy (Actual Implementation)
 
-**Local Component State**
+**Local Component State** ✅
 - Form inputs
 - UI toggles (modals, dropdowns)
-- Transient animation states
+- Loading states
+- Error states
+- Mock data (temporary)
 
-**Context API**
-- Authentication state and user info
-- Theme preferences
-- Global notifications
+**Context API** ✅ Partially Implemented
+- **AuthContext** ✅: Authentication state and user info (currently using mock)
+- **Theme preferences** ❌: Not implemented
+- **Global notifications** ❌: Not implemented
 
-**Server State (React Query/SWR)**
-- Shopping lists
-- Shopping items
-- User data
-- Cache invalidation on mutations
+**Server State** ❌ Not Yet Implemented
+- Currently using mock data in components
+- Services are ready but not called yet
+- No React Query or SWR implementation
+- Plain fetch via apiClient
 
-**Optimistic Updates**
-- Immediately reflect user actions
-- Rollback on server error
-- Queue for offline mode
+**Optimistic Updates** ❌ Not Yet Implemented
+- Currently showing loading states only
+- No optimistic UI updates
+- No rollback mechanism
+- No offline queue
 
 ### Key Frontend Patterns
 
 1. **Component Composition**: Small, focused components
-2. **Custom Hooks**: Encapsulate complex logic
+2. **Custom Hooks**: Encapsulate complex logic (useNavigation, useListItems)
 3. **Error Boundaries**: Graceful error handling
 4. **Code Splitting**: Route-based lazy loading
 5. **Memoization**: Prevent unnecessary re-renders
+
+---
+
+## Frontend Implementation Details
+
+### Type System (326 lines)
+
+**Location**: `src/types/index.ts`
+
+Complete TypeScript definitions covering:
+
+**Core Types**:
+- `User`, `UserRef` - User information and references
+- `Permission` - Owner, Editor, Viewer roles
+- `ListCollaborator` - User permissions on lists
+- `ShoppingListSummary`, `ShoppingListDetail` - List data with different detail levels
+- `ShoppingItem` - Items with category, notes, purchase status
+- `Category`, `CategoryRef` - Item categorization
+
+**API Request Types**:
+- `RegisterRequest`, `LoginRequest` - Authentication
+- `CreateListRequest`, `UpdateListRequest`, `ShareListRequest` - List management
+- `CreateItemRequest`, `UpdateItemRequest`, `UpdatePurchasedStatusRequest` - Item management
+- `ReorderItemsRequest`, `UpdateCollaboratorPermissionRequest` - Advanced operations
+- `CreateCategoryRequest` - Custom categories
+
+**API Response Types**:
+- `AuthResponse` - JWT token and user data
+- `ListsResponse`, `ItemsResponse`, `CategoriesResponse` - Collection responses
+- `SearchResponse` - Search results with pagination
+- `PaginationMetadata` - Page info for all list endpoints
+
+**Query Parameter Types**:
+- `GetListsParams`, `GetItemsParams`, `SearchParams`, `GetCategoriesParams`
+
+**Error Types**:
+- `ApiError`, `ApiErrorResponse` - Structured error responses
+
+**SignalR Event Types**:
+- `ItemAddedEvent`, `ItemUpdatedEvent`, `ItemDeletedEvent`
+- `ItemPurchasedEvent`, `ListUpdatedEvent`
+- `CollaboratorJoinedEvent`, `CollaboratorLeftEvent`
+- `PresenceChangedEvent`
+
+### API Services Layer
+
+**Location**: `src/services/`
+
+#### API Client (`utils/apiClient.ts`)
+- JWT token management with localStorage
+- HTTP methods: GET, POST, PUT, PATCH, DELETE
+- Automatic Bearer token injection
+- Query parameter building
+- Structured error handling with `ApiClientError` class
+- Type-safe generic requests
+
+#### Authentication Service (`authService.ts`)
+- `register()` - Create new user account
+- `login()` - Authenticate user, store token
+- `getCurrentUser()` - Fetch current user info
+- `refreshToken()` - Refresh JWT token
+- `logout()` - Clear token and session
+- `isAuthenticated()` - Check auth status
+
+#### Lists Service (`listsService.ts`)
+- `getAllLists(params)` - Fetch all lists with filtering/sorting
+- `getListById(id)` - Get detailed list information
+- `createList(data)` - Create new list
+- `updateList(id, data)` - Update list details
+- `deleteList(id)` - Delete list permanently
+- `archiveList(id)` / `unarchiveList(id)` - Archive operations
+- `shareList(id, data)` - Share list with users by email
+- `removeCollaborator(listId, userId)` - Remove user from list
+- `updateCollaboratorPermission(listId, userId, data)` - Change permissions
+
+#### Items Service (`itemsService.ts`)
+- `getListItems(listId, params)` - Fetch items with filters
+- `createItem(listId, data)` - Add new item
+- `updateItem(listId, itemId, data)` - Update item details
+- `deleteItem(listId, itemId)` - Remove item
+- `updatePurchasedStatus(listId, itemId, data)` - Toggle purchased
+- `markAsPurchased(listId, itemId)` - Convenience method
+- `markAsNotPurchased(listId, itemId)` - Convenience method
+- `reorderItems(listId, data)` - Update positions (drag-and-drop)
+
+#### Categories Service (`categoriesService.ts`)
+- `getAllCategories(params)` - Fetch all categories
+- `createCategory(data)` - Create custom category
+- `getDefaultCategories()` - System categories only
+- `getAllCategoriesWithCustom()` - All categories including custom
+
+#### Search Service (`searchService.ts`)
+- `search(params)` - Search across lists and items
+- `searchLists(query)` - Search lists only
+- `searchItems(query)` - Search items only
+
+### Utility Functions
+
+**Location**: `src/utils/`
+
+#### Formatters (`formatters.ts`)
+- `formatDate(dateString)` - ISO to readable date (e.g., "November 3, 2025")
+- `formatRelativeTime(dateString)` - Relative time (e.g., "2 hours ago")
+- `formatDateTime(dateString)` - Date with time
+- `pluralize(count, singular, plural)` - Smart pluralization
+- `truncate(text, maxLength)` - Text truncation with ellipsis
+- `getInitials(name)` - Extract initials (e.g., "JD" from "John Doe")
+- `formatQuantity(quantity, unit)` - Format with unit (e.g., "2 gallons")
+- `formatPercentage(value, total)` - Calculate and format percentage
+
+#### Permissions (`permissions.ts`)
+- `isOwner(permission)` - Check if user is owner
+- `canEdit(permission)` - Check if user can edit (Owner or Editor)
+- `isViewerOnly(permission)` - Check if view-only
+- `canManageCollaborators(permission)` - Owner only
+- `canDeleteList(permission)` - Owner only
+- `canArchiveList(permission)` - Owner only
+- `canShareList(permission)` - Owner only
+- `canAddItems(permission)` - Owner or Editor
+- `canEditItems(permission)` - Owner or Editor
+- `canDeleteItems(permission)` - Owner or Editor
+- `canMarkPurchased(permission)` - All users (including Viewer)
+- `getPermissionColor(permission)` - Tailwind classes for badges
+- `getPermissionDescription(permission)` - Human-readable description
+
+### Layout Components
+
+**Location**: `src/components/layout/`
+
+#### AppLayout
+- Main application wrapper for authenticated pages
+- Contains Header and Sidebar
+- Provides consistent layout structure
+- Responsive design with mobile menu
+
+#### AuthLayout
+- Clean layout for authentication pages
+- Centered card design
+- Minimal header, no sidebar
+- Focused user experience
+
+#### Header
+- App branding/logo
+- Search functionality (placeholder)
+- User menu dropdown with profile links
+- Notifications icon (placeholder)
+- Mobile menu toggle button
+- Logout functionality
+
+#### Sidebar
+- Navigation links with icons:
+  - My Lists (`/lists`)
+  - Shared with Me (`/shared`)
+  - Archived (`/archived`)
+  - People (`/people`)
+  - Activity (`/activity`)
+- Active route highlighting
+- Create new list button
+- Collapsible on mobile
+- Responsive behavior
+
+### Context & Hooks
+
+**Location**: `src/contexts/` and `src/hooks/`
+
+#### AuthContext
+- Global authentication state
+- User information storage
+- Login/logout functions
+- Currently uses localStorage mock
+- Ready for real `authService` integration
+- Provides `useAuth()` hook
+
+#### useNavigation Hook
+- Centralized navigation logic
+- Type-safe route navigation
+- Wraps React Router's `useNavigate`
+- Consistent navigation patterns
+
+#### useListItems Hook
+- Local state management for list items
+- CRUD operations on items
+- Ready for API service integration
+- Optimistic update preparation
+
+### Implemented Pages
+
+All pages use **native HTML elements styled with Tailwind CSS**.
+
+#### Authentication Pages (`/pages/auth/`)
+- **Login** - Email/password form, remember me, links to register/forgot password
+- **Register** - Email, display name, password with strength indicator
+- **ForgotPassword** - Email input for password reset (UI only)
+
+#### Lists Pages (`/pages/lists/`)
+- **ListsDashboard** - Grid/list view, filters, sort, search, create button
+- **ListDetail** - Items list, quick add form, collaborators sidebar, action buttons
+- **CreateList** - Name and description form
+- **ListSettings** - Edit list, archive, delete (permission-based)
+- **ShareList** - Email input, permission selector, pending invitations
+- **ManageCollaborators** - List of collaborators, change permissions, remove
+- **ListHistory** - Timeline of purchases (placeholder)
+
+#### Collection Pages
+- **SharedLists** (`/shared`) - Grid of lists shared with user (non-owned)
+- **ArchivedLists** (`/archived`) - List of archived lists with unarchive/delete
+
+#### Social Pages
+- **People** (`/people`) - Contact list, stats, invite section
+- **Activity** (`/activity`) - Activity feed with filters and timeline
+
+#### Profile Pages (`/pages/profile/`)
+- **Profile** - User info display, quick action cards
+- **ProfileSettings** - Edit profile, change password, danger zone
+- **NotificationSettings** - Notification preferences with toggles
+
+#### Other Pages
+- **Landing** (`/`) - Hero section, auto-redirect if authenticated
+- **AcceptInvite** (`/invite/:token`) - Accept invitation flow
+- **NotFound** (`/404`) - 404 error page
+- **Forbidden** (`/403`) - 403 access denied page
+
+### Routing Structure
+
+**Location**: `src/App.tsx`
+
+- React Router v7 in BrowserRouter mode
+- Protected routes wrapped with authentication check
+- Public-only routes (redirect if authenticated)
+- Layout wrappers for consistent structure
+- All 22 pages routed and accessible
+
+### Backend Integration Points
+
+To connect to the real API:
+
+1. **Update Environment Variables**
+   - Create `.env` file
+   - Set `VITE_API_BASE_URL=http://localhost:5233/api`
+
+2. **Update AuthContext** (`src/contexts/AuthContext.tsx`)
+   - Replace localStorage mock with `authService.login()`
+   - Store token from API response
+   - Fetch user on app load with `authService.getCurrentUser()`
+   - Handle token expiration
+
+3. **Replace Mock Data in Pages**
+   - All list pages have mock data in `useState` hooks
+   - Replace with service calls in `useEffect` hooks
+   - Services are already imported and ready to use
+
+4. **Add Error Handling**
+   - Wrap service calls in try/catch
+   - Display error messages to users
+   - Handle 401 (redirect to login)
+   - Handle 403 (show forbidden message)
+
+5. **Add Real-time (Future)**
+   - Install `@microsoft/signalr`
+   - Create SignalR hub connection
+   - Subscribe to events in list detail pages
+   - Update local state on events
 
 ## Backend Architecture
 

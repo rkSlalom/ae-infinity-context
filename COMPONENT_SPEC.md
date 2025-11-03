@@ -1,6 +1,19 @@
 # Frontend Component Specification
 
-## Design System
+**Current Implementation Status**: This document describes the IDEAL component library. The actual UI implementation uses **native HTML elements with Tailwind CSS** instead of custom components. See `UI_IMPLEMENTATION_STATUS.md` for actual implementation details.
+
+**Components Currently Implemented**:
+- LoadingSpinner ✅
+- Layout components (AppLayout, AuthLayout, Header, Sidebar) ✅
+
+**Components Using Native HTML**:
+- All form elements (buttons, inputs)
+- All page content
+- All modals and cards
+
+---
+
+## Design System (Aspirational)
 
 ### Color Palette
 ```typescript
