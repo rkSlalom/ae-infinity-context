@@ -50,6 +50,21 @@ We follow a **specification-first** approach:
 | [COMPONENT_SPEC.md](./COMPONENT_SPEC.md) | UI component library specifications | When designing new UI components |
 | [FEATURES.md](./FEATURES.md) | Master feature tracker with implementation status | After each feature is implemented or integrated |
 
+### Feature-Specific Documentation
+
+| Directory | Purpose |
+|-----------|---------|
+| [features/](./features/) | **Feature-driven documentation** - Each feature domain has its own directory with detailed specs, implementation details, and integration steps |
+| [features/authentication/](./features/authentication/) | Authentication & user management |
+| [features/lists/](./features/lists/) | Shopping list CRUD operations |
+| [features/items/](./features/items/) | Shopping item management |
+| [features/collaboration/](./features/collaboration/) | List sharing & permissions |
+| [features/categories/](./features/categories/) | Item categorization |
+| [features/search/](./features/search/) | Global search functionality |
+| [features/realtime/](./features/realtime/) | SignalR live updates |
+| [features/ui-components/](./features/ui-components/) | UI component library |
+| [features/infrastructure/](./features/infrastructure/) | DevOps & cross-cutting concerns |
+
 ### Data & Domain
 
 | Document | Purpose |
