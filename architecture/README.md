@@ -24,11 +24,14 @@ This directory contains architecture documentation split by system component for
   - Dependency injection
   - Middleware pipeline
 
-- **[data-models.md](./data-models.md)** - Database schemas and relationships
-  - Entity definitions
-  - Relationships
+- **[data-models.md](./data-models.md)** - ✅ **COMPLETED** - Database schemas and relationships
+  - Entity definitions (Users, Lists, Items, Categories, Roles)
+  - Complete audit trail and soft delete pattern
+  - Relationships and foreign keys
   - Indexes and constraints
+  - EF Core implementation details
   - Migration strategy
+  - **Source**: [../../ae-infinity-api/docs/DB_SCHEMA.md](../../ae-infinity-api/docs/DB_SCHEMA.md)
 
 - **[state-management.md](./state-management.md)** - Frontend state patterns
   - Local component state

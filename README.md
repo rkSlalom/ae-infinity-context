@@ -85,6 +85,7 @@ These documents provide project-wide context:
 - **[COMPONENT_SPEC.md](./COMPONENT_SPEC.md)** - UI components (to be split into components/)
 - **[USER_PERSONAS.md](./USER_PERSONAS.md)** - Original personas document (replaced by personas/)
 - **[DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md)** - Development workflow (to be split into workflows/)
+- **[GLOSSARY.md](./GLOSSARY.md)** - ✅ **NEW** - Terminology and jargon reference
 - **[QUICK_START.md](./QUICK_START.md)** - Quick start guide
 
 ## 🚀 Quick Start
