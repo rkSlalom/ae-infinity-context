@@ -154,6 +154,51 @@ This document provides consistent terminology for:
 
 ## 🔧 Technical Concepts
 
+### Authentication & Security
+
+**Authentication**
+- **Definition**: Process of verifying a user's identity
+- **Method**: Email + password → JWT token
+- **Implementation**: BCrypt password hashing, JWT Bearer tokens
+- **Flow**: Login → Receive token → Include in Authorization header
+
+**Password Hash**
+- **Definition**: One-way encryption of user passwords
+- **Algorithm**: BCrypt (recommended) or Argon2
+- **Storage**: Only hashed password stored in database, never plain text
+- **Verification**: Password input is hashed and compared to stored hash
+- **Salt**: Random data added before hashing to prevent rainbow table attacks
+
+**JWT Claims**
+- **Definition**: Key-value pairs embedded in JWT token payload
+- **Standard Claims**: 
+  - `sub` (Subject): User ID
+  - `email`: User's email address
+  - `jti` (JWT ID): Unique token identifier
+  - `exp` (Expiration): Token expiry timestamp
+  - `iss` (Issuer): "AeInfinityApi"
+  - `aud` (Audience): "AeInfinityClient"
+- **Purpose**: Carry user identity and metadata without database lookup
+
+**Token Expiration**
+- **Definition**: Timestamp when JWT becomes invalid
+- **Duration**: 24 hours from issuance
+- **Behavior**: After expiration, user must login again
+- **Security**: Limits impact of stolen tokens
+- **Validation**: Checked on every API request
+
+**Bearer Authentication**
+- **Definition**: HTTP authentication scheme using tokens
+- **Format**: `Authorization: Bearer eyJhbGciOi...`
+- **Usage**: Included in every authenticated API request
+- **Standard**: RFC 6750 (OAuth 2.0 Bearer Token Usage)
+
+**Authorization**
+- **Definition**: Determining what an authenticated user can access
+- **Implementation**: Role-based permissions at list level
+- **Check Location**: Middleware and business logic layer
+- **Permissions**: Owner, Editor, Editor-Limited, Viewer
+
 ### Database Patterns
 
 **Soft Delete**

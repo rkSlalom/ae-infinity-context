@@ -337,25 +337,137 @@ AeInfinity.Infrastructure/
 ## Security Architecture
 
 ### Authentication Flow
-1. User submits credentials
-2. Server validates and generates JWT
-3. Client stores JWT in httpOnly cookie
-4. Client includes JWT in Authorization header
-5. Server validates JWT on each request
+
+#### Login Process
+1. **User Submits Credentials**: Email + password via `POST /auth/login`
+2. **Server Validation**:
+   - Look up user by normalized email (case-insensitive)
+   - Verify password using BCrypt hash comparison
+   - Return generic error if email or password invalid (security best practice)
+3. **JWT Generation**:
+   - Create JWT with HMAC-SHA256 algorithm
+   - Include claims: User ID (`sub`), Email, Display Name, JWT ID (`jti`)
+   - Set expiration to 24 hours from issuance
+   - Sign with secret key from configuration
+4. **Response**: Return JWT token, expiration time, and user details
+5. **Client Storage**: Client stores JWT (typically in memory or localStorage)
+6. **Update Audit**: Server updates user's `lastLoginAt` timestamp
+
+#### Authenticated Request Flow
+1. **Client Request**: Include JWT in Authorization header: `Bearer <token>`
+2. **JWT Validation** (ASP.NET Core JWT Bearer Middleware):
+   - Verify signature using secret key
+   - Validate issuer, audience, and expiration
+   - Extract claims and populate `HttpContext.User`
+3. **Authorization Check**: Verify user has permission for requested resource
+4. **Process Request**: Execute controller action
+5. **Response**: Return data or error
+
+#### Logout Process
+1. **Client Request**: `POST /auth/logout` with JWT token
+2. **Server Action**: Log logout event (audit purposes)
+3. **Client Action**: Remove JWT from storage
+4. **Token Behavior**: Token remains technically valid until expiration (24h)
+
+**Note**: Current implementation does not maintain server-side token blacklist. Tokens are stateless and valid until expiration.
+
+### Authentication Implementation Details
+
+**Technology Stack:**
+- **ASP.NET Core Authentication Middleware**: JWT Bearer authentication
+- **JWT Library**: Microsoft.IdentityModel.Tokens, System.IdentityModel.Tokens.Jwt
+- **Password Hashing**: BCrypt via BCrypt.Net-Next
+
+**JWT Configuration** (`appsettings.json`):
+```json
+{
+  "Jwt": {
+    "Secret": "[Secret key - change in production]",
+    "Issuer": "AeInfinityApi",
+    "Audience": "AeInfinityClient"
+  }
+}
+```
+
+**Token Validation Parameters**:
+- `ValidateIssuer`: true
+- `ValidateAudience`: true
+- `ValidateLifetime`: true (expires after 24h)
+- `ValidateIssuerSigningKey`: true
+- `ClockSkew`: Zero (no grace period)
+
+**Password Security**:
+- Minimum length: 8 characters (enforced by validation)
+- Hashing: BCrypt with automatic salt generation
+- Storage: Only hash stored in `users.password_hash` column
+- Verification: Re-hash input and compare to stored hash
 
 ### Authorization
-- Role-Based Access Control (RBAC) at list level
-- Permission checks in middleware
-- Resource ownership validation
+
+**Role-Based Access Control (RBAC):**
+- Implemented at list level via `user_to_list` junction table
+- Four permission levels: Owner, Editor, Editor-Limited, Viewer
+- Permissions stored in `roles` table with capability flags
+- Each list collaboration has assigned role
+
+**Authorization Enforcement:**
+1. **Middleware Level**: `[Authorize]` attribute on controllers/actions
+2. **Business Logic Level**: Permission checks in CQRS command handlers
+3. **Database Level**: Queries filtered by user access
+
+**Permission Validation Pattern:**
+```csharp
+// Get user's role for the list
+var userToList = await _context.UserToLists
+    .Include(u => u.Role)
+    .FirstOrDefaultAsync(u => u.UserId == currentUserId && u.ListId == listId);
+
+if (userToList == null)
+    throw new ForbiddenException("You don't have access to this list");
+
+// Check specific capability
+if (!userToList.Role.CanManageItems)
+    throw new ForbiddenException("You don't have permission to manage items");
+```
 
 ### Security Measures
-- HTTPS enforcement
-- CORS configuration
-- Content Security Policy headers
-- Rate limiting (100 requests/minute per user)
-- Input validation and sanitization
-- SQL injection prevention (parameterized queries)
-- XSS prevention (output encoding)
+
+**Transport Security:**
+- HTTPS enforcement in production
+- CORS configured to allow specific origins (currently `AllowAll` for development)
+- Secure headers (recommended: add Helmet.js equivalent for .NET)
+
+**Authentication Security:**
+- JWT tokens expire after 24 hours
+- BCrypt password hashing with automatic salts
+- Case-insensitive email lookup prevents timing attacks
+- Generic error messages for failed authentication
+
+**Input Validation:**
+- FluentValidation for request validation
+- Automatic validation via MediatR pipeline behavior
+- 400 Bad Request returned for validation failures
+
+**Database Security:**
+- Entity Framework Core parameterized queries (prevents SQL injection)
+- Soft delete pattern maintains audit trail
+- Audit columns track all changes (`created_by`, `modified_by`, `deleted_by`)
+
+**API Security:**
+- Rate limiting: Planned (100 requests/minute per user)
+- Exception handling middleware catches and sanitizes errors
+- Validation on all inputs
+
+**Future Security Enhancements:**
+- Refresh tokens for extended sessions
+- Token blacklist for instant logout
+- Multi-factor authentication (MFA)
+- Email verification requirement
+- Password reset flow with time-limited tokens
+- Rate limiting implementation
+- CAPTCHA for login attempts
+- Content Security Policy (CSP) headers
+- Stricter CORS policy for production
 
 ## Performance Optimization
 

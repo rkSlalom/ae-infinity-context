@@ -2,51 +2,26 @@
 
 ## Base URL
 ```
-Development: http://localhost:5000/api/v1
-Production: https://api.ae-infinity.com/api/v1
+Development: http://localhost:5233/api
+Production: https://api.ae-infinity.com/api
 ```
 
 ## Authentication
-All endpoints (except `/auth/register` and `/auth/login`) require a JWT token in the Authorization header:
+All endpoints (except `/auth/login`) require a JWT token in the Authorization header:
 ```
 Authorization: Bearer <jwt_token>
 ```
 
+### JWT Token Details
+- **Algorithm**: HMAC-SHA256 (HS256)
+- **Expiration**: 24 hours from issuance
+- **Claims**: User ID (sub), Email, Display Name, JWT ID (jti)
+- **Issuer**: AeInfinityApi
+- **Audience**: AeInfinityClient
+
 ---
 
 ## Authentication Endpoints
-
-### POST /auth/register
-Register a new user account.
-
-**Request Body:**
-```json
-{
-  "email": "user@example.com",
-  "displayName": "John Doe",
-  "password": "SecurePass123!"
-}
-```
-
-**Success Response (201 Created):**
-```json
-{
-  "user": {
-    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    "email": "user@example.com",
-    "displayName": "John Doe",
-    "avatarUrl": null,
-    "createdAt": "2025-11-03T10:30:00Z"
-  },
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
-
-**Error Responses:**
-- `400 Bad Request`: Invalid input data
-- `409 Conflict`: Email already exists
-
----
 
 ### POST /auth/login
 Authenticate user and receive JWT token.
@@ -59,46 +34,68 @@ Authenticate user and receive JWT token.
 }
 ```
 
+**Validation Rules:**
+- Email: Required, valid email format, max 255 characters
+- Password: Required
+
 **Success Response (200 OK):**
 ```json
 {
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expiresAt": "2025-11-04T10:30:00Z",
   "user": {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "email": "user@example.com",
     "displayName": "John Doe",
-    "avatarUrl": "https://storage.com/avatars/user.jpg"
-  },
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    "avatarUrl": "https://storage.com/avatars/user.jpg",
+    "isEmailVerified": true,
+    "lastLoginAt": "2025-11-03T10:30:00Z",
+    "createdAt": "2025-01-01T10:00:00Z"
+  }
 }
 ```
 
 **Error Responses:**
-- `401 Unauthorized`: Invalid credentials
-- `400 Bad Request`: Missing fields
+- `400 Bad Request`: Validation errors (invalid email format, missing fields)
+- `401 Unauthorized`: Invalid email or password
+
+**Implementation Notes:**
+- Passwords are verified using BCrypt hashing
+- Email lookup is case-insensitive (uses `EmailNormalized` field)
+- Updates `lastLoginAt` timestamp on successful login
+- Generic error message for invalid credentials (security best practice)
 
 ---
 
-### POST /auth/refresh
-Refresh JWT token before expiration.
+### POST /auth/logout
+Logout current user (client-side token cleanup).
 
-**Request Body:**
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
+**Headers Required:**
+```
+Authorization: Bearer <jwt_token>
 ```
 
-**Success Response (200 OK):**
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
+**Success Response (204 No Content):**
+No response body.
+
+**Error Responses:**
+- `401 Unauthorized`: Missing or invalid token
+
+**Implementation Notes:**
+- This endpoint is primarily for audit/logging purposes
+- Actual token invalidation happens client-side by removing the token
+- Server does not maintain token blacklist in current implementation
+- Token will remain valid until expiration (24 hours)
 
 ---
 
-### GET /auth/me
+### GET /users/me
 Get current authenticated user information.
+
+**Headers Required:**
+```
+Authorization: Bearer <jwt_token>
+```
 
 **Success Response (200 OK):**
 ```json
@@ -107,9 +104,34 @@ Get current authenticated user information.
   "email": "user@example.com",
   "displayName": "John Doe",
   "avatarUrl": "https://storage.com/avatars/user.jpg",
+  "isEmailVerified": true,
+  "lastLoginAt": "2025-11-03T10:30:00Z",
   "createdAt": "2025-01-01T10:00:00Z"
 }
 ```
+
+**Error Responses:**
+- `401 Unauthorized`: Missing or invalid token
+- `404 Not Found`: User not found (user was deleted)
+
+---
+
+### 🚧 Future Authentication Endpoints (Not Yet Implemented)
+
+#### POST /auth/register
+Register a new user account.
+
+#### POST /auth/refresh
+Refresh JWT token before expiration.
+
+#### POST /auth/forgot-password
+Request password reset email.
+
+#### POST /auth/reset-password
+Reset password using reset token.
+
+#### POST /auth/verify-email
+Verify email address using verification token.
 
 ---
 
