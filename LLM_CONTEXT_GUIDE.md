@@ -9,6 +9,7 @@ This guide provides instructions for effective AI-assisted development of the AE
 | File | Use When |
 |------|----------|
 | **PROJECT_SPEC.md** | Understanding overall requirements, features, user roles, or project scope |
+| **USER_PERSONAS.md** | Understanding user types, behaviors, permission models, or UX decisions |
 | **ARCHITECTURE.md** | Designing system components, understanding data flow, or making architectural decisions |
 | **API_SPEC.md** | Implementing or consuming API endpoints, understanding request/response formats |
 | **COMPONENT_SPEC.md** | Building UI components, implementing design system, or frontend architecture |
@@ -19,7 +20,7 @@ This guide provides instructions for effective AI-assisted development of the AE
 
 ### Scenario 1: Implementing a New Feature
 
-**Required Context Files**: PROJECT_SPEC.md, ARCHITECTURE.md, API_SPEC.md, COMPONENT_SPEC.md
+**Required Context Files**: PROJECT_SPEC.md, USER_PERSONAS.md, ARCHITECTURE.md, API_SPEC.md, COMPONENT_SPEC.md
 
 **Prompt Template**:
 ```
@@ -27,18 +28,21 @@ I need to implement [FEATURE_NAME] for the AE Infinity shopping list application
 
 Context needed:
 1. Review PROJECT_SPEC.md for feature requirements
-2. Review ARCHITECTURE.md for system design patterns
-3. Review API_SPEC.md for relevant endpoints
-4. Review COMPONENT_SPEC.md for UI components
+2. Review USER_PERSONAS.md to understand which users need this feature
+3. Review ARCHITECTURE.md for system design patterns
+4. Review API_SPEC.md for relevant endpoints
+5. Review COMPONENT_SPEC.md for UI components
 
 Please:
-1. Create the backend API endpoint(s)
-2. Implement the frontend components
-3. Add real-time SignalR events if needed
-4. Write tests for both frontend and backend
-5. Follow coding standards from DEVELOPMENT_GUIDE.md
+1. Consider which user personas will use this feature
+2. Create the backend API endpoint(s) with appropriate permissions
+3. Implement the frontend components optimized for target personas
+4. Add real-time SignalR events if needed
+5. Write tests for both frontend and backend
+6. Follow coding standards from DEVELOPMENT_GUIDE.md
 
 Feature details: [DESCRIBE FEATURE]
+Target personas: [LIST PERSONAS]
 ```
 
 ### Scenario 2: Adding a New API Endpoint
@@ -202,14 +206,15 @@ Please:
 
 **Autonomous Workflow**:
 1. Read PROJECT_SPEC.md to understand feature requirements
-2. Read ARCHITECTURE.md to understand system design
-3. Read API_SPEC.md to design API endpoints
-4. Read COMPONENT_SPEC.md to design UI components
-5. Generate backend code (DTOs, services, controllers)
-6. Generate frontend code (components, hooks, API clients)
-7. Generate tests (unit and integration)
-8. Update specification documents
-9. Run tests and verify implementation
+2. Read USER_PERSONAS.md to understand target users and permissions
+3. Read ARCHITECTURE.md to understand system design
+4. Read API_SPEC.md to design API endpoints
+5. Read COMPONENT_SPEC.md to design UI components
+6. Generate backend code (DTOs, services, controllers) with permission checks
+7. Generate frontend code (components, hooks, API clients) optimized for personas
+8. Generate tests (unit and integration)
+9. Update specification documents
+10. Run tests and verify implementation
 
 **Agent Instructions**:
 ```
@@ -219,15 +224,16 @@ Your task: Implement [FEATURE_NAME]
 
 Required steps:
 1. ✓ Read context from specification files
-2. ✓ Design API endpoints following API_SPEC.md patterns
-3. ✓ Design UI components following COMPONENT_SPEC.md patterns
-4. ✓ Implement backend (service, controller, DTOs)
-5. ✓ Implement frontend (components, hooks)
-6. ✓ Implement real-time updates if needed
-7. ✓ Write comprehensive tests
-8. ✓ Update specification documents
-9. ✓ Verify all tests pass
-10. ✓ Report completion with summary
+2. ✓ Identify target user personas from USER_PERSONAS.md
+3. ✓ Design API endpoints following API_SPEC.md patterns with permissions
+4. ✓ Design UI components following COMPONENT_SPEC.md patterns for personas
+5. ✓ Implement backend (service, controller, DTOs, authorization)
+6. ✓ Implement frontend (components, hooks, persona-optimized UX)
+7. ✓ Implement real-time updates if needed
+8. ✓ Write comprehensive tests including permission tests
+9. ✓ Update specification documents
+10. ✓ Verify all tests pass
+11. ✓ Report completion with summary
 
 Constraints:
 - Follow all coding standards from DEVELOPMENT_GUIDE.md
@@ -393,9 +399,10 @@ When specifications change:
 
 ```markdown
 - [ ] Read PROJECT_SPEC.md for requirements
+- [ ] Read USER_PERSONAS.md to identify target users and permissions
 - [ ] Read ARCHITECTURE.md for design patterns
-- [ ] Design API endpoints (update API_SPEC.md)
-- [ ] Design UI components (update COMPONENT_SPEC.md)
+- [ ] Design API endpoints with permission checks (update API_SPEC.md)
+- [ ] Design UI components for target personas (update COMPONENT_SPEC.md)
 - [ ] Implement backend:
   - [ ] Domain models
   - [ ] DTOs

@@ -10,6 +10,11 @@
 - User roles and permissions
 - Development phases
 
+→ Read **[USER_PERSONAS.md](./USER_PERSONAS.md)**
+- Detailed user personas and behaviors
+- Permission tier explanations
+- User journey examples
+
 #### ...understand the technical architecture
 → Read **[ARCHITECTURE.md](./ARCHITECTURE.md)**
 - System architecture diagram
@@ -93,6 +98,7 @@ Include: Fix + Regression test
 |------|---------|--------------|
 | **README.md** | Project overview | First time setup |
 | **PROJECT_SPEC.md** | Requirements & features | Before any feature work |
+| **USER_PERSONAS.md** | User personas & journeys | Understanding users & permissions |
 | **ARCHITECTURE.md** | System design | Architecture decisions |
 | **API_SPEC.md** | API documentation | API implementation |
 | **COMPONENT_SPEC.md** | UI components | Frontend development |
@@ -105,12 +111,13 @@ Include: Fix + Regression test
 ### Starting a New Feature
 
 1. ✅ Read requirements in **PROJECT_SPEC.md**
-2. ✅ Check architecture in **ARCHITECTURE.md**
-3. ✅ Design API in **API_SPEC.md**
-4. ✅ Design UI in **COMPONENT_SPEC.md**
-5. ✅ Follow standards in **DEVELOPMENT_GUIDE.md**
-6. ✅ Implement backend + frontend + tests
-7. ✅ Update specification docs
+2. ✅ Understand users in **USER_PERSONAS.md**
+3. ✅ Check architecture in **ARCHITECTURE.md**
+4. ✅ Design API in **API_SPEC.md**
+5. ✅ Design UI in **COMPONENT_SPEC.md**
+6. ✅ Follow standards in **DEVELOPMENT_GUIDE.md**
+7. ✅ Implement backend + frontend + tests
+8. ✅ Update specification docs
 
 ### Fixing a Bug
 
@@ -141,6 +148,7 @@ Include: Fix + Regression test
 ### Day 1: Understanding the Project
 - [ ] Read **README.md** - Overview
 - [ ] Read **PROJECT_SPEC.md** - What we're building
+- [ ] Read **USER_PERSONAS.md** - Who we're building for
 - [ ] Skim **ARCHITECTURE.md** - How it works
 
 ### Day 2: Setup & First Task

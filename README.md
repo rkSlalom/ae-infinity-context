@@ -9,6 +9,7 @@ This project follows a spec-driven development approach optimized for LLM-assist
 ### Core Specification Documents
 
 - **[PROJECT_SPEC.md](./PROJECT_SPEC.md)** - Complete project requirements, features, user roles, and development phases
+- **[USER_PERSONAS.md](./USER_PERSONAS.md)** - User personas, permission tiers, and user journey examples
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System architecture, data models, technology stack, and design patterns
 - **[API_SPEC.md](./API_SPEC.md)** - Detailed REST API specification with all endpoints, requests, and responses
 - **[COMPONENT_SPEC.md](./COMPONENT_SPEC.md)** - Frontend component specifications, design system, and UI patterns
