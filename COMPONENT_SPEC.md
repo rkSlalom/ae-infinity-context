@@ -1,6 +1,6 @@
 # Frontend Component Specification
 
-**Current Implementation Status**: This document describes the IDEAL component library. The actual UI implementation uses **native HTML elements with Tailwind CSS** instead of custom components. See `UI_IMPLEMENTATION_STATUS.md` for actual implementation details.
+**Current Implementation Status**: This document describes the IDEAL component library. The actual UI implementation uses **native HTML elements with Tailwind CSS** instead of custom components. See `ARCHITECTURE.md` (Frontend Implementation Details section) for actual implementation details.
 
 **Components Currently Implemented**:
 - LoadingSpinner ✅
