@@ -1,5 +1,9 @@
 # AE Infinity - Collaborative Shopping List Application
 
+**Specification Version**: 1.0  
+**Last Updated**: November 3, 2025  
+**Status**: Development Phase
+
 ## Project Overview
 
 AE Infinity is a real-time collaborative shopping list application that allows multiple users to create, share, and manage shopping lists together. Users can add items, mark them as purchased, and see updates from other collaborators in real-time.

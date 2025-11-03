@@ -1,5 +1,12 @@
 # API Specification
 
+**API Version**: 1.0  
+**Specification Version**: 1.0  
+**Last Updated**: November 3, 2025  
+**Status**: 80% Implemented
+
+---
+
 ## Base URL
 ```
 Development: http://localhost:5233/api
