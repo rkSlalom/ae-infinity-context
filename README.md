@@ -190,25 +190,29 @@ Continuously updated as project evolves.
 
 ```
 ae-infinity-context/
+├── features/           # Feature-driven documentation (NEW!)
+│   ├── authentication/
+│   ├── lists/
+│   ├── items/
+│   ├── collaboration/
+│   ├── categories/
+│   ├── search/
+│   ├── realtime/
+│   ├── ui-components/
+│   └── infrastructure/
 ├── personas/           # User personas and permissions
 ├── journeys/           # User workflows and flows
-├── api/                # API specifications by domain (Coming Soon)
-├── architecture/       # System architecture docs (Coming Soon)
-├── components/         # UI component specs (Coming Soon)
-├── config/             # Configuration docs (Coming Soon)
 ├── schemas/            # JSON Schema definitions for API contracts
-├── metadata/           # Project metadata
 ├── docs/               # Additional documentation
+├── openspec/           # OpenSpec framework integration
 │
 ├── PROJECT_SPEC.md     # Project requirements
+├── FEATURES.md         # Master feature tracker
 ├── API_SPEC.md         # Complete API spec
 ├── ARCHITECTURE.md     # System architecture
 ├── COMPONENT_SPEC.md   # UI components
-├── USER_PERSONAS.md    # Original personas (see personas/ for new)
 ├── DEVELOPMENT_GUIDE.md # Development workflow
-├── QUICK_START.md      # Quick start guide
-├── README.md           # This file
-└── REORGANIZATION_GUIDE.md # Migration guide for new structure
+└── README.md           # This file
 ```
 
 ## 📖 Related Repositories
@@ -295,17 +299,15 @@ AI generates code matching exact specifications
 The repository is being reorganized into a more granular structure:
 
 ✅ **Completed:**
-- `personas/` - User personas fully migrated
+- `personas/` - User personas fully documented
 - `journeys/` - Key user journeys documented
 - `schemas/` - JSON Schema definitions for all API contracts
+- `features/` - Feature-driven documentation (9 feature domains)
 
-🚧 **In Progress:**
-- `api/` - Splitting API_SPEC.md into domain files
-- `architecture/` - Splitting ARCHITECTURE.md into focused docs
-- `components/` - Splitting COMPONENT_SPEC.md by component type
-- `config/` - Extracting configuration docs
-
-📖 **See Also**: [REORGANIZATION_GUIDE.md](./REORGANIZATION_GUIDE.md) for migration details
+🚧 **Future Enhancements:**
+- `api/` - Could split API_SPEC.md into domain files (optional)
+- `architecture/` - Could split ARCHITECTURE.md into focused docs (optional)
+- `components/` - Component library documentation as it grows
 
 ## 🔗 Quick Links
 
