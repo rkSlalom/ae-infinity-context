@@ -1,0 +1,58 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2025-11-04",
+  "repository": "ae-infinity-context",
+  "methodology": "Specification-Driven Development (SDD)",
+  "features": {
+    "active": [
+      {
+        "id": "feat-001-live-updates",
+        "name": "Real-time Live Updates",
+        "description": "SignalR-based real-time synchronization for collaborative shopping lists",
+        "status": "specification",
+        "priority": "high",
+        "phase": "planning",
+        "estimatedDays": "12-16",
+        "startDate": null,
+        "targetDate": null,
+        "documents": [
+          "README.md",
+          "LIVE_UPDATES_SPEC.md",
+          "SIGNALR_ARCHITECTURE.md",
+          "SIGNALR_API_SPEC.md",
+          "LIVE_UPDATES_IMPLEMENTATION_GUIDE.md"
+        ],
+        "dependencies": [
+          "authentication",
+          "lists",
+          "items",
+          "collaboration"
+        ],
+        "assignees": [],
+        "tags": ["real-time", "signalr", "collaboration", "websocket"]
+      }
+    ],
+    "backlog": [],
+    "completed": [],
+    "archived": {
+      "features": [
+        "authentication",
+        "lists",
+        "items",
+        "collaboration",
+        "categories",
+        "search",
+        "realtime",
+        "ui-components",
+        "infrastructure"
+      ]
+    }
+  },
+  "stats": {
+    "totalFeatures": 1,
+    "activeFeatures": 1,
+    "completedFeatures": 0,
+    "backlogFeatures": 0
+  }
+}
+

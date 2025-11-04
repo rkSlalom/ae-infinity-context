@@ -38,54 +38,57 @@ We follow a **specification-first** approach:
 
 ---
 
-## 📚 Key Documents
+## 📚 Documentation Structure
 
-### Core Specifications
+This repository follows **Specification-Driven Development (SDD)** with a clean, organized structure:
 
-| Document | Purpose | When to Update |
-|----------|---------|----------------|
-| [PROJECT_SPEC.md](./PROJECT_SPEC.md) | High-level project requirements and goals | When adding major features or changing project scope |
-| [ARCHITECTURE.md](./ARCHITECTURE.md) | System architecture, tech stack, and implementation details | When architectural decisions change or implementations are completed |
-| [API_SPEC.md](./API_SPEC.md) | Complete REST API contract and SignalR events | When adding/modifying API endpoints |
-| [COMPONENT_SPEC.md](./COMPONENT_SPEC.md) | UI component library specifications | When designing new UI components |
-| [FEATURES.md](./FEATURES.md) | Master feature tracker with implementation status | After each feature is implemented or integrated |
+### 📖 [docs/](./docs/) - Project Documentation
+Comprehensive project documentation organized by topic.
 
-### Feature-Specific Documentation
+| Section | Description |
+|---------|-------------|
+| [docs/project/](./docs/project/) | Core project specs, architecture, features tracker |
+| [docs/api/](./docs/api/) | API specifications, component specs, data models |
+| [docs/personas/](./docs/personas/) | User personas and permission matrix |
+| [docs/journeys/](./docs/journeys/) | User journey maps and workflows |
 
-| Directory | Purpose |
-|-----------|---------|
-| [features/](./features/) | **Feature-driven documentation** - Each feature domain has its own directory with detailed specs, implementation details, and integration steps |
-| [features/authentication/](./features/authentication/) | Authentication & user management |
-| [features/lists/](./features/lists/) | Shopping list CRUD operations |
-| [features/items/](./features/items/) | Shopping item management |
-| [features/collaboration/](./features/collaboration/) | List sharing & permissions |
-| [features/categories/](./features/categories/) | Item categorization |
-| [features/search/](./features/search/) | Global search functionality |
-| [features/realtime/](./features/realtime/) | SignalR live updates |
-| [features/ui-components/](./features/ui-components/) | UI component library |
-| [features/infrastructure/](./features/infrastructure/) | DevOps & cross-cutting concerns |
+**Start here**: [docs/README.md](./docs/README.md)
 
-### Data & Domain
+---
 
-| Document | Purpose |
-|----------|---------|
-| [DB_SCHEMA.md](./docs/DB_SCHEMA.md) | Database schema and relationships |
-| [architecture/data-models.md](./architecture/data-models.md) | Domain model definitions |
+### 🎯 [specs/](./specs/) - Feature Specifications
+SDD-compliant feature specifications from planning to delivery.
 
-### User-Centric
+| Section | Description |
+|---------|-------------|
+| [specs/active/](./specs/active/) | Features currently in development |
+| [specs/backlog/](./specs/backlog/) | Planned features |
+| [specs/completed/](./specs/completed/) | Delivered features |
+| [specs/archive/](./specs/archive/) | Reference material and legacy docs |
 
-| Document | Purpose |
-|----------|---------|
-| [USER_PERSONAS.md](./USER_PERSONAS.md) | User types and their needs |
-| [personas/permission-matrix.md](./personas/permission-matrix.md) | Permission levels and capabilities |
-| [journeys/](./journeys/) | User journey maps and flows |
+**Start here**: [specs/README.md](./specs/README.md)
 
-### Development Guides
+---
 
-| Document | Purpose |
-|----------|---------|
-| [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md) | How to set up and develop |
-| [API_INTEGRATION_GUIDE.md](./docs/API_INTEGRATION_GUIDE.md) | How to integrate frontend with backend |
+## 🚀 Quick Links
+
+### For New Team Members
+1. 📋 [Project Specification](./docs/project/PROJECT_SPEC.md) - What we're building
+2. 🏗️ [Architecture](./docs/project/ARCHITECTURE.md) - How it's structured
+3. 💻 [Development Guide](./docs/project/DEVELOPMENT_GUIDE.md) - Setup and workflow
+4. ✅ [Features Tracker](./docs/project/FEATURES.md) - Implementation status
+
+### For Developers
+- 🔌 [API Specification](./docs/api/API_SPEC.md) - REST API contracts
+- 🗄️ [Data Models](./docs/api/data-models.md) - Database schema
+- 🎨 [Component Spec](./docs/api/COMPONENT_SPEC.md) - UI components
+- 📐 [Feature Specs](./specs/) - Detailed feature specifications
+
+### For Product/Design
+- 👥 [User Personas](./docs/personas/) - Who are our users?
+- 🗺️ [User Journeys](./docs/journeys/) - How do users accomplish goals?
+- ✨ [Features Tracker](./docs/project/FEATURES.md) - What's implemented?
+- 🎯 [Active Features](./specs/active/) - What's in development?
 
 ---
 
@@ -155,33 +158,45 @@ Throughout this repository, you'll see status indicators:
 
 ```
 ae-infinity-context/
-├── README.md                  # This file - start here!
-├── FEATURES.md               # Master feature tracker
-├── PROJECT_SPEC.md           # High-level project requirements
-├── ARCHITECTURE.md           # System architecture + implementation
-├── API_SPEC.md              # REST API specification
-├── COMPONENT_SPEC.md        # UI component specifications
-├── USER_PERSONAS.md         # User types and needs
-├── DEVELOPMENT_GUIDE.md     # Setup and development guide
+├── README.md                    # This file - start here!
 │
-├── architecture/            # Detailed architecture docs
-│   ├── data-models.md
-│   └── README.md
+├── docs/                        # 📚 Project Documentation
+│   ├── README.md               # Documentation navigation
+│   ├── project/                # Core project docs
+│   │   ├── PROJECT_SPEC.md
+│   │   ├── ARCHITECTURE.md
+│   │   ├── DEVELOPMENT_GUIDE.md
+│   │   └── FEATURES.md
+│   ├── api/                    # API specifications
+│   │   ├── API_SPEC.md
+│   │   ├── COMPONENT_SPEC.md
+│   │   └── data-models.md
+│   ├── personas/               # User personas
+│   │   ├── list-creator.md
+│   │   ├── active-collaborator.md
+│   │   ├── passive-viewer.md
+│   │   └── permission-matrix.md
+│   └── journeys/               # User journey maps
+│       ├── creating-first-list.md
+│       └── shopping-together.md
 │
-├── personas/               # User persona details
-│   ├── permission-matrix.md
-│   └── *.md
+├── specs/                       # 🎯 SDD Feature Specifications
+│   ├── README.md               # Specs navigation
+│   ├── index.json              # Machine-readable registry
+│   ├── active/                 # In development
+│   │   └── feat-001-live-updates/
+│   ├── backlog/                # Planned features
+│   ├── completed/              # Delivered features
+│   └── archive/                # Reference material
+│       └── features/           # Legacy feature docs
 │
-├── journeys/              # User journey maps
-│   ├── creating-first-list.md
-│   └── *.md
+├── .sdd/                        # ⚙️ SDD Framework
+│   ├── guidelines.md
+│   ├── templates/
+│   └── config.json
 │
-├── docs/                  # Additional documentation
-│   ├── API_INTEGRATION_GUIDE.md
-│   └── DB_SCHEMA.md
-│
-└── api/                   # API-specific docs
-    └── README.md
+└── .cursor/                     # 🤖 Cursor Commands
+    └── commands/
 ```
 
 ---
@@ -244,25 +259,33 @@ refactor: Reorganize documentation structure
 
 ### I'm New to This Project
 
-1. Read [PROJECT_SPEC.md](./PROJECT_SPEC.md) - Understand what we're building
-2. Read [ARCHITECTURE.md](./ARCHITECTURE.md) - Understand how it's structured
-3. Read [FEATURES.md](./FEATURES.md) - See what's implemented
-4. Read [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md) - Set up your environment
+1. Read [Project Specification](./docs/project/PROJECT_SPEC.md) - Understand what we're building
+2. Read [Architecture](./docs/project/ARCHITECTURE.md) - Understand how it's structured
+3. Check [Features Tracker](./docs/project/FEATURES.md) - See what's implemented
+4. Follow [Development Guide](./docs/project/DEVELOPMENT_GUIDE.md) - Set up your environment
 
 ### I'm Adding a New Feature
 
-1. Open [FEATURES.md](./FEATURES.md) - Add your feature to the tracker
-2. Update relevant spec files - API_SPEC.md, COMPONENT_SPEC.md, etc.
-3. Commit your spec changes
-4. Implement in code repos
-5. Come back and mark as implemented
+**Quick Start (Most Features)**:
+```bash
+# Use SDD brief for rapid planning
+/brief "Your feature description"
+```
 
-### I'm Connecting Frontend to Backend
+**Comprehensive Planning (Complex Features)**:
+1. Navigate to [specs/](./specs/)
+2. Create feature folder in `specs/active/`
+3. Follow SDD workflow: research → specify → plan → tasks → implement
+4. Use templates from [.sdd/templates/](./.sdd/templates/)
+5. Update [specs/README.md](./specs/README.md) and [index.json](./specs/index.json)
 
-1. Read [API_INTEGRATION_GUIDE.md](./docs/API_INTEGRATION_GUIDE.md)
-2. Check [API_SPEC.md](./API_SPEC.md) for endpoint contracts
-3. Update [ARCHITECTURE.md](./ARCHITECTURE.md) as you integrate
-4. Mark features as integrated in [FEATURES.md](./FEATURES.md)
+### I'm Implementing a Feature
+
+1. Check [specs/active/](./specs/active/) for feature specification
+2. Review [API Specification](./docs/api/API_SPEC.md) for endpoints needed
+3. Follow [Development Guide](./docs/project/DEVELOPMENT_GUIDE.md) for workflow
+4. Update [Features Tracker](./docs/project/FEATURES.md) as you progress
+5. Update spec status when complete
 
 ---
 

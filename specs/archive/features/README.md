@@ -201,10 +201,13 @@ Authentication (foundational)
 
 ## Related Documentation
 
-- [FEATURES.md](../FEATURES.md) - Master feature tracker
-- [API_SPEC.md](../API_SPEC.md) - Complete API specification
-- [ARCHITECTURE.md](../ARCHITECTURE.md) - System architecture
-- [README.md](../README.md) - Context repo guide
+**Note**: This directory has been archived. Active feature specifications now follow SDD methodology in `../../active/`.
+
+- [FEATURES.md](../../../docs/project/FEATURES.md) - Master feature tracker
+- [API_SPEC.md](../../../docs/api/API_SPEC.md) - Complete API specification
+- [ARCHITECTURE.md](../../../docs/project/ARCHITECTURE.md) - System architecture
+- [README.md](../../../README.md) - Context repo guide
+- [Active Specs](../../active/) - Current SDD-compliant specifications
 
 ---
 
