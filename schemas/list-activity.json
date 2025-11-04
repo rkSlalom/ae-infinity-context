@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/list-activity.json",
+  "title": "ListActivityDto",
+  "description": "Activity/history entry for a list",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Activity record identifier"
+    },
+    "activityType": {
+      "type": "string",
+      "enum": [
+        "item_created",
+        "item_updated",
+        "item_purchased",
+        "item_unpurchased",
+        "item_deleted",
+        "list_updated",
+        "collaborator_added",
+        "collaborator_removed"
+      ],
+      "description": "Type of activity"
+    },
+    "userId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "User who performed the action"
+    },
+    "userDisplayName": {
+      "type": "string",
+      "description": "Display name of user who performed the action"
+    },
+    "itemName": {
+      "type": ["string", "null"],
+      "description": "Name of the item (if applicable)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the activity"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the activity occurred"
+    }
+  },
+  "required": [
+    "id",
+    "activityType",
+    "userId",
+    "userDisplayName",
+    "description",
+    "timestamp"
+  ],
+  "additionalProperties": false
+}
+

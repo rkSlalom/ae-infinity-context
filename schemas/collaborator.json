@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/collaborator.json",
+  "title": "CollaboratorDto",
+  "description": "List collaborator with role and invitation details",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique collaborator record identifier"
+    },
+    "userId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Collaborator's user ID"
+    },
+    "userDisplayName": {
+      "type": "string",
+      "description": "Collaborator's display name"
+    },
+    "userAvatarUrl": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "Collaborator's avatar URL"
+    },
+    "roleId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Role identifier"
+    },
+    "roleName": {
+      "type": "string",
+      "enum": ["Owner", "Editor", "Editor-Limited", "Viewer"],
+      "description": "Role name"
+    },
+    "role": {
+      "type": ["object", "null"],
+      "description": "Complete role details with permissions",
+      "$ref": "role.json"
+    },
+    "isPending": {
+      "type": "boolean",
+      "description": "Whether the invitation is pending acceptance"
+    },
+    "invitedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the user was invited"
+    },
+    "acceptedAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When the invitation was accepted"
+    },
+    "invitedBy": {
+      "type": "string",
+      "format": "uuid",
+      "description": "User ID who sent the invitation"
+    },
+    "invitedByDisplayName": {
+      "type": "string",
+      "description": "Display name of user who sent invitation"
+    }
+  },
+  "required": [
+    "id",
+    "userId",
+    "userDisplayName",
+    "roleId",
+    "roleName",
+    "isPending",
+    "invitedAt",
+    "invitedBy",
+    "invitedByDisplayName"
+  ],
+  "additionalProperties": false
+}
+

@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/update-user-profile-request.json",
+  "title": "UpdateUserProfileRequest",
+  "description": "Request payload for updating user profile",
+  "type": "object",
+  "properties": {
+    "displayName": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 100,
+      "description": "User's new display name"
+    },
+    "avatarUrl": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "URL to user's new avatar image"
+    }
+  },
+  "required": ["displayName"],
+  "additionalProperties": false
+}
+

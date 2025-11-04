@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/list-item-basic.json",
+  "title": "ListItemBasicDto",
+  "description": "Minimal list item information",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique item identifier"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Item name"
+    },
+    "quantity": {
+      "type": "number",
+      "minimum": 0.01,
+      "description": "Quantity to purchase"
+    },
+    "unit": {
+      "type": ["string", "null"],
+      "maxLength": 50,
+      "description": "Unit of measurement (lbs, oz, ea, etc.)"
+    },
+    "isPurchased": {
+      "type": "boolean",
+      "description": "Whether the item has been purchased"
+    },
+    "position": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Display order within the list"
+    }
+  },
+  "required": ["id", "name", "quantity", "isPurchased", "position"],
+  "additionalProperties": false
+}
+

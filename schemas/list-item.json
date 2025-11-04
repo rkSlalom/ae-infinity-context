@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/list-item.json",
+  "title": "ListItemDto",
+  "description": "Complete shopping list item with all details",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique item identifier"
+    },
+    "listId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Parent list identifier"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Item name"
+    },
+    "quantity": {
+      "type": "number",
+      "minimum": 0.01,
+      "description": "Quantity to purchase"
+    },
+    "unit": {
+      "type": ["string", "null"],
+      "maxLength": 50,
+      "description": "Unit of measurement (lbs, oz, ea, etc.)"
+    },
+    "categoryId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Category identifier"
+    },
+    "category": {
+      "type": ["object", "null"],
+      "description": "Category details",
+      "$ref": "category.json"
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Additional notes or specifications"
+    },
+    "imageUrl": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "URL to item image"
+    },
+    "isPurchased": {
+      "type": "boolean",
+      "description": "Whether the item has been purchased"
+    },
+    "purchasedAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp when item was marked as purchased"
+    },
+    "purchasedBy": {
+      "type": ["string", "null"],
+      "format": "uuid",
+      "description": "User ID who marked the item as purchased"
+    },
+    "purchasedByUser": {
+      "type": ["object", "null"],
+      "description": "User who marked the item as purchased",
+      "$ref": "user-basic.json"
+    },
+    "position": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Display order within the list"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Item creation timestamp"
+    },
+    "createdBy": {
+      "type": ["string", "null"],
+      "format": "uuid",
+      "description": "User ID who created the item"
+    },
+    "creator": {
+      "type": ["object", "null"],
+      "description": "User who created the item",
+      "$ref": "user-basic.json"
+    }
+  },
+  "required": [
+    "id",
+    "listId",
+    "name",
+    "quantity",
+    "categoryId",
+    "isPurchased",
+    "position",
+    "createdAt"
+  ],
+  "additionalProperties": false
+}
+
