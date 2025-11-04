@@ -90,12 +90,15 @@ Configuration documentation (Coming Soon)
 - **deployment-config.md** - Deployment configurations
 - **feature-flags.md** - Feature toggle system
 
-### 🔄 [Workflows](./workflows/)
-Development processes and workflows (Coming Soon - see DEVELOPMENT_GUIDE.md for now)
+### 📋 [Schemas](./schemas/)
+JSON Schema definitions for API contracts
 
-- **development-workflow.md** - Git flow and PR process
-- **testing-strategy.md** - Testing approach and standards
-- **deployment-process.md** - CI/CD pipeline
+- **Authentication** - Login request/response schemas
+- **Users** - User profile and stats schemas
+- **Lists** - List and list detail schemas
+- **Items** - Item schemas with categories
+- **Collaboration** - Collaborator and invitation schemas
+- **Search** - Search result schemas with pagination
 
 ## 📖 Core Documents
 
@@ -106,7 +109,7 @@ These documents provide project-wide context:
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System architecture (to be split into architecture/)
 - **[COMPONENT_SPEC.md](./COMPONENT_SPEC.md)** - UI components (to be split into components/)
 - **[USER_PERSONAS.md](./USER_PERSONAS.md)** - Original personas document (replaced by personas/)
-- **[DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md)** - Development workflow (to be split into workflows/)
+- **[DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md)** - Development workflow
 - **[GLOSSARY.md](./GLOSSARY.md)** - ✅ **NEW** - Terminology and jargon reference
 - **[QUICK_START.md](./QUICK_START.md)** - Quick start guide
 
@@ -193,8 +196,7 @@ ae-infinity-context/
 ├── architecture/       # System architecture docs (Coming Soon)
 ├── components/         # UI component specs (Coming Soon)
 ├── config/             # Configuration docs (Coming Soon)
-├── workflows/          # Development processes (Coming Soon)
-├── schemas/            # JSON schemas
+├── schemas/            # JSON Schema definitions for API contracts
 ├── metadata/           # Project metadata
 ├── docs/               # Additional documentation
 │
@@ -295,13 +297,13 @@ The repository is being reorganized into a more granular structure:
 ✅ **Completed:**
 - `personas/` - User personas fully migrated
 - `journeys/` - Key user journeys documented
+- `schemas/` - JSON Schema definitions for all API contracts
 
 🚧 **In Progress:**
 - `api/` - Splitting API_SPEC.md into domain files
 - `architecture/` - Splitting ARCHITECTURE.md into focused docs
 - `components/` - Splitting COMPONENT_SPEC.md by component type
 - `config/` - Extracting configuration docs
-- `workflows/` - Extracting process docs from DEVELOPMENT_GUIDE.md
 
 📖 **See Also**: [REORGANIZATION_GUIDE.md](./REORGANIZATION_GUIDE.md) for migration details
 
