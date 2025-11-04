@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/invitation.json",
+  "title": "InvitationDto",
+  "description": "List collaboration invitation details",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique invitation identifier"
+    },
+    "listId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "List being shared"
+    },
+    "listName": {
+      "type": "string",
+      "description": "Name of the list being shared"
+    },
+    "userId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "User being invited"
+    },
+    "userEmail": {
+      "type": "string",
+      "format": "email",
+      "description": "Email of user being invited"
+    },
+    "userDisplayName": {
+      "type": "string",
+      "description": "Display name of user being invited"
+    },
+    "roleId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Role being granted"
+    },
+    "roleName": {
+      "type": "string",
+      "enum": ["Owner", "Editor", "Editor-Limited", "Viewer"],
+      "description": "Name of role being granted"
+    },
+    "invitedBy": {
+      "type": "string",
+      "format": "uuid",
+      "description": "User ID who sent the invitation"
+    },
+    "invitedByDisplayName": {
+      "type": "string",
+      "description": "Display name of user who sent invitation"
+    },
+    "invitedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the invitation was sent"
+    },
+    "acceptedAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When the invitation was accepted"
+    },
+    "isPending": {
+      "type": "boolean",
+      "description": "Whether the invitation is still pending"
+    }
+  },
+  "required": [
+    "id",
+    "listId",
+    "listName",
+    "userId",
+    "userEmail",
+    "userDisplayName",
+    "roleId",
+    "roleName",
+    "invitedBy",
+    "invitedByDisplayName",
+    "invitedAt",
+    "isPending"
+  ],
+  "additionalProperties": false
+}
+

@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/list-stats.json",
+  "title": "ListStatsDto",
+  "description": "Detailed statistics for a shopping list",
+  "type": "object",
+  "properties": {
+    "listId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "List identifier"
+    },
+    "listName": {
+      "type": "string",
+      "description": "List name"
+    },
+    "totalItems": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of items"
+    },
+    "purchasedItems": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of purchased items"
+    },
+    "unpurchasedItems": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of unpurchased items"
+    },
+    "totalCollaborators": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of collaborators (including owner)"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "List creation timestamp"
+    },
+    "lastActivityAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp of last activity on the list"
+    }
+  },
+  "required": [
+    "listId",
+    "listName",
+    "totalItems",
+    "purchasedItems",
+    "unpurchasedItems",
+    "totalCollaborators",
+    "createdAt"
+  ],
+  "additionalProperties": false
+}
+

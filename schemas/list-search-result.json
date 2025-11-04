@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/list-search-result.json",
+  "title": "ListSearchResultDto",
+  "description": "Search result entry for a list match",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "List identifier"
+    },
+    "name": {
+      "type": "string",
+      "description": "List name"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "List description"
+    },
+    "matchType": {
+      "type": "string",
+      "enum": ["name", "description"],
+      "description": "Where the match was found"
+    }
+  },
+  "required": ["id", "name", "matchType"],
+  "additionalProperties": false
+}
+

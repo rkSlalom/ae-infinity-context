@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/role.json",
+  "title": "RoleDto",
+  "description": "Role definition with permission flags for list collaboration",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique role identifier"
+    },
+    "name": {
+      "type": "string",
+      "enum": ["Owner", "Editor", "Editor-Limited", "Viewer"],
+      "description": "Role name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable role description"
+    },
+    "canCreateItems": {
+      "type": "boolean",
+      "description": "Permission to add items to the list"
+    },
+    "canEditItems": {
+      "type": "boolean",
+      "description": "Permission to edit item details"
+    },
+    "canDeleteItems": {
+      "type": "boolean",
+      "description": "Permission to delete items from the list"
+    },
+    "canEditOwnItemsOnly": {
+      "type": "boolean",
+      "description": "Restrict editing/deleting to items created by the user"
+    },
+    "canMarkPurchased": {
+      "type": "boolean",
+      "description": "Permission to mark items as purchased/unpurchased"
+    },
+    "canEditListDetails": {
+      "type": "boolean",
+      "description": "Permission to edit list name and description"
+    },
+    "canManageCollaborators": {
+      "type": "boolean",
+      "description": "Permission to add/remove collaborators and change roles"
+    },
+    "canDeleteList": {
+      "type": "boolean",
+      "description": "Permission to delete the entire list"
+    },
+    "canArchiveList": {
+      "type": "boolean",
+      "description": "Permission to archive/unarchive the list"
+    },
+    "priorityOrder": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Display priority (lower number = higher priority)"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "description",
+    "canCreateItems",
+    "canEditItems",
+    "canDeleteItems",
+    "canEditOwnItemsOnly",
+    "canMarkPurchased",
+    "canEditListDetails",
+    "canManageCollaborators",
+    "canDeleteList",
+    "canArchiveList",
+    "priorityOrder"
+  ],
+  "additionalProperties": false
+}
+

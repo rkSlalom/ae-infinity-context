@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/user-stats.json",
+  "title": "UserStatsDto",
+  "description": "User activity and usage statistics",
+  "type": "object",
+  "properties": {
+    "totalListsOwned": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of lists owned by the user"
+    },
+    "totalListsShared": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of lists shared with the user"
+    },
+    "totalItemsCreated": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total items created by the user across all lists"
+    },
+    "totalItemsPurchased": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total items marked as purchased by the user"
+    },
+    "totalActiveCollaborations": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of active collaborative lists"
+    },
+    "lastActivityAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp of user's last activity"
+    }
+  },
+  "required": [
+    "totalListsOwned",
+    "totalListsShared",
+    "totalItemsCreated",
+    "totalItemsPurchased",
+    "totalActiveCollaborations"
+  ],
+  "additionalProperties": false
+}
+

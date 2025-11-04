@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/user.json",
+  "title": "UserDto",
+  "description": "Complete user profile information",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique user identifier"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "User's email address"
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 100,
+      "description": "User's display name"
+    },
+    "avatarUrl": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "URL to user's avatar image"
+    },
+    "isEmailVerified": {
+      "type": "boolean",
+      "description": "Whether the user's email has been verified"
+    },
+    "lastLoginAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Last successful login timestamp"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Account creation timestamp"
+    }
+  },
+  "required": ["id", "email", "displayName", "isEmailVerified", "createdAt"],
+  "additionalProperties": false
+}
+

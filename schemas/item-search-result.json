@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/item-search-result.json",
+  "title": "ItemSearchResultDto",
+  "description": "Search result entry for an item match",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Item identifier"
+    },
+    "listId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Parent list identifier"
+    },
+    "listName": {
+      "type": "string",
+      "description": "Name of the list containing the item"
+    },
+    "name": {
+      "type": "string",
+      "description": "Item name"
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Item notes"
+    },
+    "matchType": {
+      "type": "string",
+      "enum": ["name", "notes"],
+      "description": "Where the match was found"
+    }
+  },
+  "required": ["id", "listId", "listName", "name", "matchType"],
+  "additionalProperties": false
+}
+

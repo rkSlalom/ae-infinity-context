@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/search-result.json",
+  "title": "SearchResultDto",
+  "description": "Combined search results across lists and items",
+  "type": "object",
+  "properties": {
+    "lists": {
+      "type": "array",
+      "description": "Matching lists",
+      "items": {
+        "$ref": "list-search-result.json"
+      }
+    },
+    "items": {
+      "type": "array",
+      "description": "Matching items",
+      "items": {
+        "$ref": "item-search-result.json"
+      }
+    },
+    "pagination": {
+      "type": "object",
+      "description": "Pagination information",
+      "$ref": "pagination.json"
+    }
+  },
+  "required": ["lists", "items", "pagination"],
+  "additionalProperties": false
+}
+

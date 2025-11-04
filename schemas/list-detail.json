@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/list-detail.json",
+  "title": "ListDetailDto",
+  "description": "Complete list details with items and collaborators",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique list identifier"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "List name"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "Optional list description"
+    },
+    "ownerId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "List owner's user ID"
+    },
+    "owner": {
+      "type": ["object", "null"],
+      "description": "List owner details",
+      "$ref": "user-basic.json"
+    },
+    "isArchived": {
+      "type": "boolean",
+      "description": "Whether the list is archived"
+    },
+    "archivedAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When the list was archived"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "List creation timestamp"
+    },
+    "updatedAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Last update timestamp"
+    },
+    "totalItems": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of items in the list"
+    },
+    "purchasedItems": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of purchased items"
+    },
+    "collaboratorsCount": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of collaborators (including owner)"
+    },
+    "collaborators": {
+      "type": "array",
+      "description": "List of all collaborators with roles",
+      "items": {
+        "$ref": "collaborator.json"
+      }
+    },
+    "items": {
+      "type": "array",
+      "description": "List of all items in the list",
+      "items": {
+        "$ref": "list-item.json"
+      }
+    },
+    "userRole": {
+      "type": ["string", "null"],
+      "enum": ["Owner", "Editor", "Editor-Limited", "Viewer", null],
+      "description": "Current user's role for this list"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "ownerId",
+    "isArchived",
+    "createdAt",
+    "totalItems",
+    "purchasedItems",
+    "collaboratorsCount",
+    "collaborators",
+    "items"
+  ],
+  "additionalProperties": false
+}
+
