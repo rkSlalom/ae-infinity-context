@@ -1,337 +1,347 @@
-#!/Users/nieky.allen/Projects/ae-workshop/ae-infinity/ae-infinity-context/openspec/doctor
+# OpenSpec Doctor - Automated Setup Validation
 
-This directory contains the **OpenSpec Doctor** - an automated diagnostic and repair tool for cross-repository OpenSpec setups.
+A self-contained diagnostic and repair tool that ensures OpenSpec is correctly configured across all three repositories.
 
-## Purpose
+## Problem It Solves
 
-OpenSpec Doctor ensures your multi-repo OpenSpec configuration is healthy by:
-- ✅ Detecting all repositories automatically
-- ✅ Validating symlinks and directory structure
-- ✅ Checking .gitignore entries
-- ✅ Verifying slash commands are present
-- ✅ Auto-fixing common issues
+When working with multiple repositories and symlinks, things can go wrong:
+- ❌ Symlinks point to wrong locations after repo moves
+- ❌ Missing directories or configuration files
+- ❌ .gitignore not excluding symlinks
+- ❌ New team members have incomplete setup
+- ❌ Different folder names or hierarchies break paths
 
-## Quick Start
+**OpenSpec Doctor fixes all of these automatically.**
 
-### Run Diagnostics
+## Quick Usage
+
+### Option 1: Cursor Slash Command (Easiest)
+
+From any of the three repos in Cursor:
+
+```
+/openspec-doctor
+```
+
+The AI will:
+1. Run diagnostics
+2. Explain issues found
+3. Ask permission to fix
+4. Auto-repair and verify
+
+### Option 2: Command Line
 
 ```bash
-cd /path/to/ae-infinity-context/openspec/doctor
+# Diagnostic mode (reports issues)
+cd ae-infinity-context/openspec/doctor
 ./openspec-doctor.sh
-```
 
-This shows what's wrong without changing anything.
-
-### Auto-Fix Issues
-
-```bash
+# Auto-fix mode (repairs issues)
 ./openspec-doctor.sh --fix
-```
 
-Automatically repairs detected issues.
-
-### Verbose Mode
-
-```bash
+# Verbose mode (detailed output)
 ./openspec-doctor.sh --fix --verbose
 ```
 
-Shows detailed information about each check.
-
 ## What It Checks
 
-### 1. Repository Detection
-- Automatically finds API repo (looks for .NET projects)
-- Automatically finds UI repo (looks for React/Vite package.json)
-- Works even if repos are renamed
-- Relative path detection
+### 1. Repository Detection ✅
+- Automatically finds API repo (.NET markers: `.sln`, `.csproj`)
+- Automatically finds UI repo (React/Vite markers: `package.json`)
+- Works even if repos are renamed or in different locations
 
-### 2. Context Repo Structure
+### 2. Context Repo Structure ✅
 - `openspec/project.md` exists
 - `openspec/AGENTS.md` exists
 - `openspec/specs/` directory exists
 - `openspec/changes/` directory exists
 - Documentation files present
 
-### 3. Symlinks (API and UI repos)
-- `openspec/project.md` → `../../ae-infinity-context/openspec/project.md`
-- `openspec/AGENTS.md` → `../../ae-infinity-context/openspec/AGENTS.md`
-- `openspec/specs/` → `../../ae-infinity-context/openspec/specs/`
-- Calculates correct relative paths automatically
-- Verifies symlinks point to correct locations
+### 3. Symlinks (API & UI repos) ✅
+- `openspec/project.md` → correct relative path to context
+- `openspec/AGENTS.md` → correct relative path to context
+- `openspec/specs/` → correct relative path to context
+- Calculates relative paths automatically
+- Creates missing symlinks
+- Fixes incorrect symlink targets
 
-### 4. .gitignore Entries
-- Checks for OpenSpec symlink exclusions
-- Verifies proper format
-- Auto-adds missing entries
+### 4. .gitignore Entries ✅
+- Verifies symlinks are excluded from git
+- Adds missing OpenSpec exclusion rules
+- Prevents accidental commits of symlinks
 
-### 5. Slash Commands
-- Checks for `.cursor/commands/` directory in each repo
-- Checks root directory `.cursor/commands/` as well
-- Verifies presence of:
-  - `openspec-proposal.md`
-  - `openspec-apply.md`
-  - `openspec-archive.md`
-  - `openspec-doctor.md`
+### 5. Slash Commands ✅
+- Checks for `.cursor/commands/` directory
+- Verifies `openspec-proposal.md`, `openspec-apply.md`, `openspec-archive.md`
 - Copies missing commands from context repo
 
-### 6. Local Directories
-- Each implementation repo has `openspec/changes/` (local)
+### 6. Directory Structure ✅
+- Each repo has `openspec/` directory
+- Implementation repos have local `changes/` directory
 - Archive directories exist
 
-## Usage Examples
+## How It Works
 
-### From Context Repo
+```
+┌─────────────────────────────────────────┐
+│  Run: /openspec-doctor                  │
+│  or: ./openspec-doctor.sh --fix         │
+└─────────────────┬───────────────────────┘
+                  │
+                  ▼
+┌─────────────────────────────────────────┐
+│  1. Detect Repositories                 │
+│     - Scan parent directory             │
+│     - Identify by file markers          │
+│     - Calculate relative paths          │
+└─────────────────┬───────────────────────┘
+                  │
+                  ▼
+┌─────────────────────────────────────────┐
+│  2. Validate Context Repo               │
+│     - Check required files exist        │
+│     - Verify directory structure        │
+│     - Create missing dirs if --fix      │
+└─────────────────┬───────────────────────┘
+                  │
+                  ▼
+┌─────────────────────────────────────────┐
+│  3. Check API & UI Repos                │
+│     - Validate symlinks                 │
+│     - Check .gitignore entries          │
+│     - Verify slash commands             │
+│     - Fix issues if --fix flag set      │
+└─────────────────┬───────────────────────┘
+                  │
+                  ▼
+┌─────────────────────────────────────────┐
+│  4. Generate Health Report              │
+│     - Count issues found                │
+│     - Count issues fixed                │
+│     - Display summary                   │
+└─────────────────────────────────────────┘
+```
+
+## Example: Fixing a Broken Setup
+
+### Before (Issues Found)
 
 ```bash
-cd ae-infinity-context/openspec/doctor
-./openspec-doctor.sh --fix
-```
-
-### From API Repo
-
-```bash
-cd ae-infinity-api
-../ae-infinity-context/openspec/doctor/openspec-doctor.sh
-```
-
-### From UI Repo
-
-```bash
-cd ae-infinity-ui
-../ae-infinity-context/openspec/doctor/openspec-doctor.sh --fix
-```
-
-### As Part of CI/CD
-
-```bash
-# In your CI script
-if ! ./openspec-doctor.sh; then
-    echo "OpenSpec setup has issues!"
-    ./openspec-doctor.sh --fix
-fi
-```
-
-## Output Example
-
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-OpenSpec Doctor v1.0.0
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-ℹ  Running in AUTO-FIX mode
+$ ./openspec-doctor.sh
 
 ℹ  Detecting repository locations...
 ✓  API repo detected: ae-infinity-api
 ✓  UI repo detected: ae-infinity-ui
 
-ℹ  Checking context repo structure...
-✓  Found: openspec/project.md
-✓  Found: openspec/AGENTS.md
-✓  Found: openspec/specs/
-✓  Found: openspec/changes/
-
 ℹ  Checking API repo symlinks...
-✓  API repo: project.md → correct
-✓  API repo: AGENTS.md → correct
-✓  API repo: specs → correct
-✓  API repo: Has local changes/ directory
+⚠  API repo: Missing symlink: project.md
+⚠  API repo: Missing symlink: AGENTS.md
+⚠  API repo: specs → incorrect target
 
 ℹ  Checking API repo .gitignore...
-✓  API repo: .gitignore has OpenSpec entries
-
-ℹ  Checking API repo slash commands...
-✓  API repo: Has all OpenSpec slash commands
+⚠  API repo: .gitignore missing 3 OpenSpec entries
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 OpenSpec Health Report
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✓ All checks passed!
-  OpenSpec is correctly configured across all repositories.
+⚠ Found 6 issue(s)
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Run with --fix flag to automatically repair issues:
+  ./openspec-doctor.sh --fix
 ```
 
-## Common Issues and Fixes
-
-### Issue: "API repo not found"
-**Cause**: Script can't detect .NET project markers
-**Fix**: Ensure repo has `*.sln` or `*.csproj` files
-**Manual**: Set `API_REPO` environment variable
-
-### Issue: "Symlink points to wrong location"
-**Cause**: Repo was moved or renamed
-**Fix**: Run with `--fix` to recalculate paths
-**Result**: Symlinks updated with correct relative paths
-
-### Issue: "openspec/project.md exists but is not a symlink"
-**Cause**: File was created manually instead of symlinked
-**Fix**: Script will ask to replace with symlink
-**Action**: Backup the file first if it has changes
-
-### Issue: "Missing slash commands"
-**Cause**: `.cursor/commands/` not set up
-**Fix**: Run with `--fix` to copy from context repo
-**Verify**: Check `.cursor/commands/` directory
-
-## Advanced Usage
-
-### Custom Repository Names
-
-If your repos have different names:
+### After (Auto-Fixed)
 
 ```bash
-# Set environment variables
-export API_REPO=/path/to/my-custom-api-name
-export UI_REPO=/path/to/my-custom-ui-name
+$ ./openspec-doctor.sh --fix
 
-./openspec-doctor.sh --fix
+ℹ  Running in AUTO-FIX mode
+
+ℹ  Checking API repo symlinks...
+✓  API repo: Created project.md symlink [FIXED]
+✓  API repo: Created AGENTS.md symlink [FIXED]
+✓  API repo: Fixed specs symlink [FIXED]
+
+ℹ  Checking API repo .gitignore...
+✓  API repo: Added OpenSpec entries to .gitignore [FIXED]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OpenSpec Health Report
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ Fixed 6 issue(s) automatically
+
+✓ All checks passed!
+  OpenSpec is correctly configured across all repositories.
 ```
 
-### Different Folder Hierarchy
+## Advanced Features
 
-Works with any structure as long as repos are siblings:
+### Works with Any Repo Names
 
 ```
 my-project/
-├── backend/          # API repo (will be detected)
-├── frontend/         # UI repo (will be detected)
-└── documentation/    # Context repo (run doctor from here)
+├── backend/          # Detected as API repo
+├── frontend/         # Detected as UI repo
+└── docs/             # Context repo (run doctor from here)
 ```
 
-### Continuous Monitoring
+### Works from Any Location
 
-Add to git hooks:
+```bash
+# From API repo
+cd ae-infinity-api
+../ae-infinity-context/openspec/doctor/openspec-doctor.sh --fix
+
+# From UI repo
+cd ae-infinity-ui
+../ae-infinity-context/openspec/doctor/openspec-doctor.sh --fix
+
+# From parent directory
+cd ae-infinity
+ae-infinity-context/openspec/doctor/openspec-doctor.sh --fix
+```
+
+### Calculates Correct Paths Automatically
+
+No matter where repos are located, the doctor calculates correct relative paths:
+
+```
+From: ae-infinity-api/openspec/
+To:   ae-infinity-context/openspec/
+Path: ../../ae-infinity-context/openspec/
+```
+
+## Integration Examples
+
+### CI/CD
+
+```yaml
+# .github/workflows/pr-check.yml
+name: OpenSpec Health
+on: [pull_request]
+jobs:
+  openspec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run OpenSpec Doctor
+        run: |
+          cd ae-infinity-context/openspec/doctor
+          ./openspec-doctor.sh
+```
+
+### Git Hook
 
 ```bash
 # .git/hooks/pre-commit
 #!/bin/bash
 if ! ../ae-infinity-context/openspec/doctor/openspec-doctor.sh; then
-    echo "OpenSpec setup has issues. Run 'openspec-doctor.sh --fix'"
+    echo "❌ OpenSpec setup has issues!"
+    echo "Fix with: ./openspec-doctor.sh --fix"
     exit 1
 fi
 ```
 
-## Integration with Cursor
+### NPM Script
 
-Use the `/openspec-doctor` slash command:
-
-1. Open any repo in Cursor
-2. Type `/openspec-doctor` in chat
-3. Review diagnostics
-4. Confirm auto-fix if needed
-5. Verify health report
-
-The slash command wraps this script and provides interactive feedback.
-
-## Exit Codes
-
-- `0` - All checks passed
-- `>0` - Number of issues found (diagnostic mode)
-- `>0` - Number of issues remaining after fix (auto-fix mode)
-
-Use in CI/CD:
-
-```bash
-if ./openspec-doctor.sh; then
-    echo "✓ OpenSpec setup is healthy"
-else
-    echo "✗ OpenSpec setup needs attention"
-    exit 1
-fi
+```json
+{
+  "scripts": {
+    "pretest": "../ae-infinity-context/openspec/doctor/openspec-doctor.sh"
+  }
+}
 ```
 
-## Requirements
+## When to Run
 
-- Bash 4.0+
-- Python 3 (for relative path calculation)
-- Standard Unix tools (ln, readlink, grep, find)
-- Works on macOS, Linux, WSL
+**Always:**
+- After initial repo setup
+- After cloning repos
+- Before opening PR
+- When onboarding new team members
+
+**As Needed:**
+- After moving/renaming repos
+- After long-running branches merge
+- When symlinks seem broken
+- When slash commands don't work
+
+**Regular:**
+- Weekly if actively developing
+- Before major releases
+- After dependency updates
 
 ## Files Created/Modified
 
-**Auto-creates (if missing):**
+### Auto-Creates (if missing):
 - `{repo}/openspec/` directory
-- `{repo}/openspec/changes/archive/` directory
+- `{repo}/openspec/changes/` directory
 - `{repo}/.cursor/commands/` directory
-- `{context}/openspec/specs/` directory
-- `{context}/openspec/changes/` directory
+- Symlinks: `project.md`, `AGENTS.md`, `specs/`
 
-**Auto-modifies (if needed):**
+### Auto-Modifies:
 - `{repo}/.gitignore` - Adds OpenSpec exclusions
-- `{repo}/openspec/project.md` - Creates/fixes symlink
-- `{repo}/openspec/AGENTS.md` - Creates/fixes symlink
-- `{repo}/openspec/specs/` - Creates/fixes symlink
 
-**Never modifies:**
-- Actual content in context repo (project.md, AGENTS.md, specs/)
+### Never Touches:
+- Actual spec content in context repo
 - Existing changes in any repo
 - Custom slash commands
+- User data or configurations
+
+## Benefits for Your Teammate
+
+When your teammate clones the repos:
+
+```bash
+# 1. Clone all three repos
+git clone .../ae-infinity-context
+git clone .../ae-infinity-api  
+git clone .../ae-infinity-ui
+
+# 2. Run doctor (from any repo)
+cd ae-infinity-context/openspec/doctor
+./openspec-doctor.sh --fix
+
+# 3. Done! ✅
+# - All symlinks created
+# - All directories set up
+# - .gitignore configured
+# - Slash commands installed
+```
+
+**Zero manual configuration needed!**
+
+## Documentation
+
+- **Quick Start**: [doctor/QUICK_START.md](ae-infinity-context/openspec/doctor/QUICK_START.md)
+- **Full Guide**: [doctor/README.md](ae-infinity-context/openspec/doctor/README.md)
+- **Setup Guide**: [openspec/CROSS_REPO_SETUP.md](ae-infinity-context/openspec/CROSS_REPO_SETUP.md)
 
 ## Troubleshooting
 
-### Symlinks not working on Windows
+See [doctor/README.md#troubleshooting](ae-infinity-context/openspec/doctor/README.md#troubleshooting) for:
+- Repository not detected
+- Symlink issues on Windows
+- Permission errors
+- Python not found
+- Custom repo names/locations
 
-Enable Developer Mode or use Git Bash:
-```bash
-# In Git Bash
-./openspec-doctor.sh --fix
-```
+## Summary
 
-### Permission denied
+**OpenSpec Doctor is your safety net for cross-repository OpenSpec setups.**
 
-Make script executable:
-```bash
-chmod +x openspec-doctor.sh
-```
+- ✅ Auto-detects repos (even with different names)
+- ✅ Validates configuration (symlinks, directories, files)
+- ✅ Auto-fixes issues (with permission)
+- ✅ Works from anywhere (any repo, any location)
+- ✅ Integrates everywhere (Cursor, CLI, CI/CD)
+- ✅ Zero manual work (for new team members)
 
-### Python not found
-
-Install Python 3 or manually set relative paths in the script.
-
-### Script can't find repos
-
-Manually specify:
-```bash
-API_REPO=/full/path/to/api \
-UI_REPO=/full/path/to/ui \
-./openspec-doctor.sh --fix
-```
-
-## Maintenance
-
-### Updating the Doctor
-
-Pull latest from context repo:
-```bash
-cd ae-infinity-context
-git pull origin main
-```
-
-Doctor updates automatically.
-
-### Adding New Checks
-
-Edit `openspec-doctor.sh` and add functions:
-1. Define check function
-2. Call from `main()`
-3. Update this README
-4. Test with `--verbose` flag
-
-## Support
-
-- **Documentation**: See `../CROSS_REPO_SETUP.md`
-- **Quick Reference**: See `../QUICK_REFERENCE.md`
-- **Issues**: Open issue in context repo
-- **Questions**: Check `../AGENTS.md` for patterns
+**Your teammate just needs to run one command after cloning. That's it.**
 
 ---
 
-**Remember**: Run doctor after:
-- Initial setup
-- Repo renames/moves
-- Team member onboarding
-- Merge conflicts in openspec/
-- Suspected configuration drift
+**Try it now**: Type `/openspec-doctor` in Cursor or run `./openspec-doctor.sh --fix`
 
