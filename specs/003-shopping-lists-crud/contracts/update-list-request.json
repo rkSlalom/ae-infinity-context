@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/update-list-request.json",
+  "title": "UpdateListRequest",
+  "description": "Request payload for updating list details (name and/or description)",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Updated list name (required, 1-200 characters)"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "maxLength": 1000,
+      "description": "Updated description (max 1000 characters, null to clear)"
+    }
+  },
+  "required": ["name"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "name": "Weekly Groceries - Updated",
+      "description": "Our updated weekly shopping list"
+    },
+    {
+      "name": "Birthday Party Shopping",
+      "description": null
+    },
+    {
+      "name": "Home Supplies - Q4 2025"
+    }
+  ]
+}
+

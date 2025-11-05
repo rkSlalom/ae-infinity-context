@@ -1,0 +1,153 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ItemResponse",
+  "description": "Response for a single list item",
+  "type": "object",
+  "required": [
+    "id",
+    "listId",
+    "name",
+    "quantity",
+    "isPurchased",
+    "position",
+    "createdBy",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique item identifier",
+      "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    },
+    "listId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Parent list identifier",
+      "example": "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+    },
+    "name": {
+      "type": "string",
+      "description": "Item name",
+      "example": "Organic Milk"
+    },
+    "quantity": {
+      "type": "number",
+      "description": "Quantity to purchase",
+      "example": 2
+    },
+    "unit": {
+      "type": ["string", "null"],
+      "description": "Unit of measurement",
+      "example": "gallons"
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Additional details or instructions",
+      "example": "Get the organic version, brand: Horizon"
+    },
+    "imageUrl": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "Optional image URL",
+      "example": "https://example.com/images/milk.jpg"
+    },
+    "category": {
+      "type": ["object", "null"],
+      "description": "Item category",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        },
+        "name": {
+          "type": "string",
+          "example": "Dairy"
+        },
+        "icon": {
+          "type": "string",
+          "example": "🥛"
+        },
+        "color": {
+          "type": "string",
+          "example": "#E3F2FD"
+        }
+      },
+      "required": ["id", "name", "icon", "color"]
+    },
+    "isPurchased": {
+      "type": "boolean",
+      "description": "Whether item has been purchased",
+      "example": false
+    },
+    "position": {
+      "type": "integer",
+      "description": "Display order (0-based)",
+      "example": 0
+    },
+    "createdBy": {
+      "type": "object",
+      "description": "User who added the item",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        },
+        "displayName": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "avatarUrl": {
+          "type": ["string", "null"],
+          "format": "uri",
+          "example": "https://example.com/avatars/john.jpg"
+        }
+      },
+      "required": ["id", "displayName"]
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When item was created (ISO 8601)",
+      "example": "2025-11-05T10:00:00Z"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When item was last updated (ISO 8601)",
+      "example": "2025-11-05T10:00:00Z"
+    },
+    "purchasedAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When item was marked as purchased (ISO 8601)",
+      "example": "2025-11-05T14:30:00Z"
+    },
+    "purchasedBy": {
+      "type": ["object", "null"],
+      "description": "User who marked item as purchased",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        },
+        "displayName": {
+          "type": "string",
+          "example": "Jane Smith"
+        },
+        "avatarUrl": {
+          "type": ["string", "null"],
+          "format": "uri",
+          "example": "https://example.com/avatars/jane.jpg"
+        }
+      },
+      "required": ["id", "displayName"]
+    }
+  },
+  "additionalProperties": false
+}
+
