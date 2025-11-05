@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/get-categories-response.json",
+  "title": "GetCategoriesResponse",
+  "description": "Response containing list of categories (default and/or custom)",
+  "type": "object",
+  "properties": {
+    "categories": {
+      "type": "array",
+      "description": "Array of category objects",
+      "items": {
+        "$ref": "category.json"
+      }
+    }
+  },
+  "required": ["categories"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "categories": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "name": "Produce",
+          "icon": "🥬",
+          "color": "#4CAF50",
+          "isDefault": true,
+          "createdBy": null
+        },
+        {
+          "id": "5fa85f64-5717-4562-b3fc-2c963f66afa8",
+          "name": "Pet Supplies",
+          "icon": "🐾",
+          "color": "#8B4513",
+          "isDefault": false,
+          "createdBy": {
+            "id": "7fa85f64-5717-4562-b3fc-2c963f66afa9",
+            "displayName": "Sarah Thompson",
+            "email": "sarah@example.com"
+          }
+        }
+      ]
+    }
+  ]
+}
+

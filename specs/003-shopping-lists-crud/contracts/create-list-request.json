@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/create-list-request.json",
+  "title": "CreateListRequest",
+  "description": "Request payload for creating a new shopping list",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "List name (required, 1-200 characters)"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "maxLength": 1000,
+      "description": "Optional list description (max 1000 characters)"
+    }
+  },
+  "required": ["name"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "name": "Weekly Groceries",
+      "description": "Our regular weekly shopping list"
+    },
+    {
+      "name": "Birthday Party Shopping",
+      "description": null
+    },
+    {
+      "name": "Home Supplies"
+    }
+  ]
+}
+

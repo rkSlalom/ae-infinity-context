@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/category.json",
+  "title": "Category",
+  "description": "Category for organizing shopping items with icon and color",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique category identifier"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50,
+      "description": "Category name (1-50 characters, unique per user)"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Emoji icon (single character or sequence)"
+    },
+    "color": {
+      "type": "string",
+      "pattern": "^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$",
+      "description": "Hex color code (e.g., #4CAF50 or #FFF)"
+    },
+    "isDefault": {
+      "type": "boolean",
+      "description": "Whether this is a system-defined default category"
+    },
+    "createdBy": {
+      "type": ["object", "null"],
+      "description": "User who created this category (null for default categories)",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        }
+      }
+    }
+  },
+  "required": ["id", "name", "icon", "color", "isDefault"],
+  "additionalProperties": false
+}
+

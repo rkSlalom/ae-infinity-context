@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/list-dto.json",
+  "title": "ListDto",
+  "description": "Shopping list summary for dashboard and list views",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique list identifier"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "List name (e.g., 'Weekly Groceries')"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "maxLength": 1000,
+      "description": "Optional list description"
+    },
+    "ownerId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "User ID of the list owner"
+    },
+    "owner": {
+      "type": ["object", "null"],
+      "description": "Owner details (id, displayName, avatarUrl)",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "avatarUrl": {
+          "type": ["string", "null"],
+          "format": "uri"
+        }
+      },
+      "required": ["id", "displayName"]
+    },
+    "isArchived": {
+      "type": "boolean",
+      "description": "Whether the list is archived (hidden from main view)"
+    },
+    "archivedAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp when list was archived (null if active)"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "List creation timestamp"
+    },
+    "updatedAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Last modification timestamp"
+    },
+    "totalItems": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of items in the list"
+    },
+    "purchasedItems": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of items marked as purchased"
+    },
+    "collaboratorsCount": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of collaborators (including owner)"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "ownerId",
+    "isArchived",
+    "createdAt",
+    "totalItems",
+    "purchasedItems",
+    "collaboratorsCount"
+  ],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+      "name": "Weekly Groceries",
+      "description": "Our regular weekly shopping list",
+      "ownerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "owner": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "displayName": "John Doe",
+        "avatarUrl": null
+      },
+      "isArchived": false,
+      "archivedAt": null,
+      "createdAt": "2025-11-01T10:00:00Z",
+      "updatedAt": "2025-11-05T14:30:00Z",
+      "totalItems": 12,
+      "purchasedItems": 5,
+      "collaboratorsCount": 3
+    }
+  ]
+}
+
