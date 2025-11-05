@@ -1,8 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # AE Infinity - Working Directory Setup Script
 # Purpose: Clone all repositories into a clean working directory for agentic development
-# Version: 1.0
+# Platform: Cross-platform (Linux, macOS, Windows with Git Bash)
+# Version: 2.0
 # Last Updated: November 5, 2025
+#
+# Environment Variables:
+#   WORK_DIR   - Override working directory (default: 'work' or first argument)
+#   NO_COLOR   - Disable colored output
+#   API_REPO   - Override API repository URL
+#   UI_REPO    - Override UI repository URL
+#   CONTEXT_REPO - Override context repository URL
 
 set -e
 
@@ -10,23 +18,33 @@ set -e
 # CONFIGURATION
 # ============================================================================
 
-# Repository URLs
-API_REPO="https://github.com/rkSlalom/ae-infinity-api"
-UI_REPO="https://github.com/dallen4/ae-infinity-ui.git"
-CONTEXT_REPO="https://github.com/rkSlalom/ae-infinity-context.git"
+# Repository URLs (can be overridden via environment variables)
+API_REPO="${API_REPO:-https://github.com/rkSlalom/ae-infinity-api}"
+UI_REPO="${UI_REPO:-https://github.com/dallen4/ae-infinity-ui.git}"
+CONTEXT_REPO="${CONTEXT_REPO:-https://github.com/rkSlalom/ae-infinity-context.git}"
 
-# Default working directory (can be overridden with first argument)
+# Default working directory (can be overridden with first argument or env var)
 DEFAULT_WORK_DIR="work"
-WORK_DIR="${1:-$DEFAULT_WORK_DIR}"
+WORK_DIR="${WORK_DIR:-${1:-$DEFAULT_WORK_DIR}}"
 
-# Color codes for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-MAGENTA='\033[0;35m'
-CYAN='\033[0;36m'
-NC='\033[0m' # No Color
+# Color codes for output (disable if NO_COLOR is set or not in a terminal)
+if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    BLUE='\033[0;34m'
+    MAGENTA='\033[0;35m'
+    CYAN='\033[0;36m'
+    NC='\033[0m' # No Color
+else
+    RED=''
+    GREEN=''
+    YELLOW=''
+    BLUE=''
+    MAGENTA=''
+    CYAN=''
+    NC=''
+fi
 
 # ============================================================================
 # HELPER FUNCTIONS
