@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/category-ref.json",
+  "title": "CategoryRef",
+  "description": "Lightweight category reference used in item objects",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique category identifier"
+    },
+    "name": {
+      "type": "string",
+      "description": "Category name"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Emoji icon"
+    },
+    "color": {
+      "type": "string",
+      "pattern": "^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$",
+      "description": "Hex color code"
+    }
+  },
+  "required": ["id", "name", "icon", "color"],
+  "additionalProperties": false
+}
+

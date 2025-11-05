@@ -1,0 +1,133 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Item Search Result",
+  "description": "Item representation with parent list context in search results",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for the item"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Item name (matching text may be highlighted client-side)"
+    },
+    "quantity": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Item quantity (null if not specified)"
+    },
+    "unit": {
+      "type": ["string", "null"],
+      "maxLength": 50,
+      "description": "Unit of measurement (e.g., 'kg', 'lbs', 'pieces')"
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "maxLength": 100,
+      "description": "Notes preview (first 100 characters, null if no notes)"
+    },
+    "isPurchased": {
+      "type": "boolean",
+      "description": "True if item is marked as purchased"
+    },
+    "category": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Emoji icon"
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "Hex color code"
+        }
+      },
+      "required": ["id", "name", "icon", "color"],
+      "description": "Category reference (null if uncategorized)"
+    },
+    "parentList": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Parent list ID"
+        },
+        "name": {
+          "type": "string",
+          "description": "Parent list name"
+        },
+        "isOwner": {
+          "type": "boolean",
+          "description": "True if current user owns the parent list"
+        },
+        "ownerName": {
+          "type": "string",
+          "description": "Owner display name (for shared lists)"
+        }
+      },
+      "required": ["id", "name", "isOwner"],
+      "description": "Parent list context"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "isPurchased",
+    "parentList"
+  ],
+  "examples": [
+    {
+      "id": "item-456",
+      "name": "Organic Whole Milk",
+      "quantity": 2,
+      "unit": "gallons",
+      "notes": "Get the organic brand if available",
+      "isPurchased": false,
+      "category": {
+        "id": "cat-dairy",
+        "name": "Dairy",
+        "icon": "🥛",
+        "color": "#2196F3"
+      },
+      "parentList": {
+        "id": "list-123",
+        "name": "Weekly Groceries",
+        "isOwner": true
+      }
+    },
+    {
+      "id": "item-789",
+      "name": "Apples",
+      "quantity": 5,
+      "unit": "lbs",
+      "notes": null,
+      "isPurchased": true,
+      "category": {
+        "id": "cat-produce",
+        "name": "Produce",
+        "icon": "🥬",
+        "color": "#4CAF50"
+      },
+      "parentList": {
+        "id": "list-456",
+        "name": "Costco Trip",
+        "isOwner": false,
+        "ownerName": "Jane Smith"
+      }
+    }
+  ]
+}
+

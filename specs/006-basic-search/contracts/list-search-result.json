@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "List Search Result",
+  "description": "Lightweight list representation in search results",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for the list"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "List name (matching text may be highlighted client-side)"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "maxLength": 100,
+      "description": "Description preview (first 100 characters, null if no description)"
+    },
+    "owner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Owner user ID"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Owner display name"
+        }
+      },
+      "required": ["id", "displayName"]
+    },
+    "totalItems": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of items in the list"
+    },
+    "purchasedItems": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of purchased items in the list"
+    },
+    "isOwner": {
+      "type": "boolean",
+      "description": "True if the current user owns the list, false if shared"
+    },
+    "isArchived": {
+      "type": "boolean",
+      "description": "True if the list is archived"
+    },
+    "lastUpdatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last update"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "owner",
+    "totalItems",
+    "purchasedItems",
+    "isOwner",
+    "isArchived",
+    "lastUpdatedAt"
+  ],
+  "examples": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Weekly Groceries",
+      "description": "Shopping for the week starting Monday",
+      "owner": {
+        "id": "user-123",
+        "displayName": "John Doe"
+      },
+      "totalItems": 15,
+      "purchasedItems": 7,
+      "isOwner": true,
+      "isArchived": false,
+      "lastUpdatedAt": "2025-11-05T14:30:00Z"
+    }
+  ]
+}
+

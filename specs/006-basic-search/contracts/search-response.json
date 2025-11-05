@@ -1,0 +1,180 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Search Response",
+  "description": "Combined search response containing lists and/or items with pagination metadata",
+  "type": "object",
+  "properties": {
+    "query": {
+      "type": "string",
+      "description": "The search query that was executed"
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["all", "lists", "items"],
+      "description": "Scope of the search"
+    },
+    "lists": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of matching lists"
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "./list-search-result.json"
+          },
+          "description": "Array of list search results"
+        }
+      },
+      "required": ["total", "results"]
+    },
+    "items": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of matching items"
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "./item-search-result.json"
+          },
+          "description": "Array of item search results"
+        }
+      },
+      "required": ["total", "results"]
+    },
+    "pagination": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Current page number"
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Number of results per page"
+        },
+        "totalPages": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of pages"
+        },
+        "hasNext": {
+          "type": "boolean",
+          "description": "True if there is a next page"
+        },
+        "hasPrevious": {
+          "type": "boolean",
+          "description": "True if there is a previous page"
+        }
+      },
+      "required": ["page", "pageSize", "totalPages", "hasNext", "hasPrevious"]
+    }
+  },
+  "required": ["query", "scope", "lists", "items", "pagination"],
+  "examples": [
+    {
+      "query": "milk",
+      "scope": "all",
+      "lists": {
+        "total": 1,
+        "results": [
+          {
+            "id": "list-123",
+            "name": "Grocery Shopping",
+            "description": "Weekly groceries and household items",
+            "owner": {
+              "id": "user-456",
+              "displayName": "John Doe"
+            },
+            "totalItems": 20,
+            "purchasedItems": 8,
+            "isOwner": true,
+            "isArchived": false,
+            "lastUpdatedAt": "2025-11-05T10:00:00Z"
+          }
+        ]
+      },
+      "items": {
+        "total": 3,
+        "results": [
+          {
+            "id": "item-001",
+            "name": "Whole Milk",
+            "quantity": 1,
+            "unit": "gallon",
+            "notes": "Organic if available",
+            "isPurchased": false,
+            "category": {
+              "id": "cat-dairy",
+              "name": "Dairy",
+              "icon": "🥛",
+              "color": "#2196F3"
+            },
+            "parentList": {
+              "id": "list-123",
+              "name": "Grocery Shopping",
+              "isOwner": true
+            }
+          },
+          {
+            "id": "item-002",
+            "name": "Almond Milk",
+            "quantity": 2,
+            "unit": "cartons",
+            "notes": null,
+            "isPurchased": true,
+            "category": {
+              "id": "cat-dairy",
+              "name": "Dairy",
+              "icon": "🥛",
+              "color": "#2196F3"
+            },
+            "parentList": {
+              "id": "list-456",
+              "name": "Costco Trip",
+              "isOwner": false,
+              "ownerName": "Jane Smith"
+            }
+          }
+        ]
+      },
+      "pagination": {
+        "page": 1,
+        "pageSize": 20,
+        "totalPages": 1,
+        "hasNext": false,
+        "hasPrevious": false
+      }
+    },
+    {
+      "query": "grocery",
+      "scope": "lists",
+      "lists": {
+        "total": 5,
+        "results": []
+      },
+      "items": {
+        "total": 0,
+        "results": []
+      },
+      "pagination": {
+        "page": 1,
+        "pageSize": 20,
+        "totalPages": 1,
+        "hasNext": false,
+        "hasPrevious": false
+      }
+    }
+  ]
+}
+

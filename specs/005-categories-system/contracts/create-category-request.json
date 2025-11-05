@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/create-category-request.json",
+  "title": "CreateCategoryRequest",
+  "description": "Request to create a custom category",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50,
+      "description": "Category name (1-50 characters, must be unique per user)"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Emoji icon (single character or sequence)"
+    },
+    "color": {
+      "type": "string",
+      "pattern": "^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$",
+      "description": "Hex color code (e.g., #4CAF50 or #FFF)"
+    }
+  },
+  "required": ["name", "icon", "color"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "name": "Pet Supplies",
+      "icon": "🐾",
+      "color": "#8B4513"
+    },
+    {
+      "name": "Garden",
+      "icon": "🌱",
+      "color": "#228B22"
+    },
+    {
+      "name": "Baby Items",
+      "icon": "👶",
+      "color": "#FFB6C1"
+    }
+  ]
+}
+
