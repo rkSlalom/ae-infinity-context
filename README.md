@@ -50,6 +50,73 @@ This repository contains comprehensive, granular documentation that enables:
 - **Cross-functional alignment** - Shared understanding across product, design, and engineering
 - **Knowledge preservation** - Maintain institutional knowledge in structured format
 
+## 🔗 OpenSpec Cross-Repository Setup
+
+This repository serves as the **hub** for OpenSpec specifications. The API and UI repos use **symlinks** to access shared specs.
+
+### Quick Setup (All Three Repos)
+
+```bash
+# Clone all repos side-by-side
+git clone https://github.com/rkSlalom/ae-infinity-context.git
+git clone https://github.com/rkSlalom/ae-infinity-api.git
+git clone https://github.com/dallen4/ae-infinity-ui.git
+
+# Run the master setup script
+cd ae-infinity-context
+./setup-openspec-all.sh
+```
+
+This automatically configures OpenSpec in all three repositories with proper symlinks.
+
+### Platform-Specific Notes
+
+**macOS/Linux:**
+- Symlinks work automatically after cloning ✅
+
+**Windows:**
+- Enable symlinks before cloning:
+  ```bash
+  git config --global core.symlinks true
+  ```
+
+### Verify Setup
+
+```bash
+# Check API repo
+cd ../ae-infinity-api/openspec
+ls -la  # Should show symlinks (→)
+
+# Check UI repo
+cd ../../ae-infinity-ui/openspec
+ls -la  # Should show symlinks (→)
+```
+
+### Architecture
+
+```
+ae-infinity/
+├── ae-infinity-context/    ← HUB (source of truth)
+│   └── openspec/
+│       ├── project.md      ← Shared project context
+│       ├── AGENTS.md       ← AI assistant instructions
+│       └── specs/          ← All capability specs
+├── ae-infinity-api/        ← SPOKE (backend)
+│   └── openspec/
+│       ├── project.md  →   (symlink to context)
+│       ├── AGENTS.md   →   (symlink to context)
+│       ├── specs/      →   (symlink to context)
+│       └── changes/        ← Backend-specific changes
+└── ae-infinity-ui/         ← SPOKE (frontend)
+    └── openspec/
+        ├── project.md  →   (symlink to context)
+        ├── AGENTS.md   →   (symlink to context)
+        ├── specs/      →   (symlink to context)
+        └── changes/        ← Frontend-specific changes
+```
+
+**See:** [openspec/doctor/README.md](./openspec/doctor/README.md) for troubleshooting and repair tools.
+
 ## 📚 Documentation Structure
 
 ### 👥 [Personas](./personas/)
