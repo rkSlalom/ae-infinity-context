@@ -118,7 +118,7 @@ Added prominent section about working directory setup with:
 cd /Users/nieky.allen/Projects/ae-workshop/ae-infinity/ae-infinity-context
 
 # Run setup script
-./setup-working-directory.sh
+./scripts/setup-working-directory.sh
 
 # Wait 2-3 minutes for completion
 ```
@@ -164,7 +164,7 @@ npm run dev
 
 ```
 1. Create isolated workspace
-   └─→ ./setup-working-directory.sh my-feature
+   └─→ ./scripts/setup-working-directory.sh my-feature
 
 2. Agent loads context
    └─→ Read specifications from work/ae-infinity-context/
@@ -308,9 +308,9 @@ npm run dev
 ### Custom Directory Name
 
 ```bash
-./setup-working-directory.sh my-workspace
-./setup-working-directory.sh feature-xyz
-./setup-working-directory.sh /tmp/ae-dev
+./scripts/setup-working-directory.sh my-workspace
+./scripts/setup-working-directory.sh feature-xyz
+./scripts/setup-working-directory.sh /tmp/ae-dev
 ```
 
 ### Environment-Specific Setup
@@ -365,7 +365,7 @@ ae-infinity-context/
 ### Immediate
 1. **Test the script manually**
    ```bash
-   ./setup-working-directory.sh test-workspace
+   ./scripts/setup-working-directory.sh test-workspace
    ```
 
 2. **Verify functionality**
@@ -397,10 +397,10 @@ ae-infinity-context/
 ### Parallel Development
 ```bash
 # Developer 1
-./setup-working-directory.sh feature-auth
+./scripts/setup-working-directory.sh feature-auth
 
 # Developer 2
-./setup-working-directory.sh feature-search
+./scripts/setup-working-directory.sh feature-search
 
 # Both work independently
 ```
@@ -408,11 +408,11 @@ ae-infinity-context/
 ### Experimental Branches
 ```bash
 # Try approach A
-./setup-working-directory.sh experiment-a
+./scripts/setup-working-directory.sh experiment-a
 cd experiment-a && # implement
 
 # Try approach B
-./setup-working-directory.sh experiment-b
+./scripts/setup-working-directory.sh experiment-b
 cd experiment-b && # implement
 
 # Compare and choose
@@ -422,7 +422,7 @@ cd experiment-b && # implement
 ```bash
 #!/bin/bash
 for i in {1..5}; do
-  ./setup-working-directory.sh test-$i
+  ./scripts/setup-working-directory.sh test-$i
   cd test-$i
   # Run tests
   cd ..
@@ -471,7 +471,7 @@ done
 
 For issues or questions:
 1. Check `WORKING_DIRECTORY_GUIDE.md` troubleshooting
-2. Run with debug: `bash -x ./setup-working-directory.sh`
+2. Run with debug: `bash -x ./scripts/setup-working-directory.sh`
 3. Review error messages carefully
 4. Check prerequisites are met
 5. Reach out to team

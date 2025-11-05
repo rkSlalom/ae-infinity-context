@@ -37,7 +37,7 @@ A comprehensive system for agentic development with:
 
 **Usage**:
 ```bash
-./setup-working-directory.sh [workspace-name]
+./scripts/setup-working-directory.sh [workspace-name]
 ```
 
 #### 2. Documentation Suite (5 documents, ~4,000 lines)
@@ -186,7 +186,7 @@ A comprehensive system for agentic development with:
 cd ae-infinity-context
 
 # 2. Run setup script
-./setup-working-directory.sh
+./scripts/setup-working-directory.sh
 
 # 3. Wait 2-3 minutes for completion
 # ✅ All done!
@@ -233,7 +233,7 @@ Type `/` in Cursor to see all available commands:
 ┌─────────────────────────────────────────────────────────────┐
 │ 1. CREATE WORKSPACE                                         │
 │    /workspace-setup                                         │
-│    $ ./setup-working-directory.sh feature-name             │
+│    $ ./scripts/setup-working-directory.sh feature-name             │
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -504,7 +504,7 @@ ae-infinity-context/
 ### 1. Automated Setup ✅
 One command creates complete environment:
 ```bash
-./setup-working-directory.sh
+./scripts/setup-working-directory.sh
 ```
 
 ### 2. Comprehensive Documentation ✅
@@ -613,7 +613,7 @@ All criteria met:
 1. **Test the setup script**:
    ```bash
    cd ae-infinity-context
-   ./setup-working-directory.sh test-workspace
+   ./scripts/setup-working-directory.sh test-workspace
    ```
 
 2. **Try slash commands in Cursor**:

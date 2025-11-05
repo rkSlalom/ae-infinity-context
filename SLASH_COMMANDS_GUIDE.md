@@ -126,7 +126,7 @@ Get instant access to:
 ```
 
 **Quick reference includes**:
-- Setup: `./setup-working-directory.sh`
+- Setup: `./scripts/setup-working-directory.sh`
 - Start API: `cd work/ae-infinity-api/src/AeInfinity.Api && dotnet run`
 - Start UI: `cd work/ae-infinity-ui && npm run dev`
 - Login: sarah@example.com / Password123!
@@ -542,7 +542,7 @@ If a command needs improvement:
 
 ## 📚 Related Documentation
 
-- **Setup Script**: [setup-working-directory.sh](./setup-working-directory.sh)
+- **Setup Script**: [setup-working-directory.sh](./scripts/setup-working-directory.sh)
 - **Full Guide**: [WORKING_DIRECTORY_GUIDE.md](./WORKING_DIRECTORY_GUIDE.md)
 - **Quick Setup**: [QUICK_SETUP.md](./QUICK_SETUP.md)
 - **Visual Overview**: [VISUAL_OVERVIEW.md](./VISUAL_OVERVIEW.md)

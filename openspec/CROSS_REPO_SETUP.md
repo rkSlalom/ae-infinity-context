@@ -58,8 +58,8 @@ Run the master setup script from the parent directory:
 
 ```bash
 cd ae-infinity  # Parent directory containing all three repos
-chmod +x setup-openspec-all.sh
-./setup-openspec-all.sh
+chmod +x scripts/setup-openspec-all.sh
+./scripts/setup-openspec-all.sh
 ```
 
 This will configure OpenSpec in all three repositories with proper symlinks and directory structure.

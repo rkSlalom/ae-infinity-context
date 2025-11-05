@@ -10,7 +10,7 @@
 **✅ One-command setup for agentic development!** Automated script to clone all repos and set up dependencies:
 
 ```bash
-./setup-working-directory.sh
+./scripts/setup-working-directory.sh
 ```
 
 Creates an isolated workspace with all three repositories ready for development. Perfect for:
@@ -64,7 +64,7 @@ git clone https://github.com/dallen4/ae-infinity-ui.git
 
 # Run the master setup script
 cd ae-infinity-context
-./setup-openspec-all.sh
+./scripts/setup-openspec-all.sh
 ```
 
 This automatically configures OpenSpec in all three repositories with proper symlinks.

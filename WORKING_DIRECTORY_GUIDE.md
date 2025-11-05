@@ -48,7 +48,7 @@ Before running the setup script, ensure you have:
 cd ae-infinity-context
 
 # Run the setup script
-./setup-working-directory.sh
+./scripts/setup-working-directory.sh
 ```
 
 This creates a `work/` directory with all three repositories.
@@ -57,16 +57,16 @@ This creates a `work/` directory with all three repositories.
 
 ```bash
 # Create working directory with custom name
-./setup-working-directory.sh my-workspace
+./scripts/setup-working-directory.sh my-workspace
 
 # Use absolute path
-./setup-working-directory.sh /tmp/ae-dev-$(date +%Y%m%d)
+./scripts/setup-working-directory.sh /tmp/ae-dev-$(date +%Y%m%d)
 ```
 
 ### Show Help
 
 ```bash
-./setup-working-directory.sh --help
+./scripts/setup-working-directory.sh --help
 ```
 
 ---
@@ -224,7 +224,7 @@ ls features/
 **1. Feature Development Iteration**
 ```bash
 # Create working directory for new feature
-./setup-working-directory.sh work-feature-xyz
+./scripts/setup-working-directory.sh work-feature-xyz
 
 # Agent develops in isolation
 cd work-feature-xyz
@@ -236,7 +236,7 @@ cd work-feature-xyz
 **2. Experimental Changes**
 ```bash
 # Create experimental workspace
-./setup-working-directory.sh experiment-$(date +%Y%m%d)
+./scripts/setup-working-directory.sh experiment-$(date +%Y%m%d)
 
 # Try risky refactoring
 # If successful, apply to main
@@ -246,10 +246,10 @@ cd work-feature-xyz
 **3. Parallel Development**
 ```bash
 # Team member 1
-./setup-working-directory.sh work-auth-feature
+./scripts/setup-working-directory.sh work-auth-feature
 
 # Team member 2
-./setup-working-directory.sh work-search-feature
+./scripts/setup-working-directory.sh work-search-feature
 
 # Both work independently, merge later
 ```
@@ -257,12 +257,12 @@ cd work-feature-xyz
 **4. Testing Different Approaches**
 ```bash
 # Approach A
-./setup-working-directory.sh approach-a
+./scripts/setup-working-directory.sh approach-a
 cd approach-a
 # Implement solution A
 
 # Approach B
-./setup-working-directory.sh approach-b
+./scripts/setup-working-directory.sh approach-b
 cd approach-b
 # Implement solution B
 
@@ -356,7 +356,7 @@ rm -rfi work/
 ```bash
 # Remove and recreate
 rm -rf work/
-./setup-working-directory.sh work
+./scripts/setup-working-directory.sh work
 ```
 
 ### Selective Cleanup
@@ -409,10 +409,10 @@ brew install node@20
 ```bash
 # Solution 1: Remove existing directory
 rm -rf work/
-./setup-working-directory.sh
+./scripts/setup-working-directory.sh
 
 # Solution 2: Use different name
-./setup-working-directory.sh work-new
+./scripts/setup-working-directory.sh work-new
 ```
 
 **Issue**: "Failed to clone ae-infinity-ui"
@@ -468,7 +468,7 @@ The script provides colored, detailed output:
 **Enable Debug Mode**
 ```bash
 # Run with bash debug
-bash -x ./setup-working-directory.sh
+bash -x ./scripts/setup-working-directory.sh
 ```
 
 **Manual Verification**
@@ -616,7 +616,7 @@ ls -la setup-working-directory.sh
 
 ```bash
 # Morning: Create fresh workspace
-./setup-working-directory.sh work-$(date +%Y%m%d)
+./scripts/setup-working-directory.sh work-$(date +%Y%m%d)
 
 # Start development
 cd work-20251105/ae-infinity-api/src/AeInfinity.Api
@@ -645,7 +645,7 @@ rm -rf work-20251105/
 
 ```bash
 # Setup workspace
-./setup-working-directory.sh ai-workspace
+./scripts/setup-working-directory.sh ai-workspace
 
 # Agent reads context
 cat ai-workspace/ae-infinity-context/PROJECT_SPEC.md
@@ -670,8 +670,8 @@ rm -rf ai-workspace/
 
 ```bash
 # Create two workspaces
-./setup-working-directory.sh approach-state-management
-./setup-working-directory.sh approach-context-api
+./scripts/setup-working-directory.sh approach-state-management
+./scripts/setup-working-directory.sh approach-context-api
 
 # Implement different approaches
 cd approach-state-management/ae-infinity-ui
@@ -771,7 +771,7 @@ setup_api() {
 
 If you encounter issues:
 
-1. Run script with debug: `bash -x ./setup-working-directory.sh`
+1. Run script with debug: `bash -x ./scripts/setup-working-directory.sh`
 2. Check prerequisites are met
 3. Review error messages carefully
 4. Document steps to reproduce

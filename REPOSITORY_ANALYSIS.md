@@ -953,7 +953,7 @@ cat API_SPEC.md
 1. **Test the setup script**
    ```bash
    cd ae-infinity-context
-   ./setup-working-directory.sh test-workspace
+   ./scripts/setup-working-directory.sh test-workspace
    ```
 
 2. **Verify all repos cloned**

@@ -6,7 +6,7 @@
 
 ```bash
 cd ae-infinity-context
-./setup-working-directory.sh
+./scripts/setup-working-directory.sh
 ```
 
 Wait 2-3 minutes. Done! ✅
@@ -72,8 +72,8 @@ See [WORKING_DIRECTORY_GUIDE.md](./WORKING_DIRECTORY_GUIDE.md) for:
 ## ⚙️ Custom Directory
 
 ```bash
-./setup-working-directory.sh my-workspace
-./setup-working-directory.sh /tmp/dev-$(date +%Y%m%d)
+./scripts/setup-working-directory.sh my-workspace
+./scripts/setup-working-directory.sh /tmp/dev-$(date +%Y%m%d)
 ```
 
 ---
@@ -81,7 +81,7 @@ See [WORKING_DIRECTORY_GUIDE.md](./WORKING_DIRECTORY_GUIDE.md) for:
 ## ❓ Help
 
 ```bash
-./setup-working-directory.sh --help
+./scripts/setup-working-directory.sh --help
 ```
 
 ---

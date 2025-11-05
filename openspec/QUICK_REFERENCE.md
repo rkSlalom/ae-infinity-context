@@ -7,7 +7,7 @@ Fast reference for common OpenSpec tasks across the three repositories.
 ```bash
 # One-time setup from parent directory
 cd ae-infinity
-./setup-openspec-all.sh
+./scripts/setup-openspec-all.sh
 ```
 
 ## Common Commands

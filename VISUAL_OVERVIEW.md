@@ -19,7 +19,7 @@
        │ 1. Run setup script
        ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│  ./setup-working-directory.sh                                    │
+│  ./scripts/setup-working-directory.sh                                    │
 │  ────────────────────────────                                    │
 │  ✓ Check prerequisites (Git, .NET, Node.js)                     │
 │  ✓ Clone all 3 repositories                                     │
@@ -323,7 +323,7 @@ User                    UI                      API                   DB
 │                    SETUP SCRIPT EXECUTION FLOW                       │
 └──────────────────────────────────────────────────────────────────────┘
 
-  ./setup-working-directory.sh [directory]
+  ./scripts/setup-working-directory.sh [directory]
       │
       ▼
 ┌─────────────────────────────────┐
@@ -421,7 +421,7 @@ User                    UI                      API                   DB
 
 Step 1: Setup
 ─────────────
-    $ ./setup-working-directory.sh agent-workspace
+    $ ./scripts/setup-working-directory.sh agent-workspace
     ✓ Creates: agent-workspace/ with all 3 repos
 
 Step 2: Load Context
@@ -543,7 +543,7 @@ AFTER (Automated Setup)
   Errors: Prevented (automated checks)
   
   ┌───────────────────────────────────────┐
-  │ $ ./setup-working-directory.sh        │
+  │ $ ./scripts/setup-working-directory.sh        │
   │                                       │
   │ ... wait 2-3 minutes ...              │
   │                                       │
@@ -618,9 +618,9 @@ Documentation (ae-infinity-context)
 
 Setup
 ─────
-$ ./setup-working-directory.sh                  # Creates work/
-$ ./setup-working-directory.sh my-dir           # Creates my-dir/
-$ ./setup-working-directory.sh --help           # Show help
+$ ./scripts/setup-working-directory.sh                  # Creates work/
+$ ./scripts/setup-working-directory.sh my-dir           # Creates my-dir/
+$ ./scripts/setup-working-directory.sh --help           # Show help
 
 Run API
 ───────
