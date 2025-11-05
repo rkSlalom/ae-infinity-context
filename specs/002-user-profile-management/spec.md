@@ -35,7 +35,7 @@ A user wants to update their display name or avatar to personalize their account
 
 **Acceptance Scenarios**:
 
-1. **Given** a user on their profile page, **When** they click "Edit Profile", **Then** they see an editable form with current display name and avatar URL
+1. **Given** a user on their profile page, **When** they click "Edit Profile", **Then** they see an editable form with current display name and avatar URL (avatar URL field is empty if user has not set one during registration, which is expected since registration doesn't accept avatarUrl)
 2. **Given** a user editing their profile, **When** they change display name (2-100 characters) and click "Save", **Then** changes are saved and reflected immediately in the UI
 3. **Given** a user editing their profile, **When** they provide a new avatar URL, **Then** the avatar updates and is visible to all collaborators on shared lists
 4. **Given** a user enters invalid display name (less than 2 characters or more than 100), **When** they try to save, **Then** they see validation error "Display name must be 2-100 characters"
@@ -58,7 +58,7 @@ A user wants to see their usage statistics to understand their engagement with t
 1. **Given** a user views their profile, **When** statistics load, **Then** they see total lists owned, total lists shared with them, total items created, total items purchased, active collaborations count, and last activity timestamp
 2. **Given** a user creates a new list, **When** they refresh their profile, **Then** "Total Lists Owned" increments by 1
 3. **Given** a user is invited to a list, **When** they accept and view profile, **Then** "Total Lists Shared" increments by 1
-4. **Given** a user marks items as purchased, **When** they view profile statistics, **Then** "Total Items Purchased" reflects the accurate count
+4. **Given** a user marks an item as purchased, **When** they view profile statistics, **Then** "Total Items Purchased" increments by 1 (if user marks same item as purchased again later, counter increments again - counts purchase events, not unique items)
 5. **Given** a new user with no activity, **When** they view statistics, **Then** all counts show 0 and lastActivityAt is null
 6. **Given** statistics fail to load, **When** API is unreachable, **Then** user sees "Statistics unavailable" message without breaking the profile page
 
@@ -87,6 +87,9 @@ When viewing collaborators on shared lists, a user wants to click on a collabora
 - **What happens when** a user updates their display name to one already used by another user?  
   → System allows duplicate display names (display name is not unique identifier). Only email must be unique.
 
+- **What happens when** a user who just registered wants to set their avatar?  
+  → Users cannot set avatar during registration (feature 001). They must edit their profile (feature 002) to add an avatar URL. This is by design to keep registration flow simple and focused.
+
 - **What happens when** a user provides an avatar URL that points to a broken/missing image?  
   → Frontend shows fallback placeholder avatar. No server-side validation of image availability (performance trade-off).
 
@@ -114,13 +117,18 @@ When viewing collaborators on shared lists, a user wants to click on a collabora
 - **FR-003**: System MUST allow authenticated users to update their own display name via PATCH /users/me endpoint
 - **FR-004**: System MUST allow authenticated users to update their own avatar URL via PATCH /users/me endpoint
 - **FR-005**: System MUST validate display name length: minimum 2 characters, maximum 100 characters
-- **FR-006**: System MUST validate avatar URL format when provided (valid URI), but allow null values
+- **FR-006**: System MUST validate avatar URL format when provided (valid URI with max 500 characters), but allow null values (null clears existing avatar)
 - **FR-007**: System MUST accept displayName with Unicode characters including emojis (character count, not byte length)
 - **FR-008**: System MUST enforce authorization: users can only update their own profile (not other users')
 - **FR-009**: System MUST provide user activity statistics via dedicated endpoint or embedded in profile response
-- **FR-010**: System MUST calculate statistics: totalListsOwned, totalListsShared, totalItemsCreated, totalItemsPurchased, totalActiveCollaborations
-- **FR-011**: System MUST track lastActivityAt timestamp for user engagement metrics
-- **FR-012**: System MUST update statistics in real-time or near-real-time (within 60 seconds of activity)
+- **FR-010**: System MUST calculate statistics:
+  - **totalListsOwned**: Count of lists where user is owner
+  - **totalListsShared**: Count of lists where user is collaborator (not owner)
+  - **totalItemsCreated**: Sum of items created by user across all lists
+  - **totalItemsPurchased**: Sum of purchase events by user (each time user marks any item as purchased, regardless if same item marked multiple times)
+  - **totalActiveCollaborations**: Count of non-archived lists where user is collaborator
+- **FR-011**: System MUST track lastActivityAt timestamp for user engagement metrics (computed as maximum of: User.lastLoginAt, User.updatedAt, max createdAt across user's lists and items)
+- **FR-012**: System MUST update statistics in near-real-time (statistics cached for up to 5 minutes, invalidated on user actions)
 - **FR-013**: Frontend MUST display editable profile form with current values pre-populated
 - **FR-014**: Frontend MUST show validation errors inline next to the relevant form field
 - **FR-015**: Frontend MUST display loading indicator while profile data is being fetched
@@ -165,7 +173,7 @@ When viewing collaborators on shared lists, a user wants to click on a collabora
 - **SC-002**: Users can update their display name or avatar in under 5 seconds including validation and save
 - **SC-003**: 100% of profile updates persist across sessions and browser restarts
 - **SC-004**: Profile changes are visible to collaborators within 10 seconds of update (real-time sync)
-- **SC-005**: User activity statistics update within 60 seconds of relevant actions (list creation, item purchase, etc.)
+- **SC-005**: User activity statistics update within 5 minutes of relevant actions, with immediate cache invalidation for the user's own actions
 - **SC-006**: Form validation provides immediate feedback within 200 milliseconds of user input
 - **SC-007**: Profile page loads successfully even if statistics fail to load (graceful degradation)
 - **SC-008**: Users with slow connections see loading indicators within 100 milliseconds of page load

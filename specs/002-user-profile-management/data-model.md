@@ -465,6 +465,30 @@ private async Task<DateTime?> GetLastActivityTimestamp(Guid userId, Cancellation
 
 ---
 
+### lastActivityAt Computation
+
+The `lastActivityAt` field in `UserStatsDto` is a **computed field**, not a stored database column. It represents the most recent timestamp across all user activities:
+
+**Calculation Logic**:
+```csharp
+lastActivityAt = Max(
+    User.lastLoginAt,           // From feature 001 (updated on login)
+    User.updatedAt,             // Updated when profile changes
+    Lists.Max(createdAt),       // Most recent list created by user
+    Items.Max(createdAt)        // Most recent item created by user
+)
+```
+
+**Implementation Notes**:
+- No separate `UserActivities` event log table required for MVP
+- Computation happens in `GetUserStatsQueryHandler`
+- Cached with 5-minute TTL to avoid expensive queries
+- Returns `null` for users with no activity (new accounts)
+
+**Future Enhancement**: If granular activity tracking is needed (e.g., "viewed list", "marked item purchased"), introduce `UserActivities` event log table in a later feature.
+
+---
+
 ### GetUserByIdQuery (P3)
 
 **Purpose**: Retrieve public profile of another user (minimal information)

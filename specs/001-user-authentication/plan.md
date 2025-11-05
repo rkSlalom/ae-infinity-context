@@ -204,6 +204,9 @@ src/
 │       ├── ProfileSettings.tsx        # ✅ UI complete, needs API integration
 │       └── NotificationSettings.tsx   # ✅ UI complete
 │
+├── utils/
+│   └── passwordStrength.ts           # ⚠️ Needs zxcvbn integration
+│
 ├── services/
 │   └── authService.ts                 # ✅ All methods implemented
 │

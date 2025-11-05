@@ -267,7 +267,33 @@ All technical decisions are clear from constitution and feature 001:
    - GetUserStatsQuery + Handler
    - GetUserByIdQuery + Handler (P3)
 
-3. **Create Caching Service**
+3. **Statistics Calculation Logic** (GetUserStatsQueryHandler)
+   ```csharp
+   // Pseudo-code for statistics calculation
+   var user = await db.Users.FindAsync(userId);
+   var userLists = db.Lists.Where(l => l.OwnerId == userId || l.Collaborators.Any(c => c.UserId == userId));
+   var userItems = db.Items.Where(i => i.CreatedByUserId == userId);
+   
+   var stats = new UserStatsDto
+   {
+       TotalListsOwned = db.Lists.Count(l => l.OwnerId == userId),
+       TotalListsShared = db.ListCollaborators.Count(c => c.UserId == userId && c.List.OwnerId != userId),
+       TotalItemsCreated = db.Items.Count(i => i.CreatedByUserId == userId),
+       TotalItemsPurchased = db.ItemPurchaseEvents.Count(e => e.PurchasedByUserId == userId), // Counts events, not unique items
+       TotalActiveCollaborations = db.ListCollaborators.Count(c => c.UserId == userId && !c.List.IsArchived),
+       LastActivityAt = new[] {
+           user.LastLoginAt,
+           user.UpdatedAt,
+           userLists.Any() ? userLists.Max(l => l.CreatedAt) : (DateTime?)null,
+           userItems.Any() ? userItems.Max(i => i.CreatedAt) : (DateTime?)null
+       }.Where(d => d.HasValue).Max()
+   };
+   ```
+   **Note**: 
+   - totalItemsPurchased sums all purchase events. If a user marks "Milk" as purchased, then unmarks it, then marks it again, counter increments twice.
+   - lastActivityAt is computed from multiple timestamps (no separate UserActivities table needed for MVP)
+
+4. **Create Caching Service**
    - ICacheService interface
    - MemoryCacheService implementation with TTL support
 

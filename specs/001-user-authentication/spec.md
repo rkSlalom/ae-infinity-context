@@ -38,7 +38,7 @@ A new user wants to create an account so they can start creating and managing sh
 1. **Given** a new user with unique email, **When** they submit registration form with email, display name, and valid password, **Then** an account is created and they are automatically logged in
 2. **Given** a user enters an existing email, **When** they submit registration, **Then** they see error "Email already registered"
 3. **Given** a user enters weak password, **When** they submit registration, **Then** they see password requirements (8+ chars, uppercase, lowercase, number, special char)
-4. **Given** a user types password, **When** they view the form, **Then** they see a real-time password strength indicator (weak/medium/strong)
+4. **Given** a user types password, **When** they view the form, **Then** they see a real-time password strength indicator (weak/medium/strong/very strong) calculated using zxcvbn algorithm with debounced updates (300ms delay)
 5. **Given** successful registration, **When** account is created, **Then** password is hashed with BCrypt before storage (never stored as plaintext)
 
 ---
@@ -114,6 +114,9 @@ The system wants to verify that users own the email addresses they register with
 - **What happens when** a user enters email with different case (User@example.com vs user@example.com)?  
   → System uses case-insensitive email lookup (normalized email field in database)
 
+- **What happens when** a new user wants to set an avatar during registration?  
+  → Registration accepts email, displayName, and password only. Avatar URL can only be set after registration via profile editing (feature 002-user-profile-management). New users see default avatar (initials-based placeholder) until they update their profile.
+
 - **What happens when** a user's session expires mid-action?  
   → API returns 401, frontend redirects to login with return URL, user can resume after re-authenticating
 
@@ -156,7 +159,8 @@ The system wants to verify that users own the email addresses they register with
 - **FR-021**: Frontend MUST include JWT token in Authorization header (Bearer scheme) for all authenticated requests
 - **FR-022**: Frontend MUST redirect to login page when receiving 401 Unauthorized from API
 - **FR-023**: Frontend MUST display password strength indicator during registration
-- **FR-024**: System SHOULD implement rate limiting: 5 login attempts per minute per IP, 3 registrations per hour per IP, 3 password resets per hour per email
+- **FR-024** (Priority: P2): System SHOULD implement rate limiting with fixed 1-minute windows: 5 login attempts per minute per IP (block for 15 minutes after limit), 3 registrations per hour per IP (all attempts count), 3 password resets per hour per email
+- **FR-025**: System MUST accept avatarUrl as null on user creation (registration sets avatarUrl to null by default)
 
 ### Key Entities
 
@@ -165,7 +169,7 @@ The system wants to verify that users own the email addresses they register with
   - Email address (unique, case-insensitive)
   - Display name (2-100 characters)
   - Password hash (BCrypt, never plaintext)
-  - Avatar URL (optional, for profile pictures)
+  - Avatar URL (optional, nullable, initially null on registration - can be set via profile editing in feature 002)
   - Email verification status (boolean flag)
   - Last login timestamp (for activity tracking)
   - Account creation timestamp (audit trail)

@@ -205,6 +205,16 @@ Phase 9 (Polish)
 
 - [ ] T022 [P] [US2] Write integration test for POST /auth/register in ae-infinity-api/tests/AeInfinity.API.IntegrationTests/AuthControllerTests.cs (test 201 success, 400 duplicate email, 400 validation errors)
 
+#### Password Strength Indicator
+
+- [ ] T021a [US2] Add zxcvbn library to frontend package.json (npm install zxcvbn @types/zxcvbn)
+
+- [ ] T021b [US2] Create passwordStrength utility in ae-infinity-ui/src/utils/passwordStrength.ts wrapping zxcvbn with 4-level scoring (weak/medium/strong/very strong)
+
+- [ ] T021c [US2] Update Register.tsx to display password strength indicator with color-coded bar (red/yellow/green/blue) and debounced calculation (300ms)
+
+#### Frontend Tests
+
 #### Verification
 
 - [ ] T023 [US2] Manual test: Register with unique email, verify account created and automatic login with JWT token
@@ -341,11 +351,13 @@ Phase 9 (Polish)
 
 ### Tasks
 
-#### Rate Limiting
+#### Rate Limiting (Priority: P2 - Not MVP Blocking)
 
-- [ ] T044 Implement rate limiting middleware in ae-infinity-api/AeInfinity.API/Middleware/RateLimitingMiddleware.cs (5 login attempts per minute per IP, 3 registrations per hour per IP)
+- [ ] T044 [P2] Implement rate limiting middleware in ae-infinity-api/AeInfinity.API/Middleware/RateLimitingMiddleware.cs using fixed 1-minute windows (5 login attempts per minute per IP with 15-minute block, 3 registrations per hour per IP counting all attempts)
 
-- [ ] T045 Register rate limiting middleware in ae-infinity-api/AeInfinity.API/Program.cs before authentication middleware
+- [ ] T045 [P2] Register rate limiting middleware in ae-infinity-api/AeInfinity.API/Program.cs before authentication middleware
+
+**Note**: These tasks are P2 priority and not required for MVP completion. Can be implemented after P1 user stories are complete.
 
 #### Error Handling
 
@@ -485,6 +497,42 @@ Feature 001 is complete when:
 - [ ] All US4 tasks complete (T027-T036)
 - [ ] Password reset flow tested end-to-end
 - [ ] Rate limiting implemented for reset requests
+
+---
+
+## Phase 10: US6 - Email Verification *(Priority: P3 - Deferred)*
+
+**User Story**: The system wants to verify that users own the email addresses they register with.
+
+**Current Status**: Not implemented, deferred to post-MVP
+
+**Deferral Rationale**: Email verification is P3 (nice to have). MVP allows users to register and use the system without email verification. Can implement later when email service infrastructure is in place.
+
+**Duration**: TBD (deferred)
+
+### Tasks (Deferred to Future Phase)
+
+- [ ] T050 [US6] [DEFERRED] Create email service interface IEmailService in ae-infinity-api/AeInfinity.Application/Common/Interfaces/IEmailService.cs
+
+- [ ] T051 [US6] [DEFERRED] Create EmailVerificationToken entity in ae-infinity-api/AeInfinity.Domain/Entities/EmailVerificationToken.cs (token, userId, expiresAt, createdAt)
+
+- [ ] T052 [US6] [DEFERRED] Create SendVerificationEmailCommand + Handler in ae-infinity-api/AeInfinity.Application/Features/Auth/SendVerificationEmail/ (generate token, send email with link)
+
+- [ ] T053 [US6] [DEFERRED] Create VerifyEmailCommand + Handler in ae-infinity-api/AeInfinity.Application/Features/Auth/VerifyEmail/ (validate token, set isEmailVerified = true)
+
+- [ ] T054 [US6] [DEFERRED] Add POST /auth/verify-email/{token} endpoint to AuthController
+
+- [ ] T055 [US6] [DEFERRED] Add POST /auth/resend-verification endpoint to AuthController
+
+- [ ] T056 [US6] [DEFERRED] Implement mock email service for testing (logs to console)
+
+- [ ] T057 [US6] [DEFERRED] Write unit tests for email verification handlers
+
+- [ ] T058 [US6] [DEFERRED] Write integration tests for email verification endpoints
+
+**Note**: These tasks are explicitly deferred and NOT required for feature 001 completion. Implement in a future phase when email infrastructure is ready.
+
+---
 
 **Optional P3** (Email Verification):
 - [ ] Email verification flow implemented
