@@ -24,6 +24,38 @@ See **[CHANGELOG.md](./CHANGELOG.md)** for complete details.
 
 ---
 
+## 🚀 Quick Setup - Automated Workspace
+
+**NEW:** Set up a complete working environment with one command!
+
+The `setup-working-directory.sh` script creates a clean, isolated workspace with all three repositories configured for development:
+
+```bash
+# Clone the context repo first (if you haven't already)
+git clone https://github.com/rkSlalom/ae-infinity-context.git
+cd ae-infinity-context/scripts
+
+# Create a complete workspace
+./setup-working-directory.sh ~/ae-infinity-workspace
+```
+
+**What it does:**
+- ✓ Clones all 3 repositories (context, api, ui)
+- ✓ Installs all dependencies (npm, dotnet)
+- ✓ Creates configuration files
+- ✓ Runs health checks
+- ✓ Provides next steps to start coding
+
+**Perfect for:**
+- 🤖 **Agentic development** - Clean workspace for AI iterations
+- 👥 **Team onboarding** - One command to get started
+- 🧪 **Feature branches** - Isolated testing environments
+- 📦 **CI/CD** - Reproducible build environments
+
+**Learn more:** [scripts/README.md](./scripts/README.md)
+
+---
+
 ## 🎯 Purpose
 
 This repository contains comprehensive, granular documentation that enables:
