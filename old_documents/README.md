@@ -1,614 +1,266 @@
-# AE Infinity - Context Repository
+# 📦 Archived Documentation
 
-**Version**: 1.0  
-**Last Updated**: November 3, 2025  
-**Repository Type**: Specification & Documentation (Source of Truth)
-
-## 🆕 Recent Updates
-
-### Authentication System (2025-11-03 PM)
-**✅ Full authentication documentation now available!** The backend API has implemented JWT-based authentication. All relevant docs have been updated:
-
-- **[API_SPEC.md](./API_SPEC.md)** - Login, logout, and user endpoints fully documented
-- **[GLOSSARY.md](./GLOSSARY.md)** - Authentication & security terminology added
-- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Complete security architecture section
-- **UI Docs** - Integration guide with TypeScript examples
-
-**Ready to use**:
-- `POST /api/auth/login` - JWT token authentication
-- `POST /api/auth/logout` - Session cleanup
-- `GET /api/users/me` - Current user profile
-- **Test users**: sarah@example.com, alex@example.com, mike@example.com (Password: `Password123!`)
-
-See **[CHANGELOG.md](./CHANGELOG.md)** for complete details.
+**Archived Date**: November 5, 2025  
+**Reason**: Migration to Spec Kit SDD methodology  
+**Status**: Preserved for reference only
 
 ---
 
-## 🎯 Purpose
+## ⚠️ Important Notice
 
-This repository contains comprehensive, granular documentation that enables:
-- **Spec-driven development** - Build features based on complete specifications
-- **AI-assisted coding** - Provide precise context to LLMs and coding assistants
-- **Cross-functional alignment** - Shared understanding across product, design, and engineering
-- **Knowledge preservation** - Maintain institutional knowledge in structured format
+**These documents are archived and no longer maintained.**
 
-## 📚 Documentation Structure
+The project has adopted **Spec Kit SDD** (Specification-Driven Development) methodology with a new documentation structure. All active documentation has been migrated to the new format.
 
-### 👥 [Personas](./personas/)
-Detailed user personas with needs, goals, and permission levels
+**For current documentation, see the root folder and `specs/` directory.**
 
-- **[list-creator.md](./personas/list-creator.md)** - Owner persona (Sarah) - Full control over lists
-- **[active-collaborator.md](./personas/active-collaborator.md)** - Editor persona (Mike) - Actively manages items
-- **[passive-viewer.md](./personas/passive-viewer.md)** - Viewer persona (Emma) - Read-only access
-- **[permission-matrix.md](./personas/permission-matrix.md)** - Complete permission comparison
+---
 
-### 🗺️ [Journeys](./journeys/)
-Step-by-step user workflows showing how personas accomplish goals
+## 🔄 Migration Summary
 
-- **[creating-first-list.md](./journeys/creating-first-list.md)** - First-time user onboarding
-- **[sharing-list.md](./journeys/sharing-list.md)** - Sharing lists with collaborators
-- **[shopping-together.md](./journeys/shopping-together.md)** - Real-time collaborative shopping
-- **[managing-permissions.md](./journeys/managing-permissions.md)** - Managing list access
+### **What Happened?**
 
-### 🔌 [API](./api/)
-REST API specifications split by domain (Coming Soon - see API_SPEC.md for now)
+On November 5, 2025, we transitioned from a monolithic documentation approach to **Spec Kit SDD**, which provides:
+- ✅ **Feature-driven specifications** - Each feature has its own complete specification
+- ✅ **AI-friendly context** - Specifications designed to work with AI coding assistants
+- ✅ **Structured workflow** - `/speckit.specify`, `/speckit.plan`, `/speckit.tasks` commands
+- ✅ **Quality gates** - Constitution-based development standards
+- ✅ **Test-driven** - TDD approach with 80% coverage requirement
 
-- **authentication.md** - Auth endpoints and JWT handling
-- **lists.md** - Shopping list CRUD operations
-- **items.md** - Shopping item management
-- **categories.md** - Category endpoints
-- **search.md** - Search functionality
-- **realtime-events.md** - SignalR events and subscriptions
-- **error-handling.md** - Error response formats
+### **What Changed?**
 
-### 🏗️ [Architecture](./architecture/)
-System architecture and technical decisions (Coming Soon - see ARCHITECTURE.md for now)
+| Old Structure | New Structure | Status |
+|---------------|---------------|--------|
+| Single `README.md` | Root `README.md` + per-feature READMEs | ✅ Migrated |
+| Single `ARCHITECTURE.md` | Root `ARCHITECTURE.md` + per-feature `plan.md` | ✅ Migrated |
+| Single `API_SPEC.md` | Per-feature `contracts/` directories | ✅ Migrated |
+| Global `schemas/` folder | Per-feature `contracts/` with JSON schemas | ✅ Migrated |
+| Single `FEATURES.md` | `specs/README.md` feature catalog | ✅ Migrated |
+| Multiple scattered docs | Constitution + root docs + feature specs | ✅ Migrated |
 
-- **system-overview.md** - High-level system architecture
-- **frontend-architecture.md** - React application structure
-- **backend-architecture.md** - .NET API structure
-- **data-models.md** - Database schemas and relationships
-- **state-management.md** - Frontend state patterns
-- **realtime-strategy.md** - SignalR implementation details
-- **security.md** - Security architecture and auth flow
-- **performance.md** - Performance optimization strategies
-- **offline-sync.md** - Offline support and synchronization
+---
 
-### 🎨 [Components](./components/)
-UI component specifications and design system (Coming Soon - see COMPONENT_SPEC.md for now)
+## 📂 Where to Find Current Documentation
 
-- **design-system.md** - Colors, typography, spacing, and design tokens
-- **common-components.md** - Reusable components (Button, Input, Modal)
-- **list-components.md** - List-specific UI components
-- **item-components.md** - Item-specific UI components
-- **layout-components.md** - Layout and navigation components
+### **Root Documentation** (NEW)
 
-### ⚙️ [Config](./config/)
-Configuration documentation (Coming Soon)
+| Document | Purpose | Location |
+|----------|---------|----------|
+| **README.md** | Project overview and navigation hub | [/README.md](../README.md) |
+| **GETTING_STARTED.md** | Quick start guide (5-10 min setup) | [/GETTING_STARTED.md](../GETTING_STARTED.md) |
+| **CONTRIBUTING.md** | Development workflow and standards | [/CONTRIBUTING.md](../CONTRIBUTING.md) |
+| **ARCHITECTURE.md** | System architecture overview | [/ARCHITECTURE.md](../ARCHITECTURE.md) |
+| **CHANGELOG.md** | Project history and updates | [/CHANGELOG.md](../CHANGELOG.md) |
+| **ROADMAP.md** | Product roadmap (Q4 2025 - Q3 2026) | [/ROADMAP.md](../ROADMAP.md) |
+| **API_REFERENCE.md** | API endpoints and contracts | [/API_REFERENCE.md](../API_REFERENCE.md) |
+| **TESTING_GUIDE.md** | Comprehensive testing standards | [/TESTING_GUIDE.md](../TESTING_GUIDE.md) |
 
-- **environment-variables.md** - Environment variable reference
-- **deployment-config.md** - Deployment configurations
-- **feature-flags.md** - Feature toggle system
+### **Constitution** (NEW)
 
-### 📋 [Schemas](./schemas/)
-JSON Schema definitions for API contracts
+The project constitution defines development principles and quality gates:
+- **Location**: [/.specify/memory/constitution.md](../.specify/memory/constitution.md)
+- **Purpose**: Core principles, technical standards, quality gates, governance
 
-- **Authentication** - Login request/response schemas
-- **Users** - User profile and stats schemas
-- **Lists** - List and list detail schemas
-- **Items** - Item schemas with categories
-- **Collaboration** - Collaborator and invitation schemas
-- **Search** - Search result schemas with pagination
+### **Feature Specifications** (NEW)
 
-## 📖 Core Documents
+Each feature has a complete specification package:
 
-These documents provide project-wide context:
+**Location**: `/specs/XXX-feature-name/`
 
-- **[PROJECT_SPEC.md](./PROJECT_SPEC.md)** - Complete project requirements and features
-- **[API_SPEC.md](./API_SPEC.md)** - Full REST API specification (to be split into api/)
-- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System architecture (to be split into architecture/)
-- **[COMPONENT_SPEC.md](./COMPONENT_SPEC.md)** - UI components (to be split into components/)
-- **[USER_PERSONAS.md](./USER_PERSONAS.md)** - Original personas document (replaced by personas/)
-- **[DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md)** - Development workflow
-- **[GLOSSARY.md](./GLOSSARY.md)** - ✅ **NEW** - Terminology and jargon reference
-- **[QUICK_START.md](./QUICK_START.md)** - Quick start guide
+**Files per feature**:
+- `README.md` - Quick overview
+- `spec.md` - Business requirements (user stories, acceptance scenarios)
+- `plan.md` - Implementation strategy (technical approach, phases)
+- `data-model.md` - Entity definitions, DTOs, database schema
+- `quickstart.md` - Developer guide with code examples
+- `tasks.md` - Implementation checklist
+- `contracts/` - API JSON schemas
+- `checklists/requirements.md` - Quality validation
 
-## 🚀 Quick Start
+**Completed Features**:
+- [Feature 001: User Authentication](../specs/001-user-authentication/)
+- [Feature 002: User Profile Management](../specs/002-user-profile-management/)
 
-### For Developers
+**Feature Catalog**: [/specs/README.md](../specs/README.md)
 
-1. **Start with** [PROJECT_SPEC.md](./PROJECT_SPEC.md) for project overview
-2. **Understand users** via [personas/](./personas/)
-3. **Review workflows** in [journeys/](./journeys/)
-4. **Check API contracts** in [API_SPEC.md](./API_SPEC.md) (or api/ when available)
-5. **Follow architecture** in [ARCHITECTURE.md](./ARCHITECTURE.md) (or architecture/ when available)
-6. **Build UI** per [COMPONENT_SPEC.md](./COMPONENT_SPEC.md) (or components/ when available)
+---
 
-### For AI/LLM Agents
+## 🗂️ Archived Files Reference
 
-**Context Loading Pattern**:
-```
-1. Load PROJECT_SPEC.md for project overview
-2. Load relevant persona from personas/
-3. Load relevant journey from journeys/
-4. Load API specification for endpoints needed
-5. Load architecture docs for patterns
-6. Generate code following specifications
-```
+### **Old Root Files** → **New Locations**
 
-**Example Prompt**:
-```
-Context:
-- Persona: personas/active-collaborator.md
-- Journey: journeys/shopping-together.md  
-- API: API_SPEC.md#shopping-items-endpoints
-- Architecture: ARCHITECTURE.md#state-management-strategy
+| Old File | Migrated To | Notes |
+|----------|-------------|-------|
+| `README.md` | [/README.md](../README.md) | Rewritten for Spec Kit |
+| `ARCHITECTURE.md` | [/ARCHITECTURE.md](../ARCHITECTURE.md) | Updated for .NET 9.0, SQLite |
+| `CHANGELOG.md` | [/CHANGELOG.md](../CHANGELOG.md) | Updated with Spec Kit adoption |
+| `FEATURES.md` | [/specs/README.md](../specs/README.md) | Feature catalog |
+| `API_SPEC.md` | [/API_REFERENCE.md](../API_REFERENCE.md) | API overview + per-feature contracts |
+| `PROJECT_SPEC.md` | Split into feature specs | See `/specs/XXX-*/spec.md` |
+| `DEVELOPMENT_GUIDE.md` | [/GETTING_STARTED.md](../GETTING_STARTED.md) + [/CONTRIBUTING.md](../CONTRIBUTING.md) | Split into setup + workflow |
+| `COMPONENT_SPEC.md` | Future feature specs | To be created per feature |
+| `data-models.md` | Per-feature `data-model.md` | See `/specs/XXX-*/data-model.md` |
 
-Task: Implement real-time item purchase toggle with optimistic updates
-```
+### **Old Directories** → **New Locations**
 
-### For Designers
+| Old Directory | Migrated To | Notes |
+|---------------|-------------|-------|
+| `schemas/` | Per-feature `contracts/` | e.g., `/specs/001-user-authentication/contracts/` |
+| `features/` | `/specs/` | Feature-based organization |
+| `journeys/` | Per-feature `spec.md` | User stories in each feature spec |
+| `personas/` | Per-feature `spec.md` | User scenarios in each feature spec |
+| `openspec/` | `/.specify/` | Spec Kit configuration and templates |
+| `docs/` | Root documentation | Promoted to root level |
 
-1. **Research users** in [personas/](./personas/)
-2. **Map workflows** from [journeys/](./journeys/)
-3. **Follow design system** in [COMPONENT_SPEC.md](./COMPONENT_SPEC.md)
-4. **Reference API data** in [API_SPEC.md](./API_SPEC.md) for data structures
+---
 
-### For Product Managers
+## 📖 How to Use Archived Files
 
-1. **Review** [PROJECT_SPEC.md](./PROJECT_SPEC.md) for requirements
-2. **Understand users** via [personas/](./personas/)
-3. **Analyze workflows** in [journeys/](./journeys/)
-4. **Plan features** based on user needs and technical constraints
+### **When to Reference Old Documents**
 
-## 🎨 What Makes This Different
+✅ **Historical context** - Understand past decisions
+✅ **Migration verification** - Ensure nothing was missed
+✅ **Content consolidation** - When creating new feature specs
 
-### Spec-Driven Development
-Every feature starts with comprehensive specifications before implementation.
+❌ **Don't use for**:
+- Current development (use new specs)
+- API contracts (use new contracts/)
+- Architecture decisions (use new plan.md files)
+- Development workflow (use new CONTRIBUTING.md)
 
-### LLM-Optimized
-Documentation structured for easy consumption by AI coding assistants like Cursor, GitHub Copilot, and ChatGPT.
+### **Example: Creating Feature 003 Specification**
 
-### Granular & Cross-Referenced
-Small, focused files that link to related content. No monolithic documents.
+When specifying Feature 003 (Shopping Lists CRUD), reference:
+1. ✅ `old_documents/API_SPEC.md` - List endpoints
+2. ✅ `old_documents/schemas/list*.json` - Previous list schemas
+3. ✅ `old_documents/FEATURES.md` - Feature description
+4. ✅ `old_documents/journeys/creating-first-list.md` - User journey
 
-### Single Source of Truth
-All product, design, and technical decisions documented here.
-
-### Living Documentation
-Continuously updated as project evolves.
-
-## 📊 Documentation Principles
-
-1. **Completeness**: Every feature fully specified before implementation
-2. **Precision**: Exact API contracts, data models, and workflows
-3. **Cross-referencing**: Documents link to related content
-4. **Versioning**: Track changes via Git
-5. **Accessibility**: Easy to read for humans and LLMs
-
-## 🔗 Repository Structure
-
-```
-ae-infinity-context/
-├── features/           # Feature-driven documentation (NEW!)
-│   ├── authentication/
-│   ├── lists/
-│   ├── items/
-│   ├── collaboration/
-│   ├── categories/
-│   ├── search/
-│   ├── realtime/
-│   ├── ui-components/
-│   └── infrastructure/
-├── personas/           # User personas and permissions
-├── journeys/           # User workflows and flows
-├── schemas/            # JSON Schema definitions for API contracts
-├── docs/               # Additional documentation
-├── openspec/           # OpenSpec framework integration
-│
-├── PROJECT_SPEC.md     # Project requirements
-├── FEATURES.md         # Master feature tracker
-├── API_SPEC.md         # Complete API spec
-├── ARCHITECTURE.md     # System architecture
-├── COMPONENT_SPEC.md   # UI components
-├── DEVELOPMENT_GUIDE.md # Development workflow
-└── README.md           # This file
-```
-
-## 📖 Related Repositories
-
-- **ae-infinity-ui** - React + TypeScript frontend
-  - See [ae-infinity-ui/README.md](../ae-infinity-ui/README.md)
-  - References this context repo for all specifications
-  
-- **ae-infinity-api** - .NET 8 Web API backend
-  - See [ae-infinity-api/README.md](../ae-infinity-api/README.md)
-  - Implements API contracts defined here
-
-## 🔄 Using This Repository
-
-### In Development
-
-**When implementing a feature:**
+Then generate new specification:
 ```bash
-# 1. Read the spec
-cat PROJECT_SPEC.md | grep "feature-name"
-
-# 2. Understand the user
-cat personas/relevant-persona.md
-
-# 3. Review the workflow
-cat journeys/relevant-journey.md
-
-# 4. Check the API
-cat API_SPEC.md | grep "endpoint"
-
-# 5. Follow architecture
-cat ARCHITECTURE.md | grep "pattern"
+/speckit.specify "Shopping lists CRUD with create, read, update, delete, and archive"
 ```
 
-### With AI Assistants
-
-**Cursor/Copilot:**
-```
-1. Open relevant context files
-2. Reference in comments:
-   // See: ../ae-infinity-context/api/items.md#update-purchased
-3. AI uses context for accurate code generation
-```
-
-**ChatGPT/Claude:**
-```
-Attach context files directly:
-- Persona file
-- Journey file
-- API spec section
-- Architecture pattern
-
-AI generates code matching exact specifications
-```
-
-## 🤝 Contributing
-
-### Adding New Content
-
-1. **New Persona**: Add to `personas/` with cross-references
-2. **New Journey**: Add to `journeys/` with step-by-step flow
-3. **New API Endpoint**: Update `API_SPEC.md` (or add to `api/` when available)
-4. **Architecture Change**: Update `ARCHITECTURE.md` (or relevant `architecture/` file)
-5. **Component Spec**: Update `COMPONENT_SPEC.md` (or add to `components/`)
-
-### Updating Existing Content
-
-1. Find relevant file(s)
-2. Make changes
-3. Update cross-references if needed
-4. Verify related docs still accurate
-5. Commit with descriptive message
-
-## 📝 Documentation Standards
-
-- **Markdown format** for all documents
-- **Clear headings** for easy navigation
-- **Code examples** where applicable
-- **Cross-references** to related content
-- **Version history** via Git commits
-
-## 🎯 Migration Status
-
-The repository is being reorganized into a more granular structure:
-
-✅ **Completed:**
-- `personas/` - User personas fully documented
-- `journeys/` - Key user journeys documented
-- `schemas/` - JSON Schema definitions for all API contracts
-- `features/` - Feature-driven documentation (9 feature domains)
-
-🚧 **Future Enhancements:**
-- `api/` - Could split API_SPEC.md into domain files (optional)
-- `architecture/` - Could split ARCHITECTURE.md into focused docs (optional)
-- `components/` - Component library documentation as it grows
-
-## 🔗 Quick Links
-
-**Getting Started:**
-- [QUICK_START.md](./QUICK_START.md) - Quick start guide
-- [PROJECT_SPEC.md](./PROJECT_SPEC.md) - Project overview
-
-**For Developers:**
-- [API_SPEC.md](./API_SPEC.md) - API contracts
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - System design
-- [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md) - Dev workflow
-
-**For Designers:**
-- [personas/](./personas/) - User research
-- [journeys/](./journeys/) - User flows
-- [COMPONENT_SPEC.md](./COMPONENT_SPEC.md) - UI specs
-
-**For Product:**
-- [PROJECT_SPEC.md](./PROJECT_SPEC.md) - Requirements
-- [personas/](./personas/) - User personas
-- [journeys/](./journeys/) - User workflows
+This will create `/specs/003-shopping-lists-crud/` with all necessary files.
 
 ---
 
-## 📋 What is This?
+## 🔍 Archived File Index
 
-This is **NOT** a code repository. This is the **specification and documentation repository** that drives development of:
+### **Root Level**
+- `README.md` - Old project README (superseded)
+- `ARCHITECTURE.md` - Old architecture docs (superseded)
+- `CHANGELOG.md` - Old changelog (merged)
+- `FEATURES.md` - Old feature list (superseded by specs/README.md)
+- `API_SPEC.md` - Old API docs (superseded by API_REFERENCE.md + contracts/)
+- `PROJECT_SPEC.md` - Old project spec (split into feature specs)
+- `DEVELOPMENT_GUIDE.md` - Old dev guide (superseded by GETTING_STARTED.md)
+- `COMPONENT_SPEC.md` - Old UI component specs (to be feature-based)
+- `data-models.md` - Old data models (now per-feature data-model.md)
+- `AGENTS.md` - OpenSpec agent instructions (migrated to .specify/)
+- `CLAUDE.md` - AI assistant instructions (migrated to .specify/)
 
-- **Backend API**: `ae-infinity-api` (.NET 8 Web API)
-- **Frontend UI**: `ae-infinity-ui` (React + TypeScript + Vite)
+### **schemas/** (46 JSON files)
+All schema files migrated to per-feature `contracts/` directories:
+- `user*.json` → `/specs/001-user-authentication/contracts/`
+- `list*.json` → Future `/specs/003-shopping-lists-crud/contracts/`
+- `item*.json` → Future `/specs/004-list-items-management/contracts/`
+- `category.json` → Future `/specs/005-categories-system/contracts/`
+- `collaborator.json`, `invitation.json` → Future `/specs/008-invitations-permissions/contracts/`
+- `search-result.json` → Future `/specs/006-basic-search/contracts/`
 
-All features are **specified here first**, then implemented in the respective code repositories.
+### **features/** (9 feature folders)
+Feature documentation migrated to `/specs/XXX-feature-name/`:
+- `authentication/` → `/specs/001-user-authentication/`
+- `lists/` → Future `/specs/003-shopping-lists-crud/`
+- `items/` → Future `/specs/004-list-items-management/`
+- `categories/` → Future `/specs/005-categories-system/`
+- `search/` → Future `/specs/006-basic-search/`
+- `collaboration/` → Future `/specs/007-real-time-collaboration/`
+- `realtime/` → Future `/specs/007-real-time-collaboration/`
+- `ui-components/` → To be feature-specific
+- `infrastructure/` → Architecture documentation
 
----
+### **journeys/** (3 user journey files)
+User journeys migrated to feature `spec.md` files:
+- `creating-first-list.md` → Future `/specs/003-shopping-lists-crud/spec.md`
+- `shopping-together.md` → Future `/specs/007-real-time-collaboration/spec.md`
 
-## 🎯 Purpose: Spec-Driven Development
+### **personas/** (5 persona files)
+Personas consolidated into feature specifications:
+- `list-creator.md` → Referenced in feature specs
+- `active-collaborator.md` → Referenced in collaboration specs
+- `passive-viewer.md` → Referenced in collaboration specs
+- `permission-matrix.md` → Preserved in ARCHITECTURE.md and feature plans
 
-We follow a **specification-first** approach:
+### **openspec/** (OpenSpec methodology)
+OpenSpec files migrated to `.specify/`:
+- `AGENTS.md` → `/.specify/templates/`
+- `CROSS_REPO_SETUP.md` → Constitution
+- `project.md` → Constitution + README
+- `QUICK_REFERENCE.md` → Per-feature quickstart.md
+- `specs/` → `/specs/` (new structure)
+- `doctor/` → `.specify/scripts/`
 
-```
-1. Write/Update SPEC → 2. Implement Code → 3. Mark as Implemented → 4. Integration Test
-   (This Repo)          (Code Repos)         (Update This Repo)       (Both Connected)
-```
-
-### Benefits
-
-- **Single Source of Truth** - All teams reference the same specs
-- **Clear Requirements** - Features are fully specified before coding begins
-- **Change Management** - Spec changes are tracked in git
-- **Documentation Always Current** - Specs evolve with the project
-- **Easy Onboarding** - New developers read specs to understand the system
-
----
-
-## 📚 Key Documents
-
-### Core Specifications
-
-| Document | Purpose | When to Update |
-|----------|---------|----------------|
-| [PROJECT_SPEC.md](./PROJECT_SPEC.md) | High-level project requirements and goals | When adding major features or changing project scope |
-| [ARCHITECTURE.md](./ARCHITECTURE.md) | System architecture, tech stack, and implementation details | When architectural decisions change or implementations are completed |
-| [API_SPEC.md](./API_SPEC.md) | Complete REST API contract and SignalR events | When adding/modifying API endpoints |
-| [COMPONENT_SPEC.md](./COMPONENT_SPEC.md) | UI component library specifications | When designing new UI components |
-| [FEATURES.md](./FEATURES.md) | Master feature tracker with implementation status | After each feature is implemented or integrated |
-
-### Feature-Specific Documentation
-
-| Directory | Purpose |
-|-----------|---------|
-| [features/](./features/) | **Feature-driven documentation** - Each feature domain has its own directory with detailed specs, implementation details, and integration steps |
-| [features/authentication/](./features/authentication/) | Authentication & user management |
-| [features/lists/](./features/lists/) | Shopping list CRUD operations |
-| [features/items/](./features/items/) | Shopping item management |
-| [features/collaboration/](./features/collaboration/) | List sharing & permissions |
-| [features/categories/](./features/categories/) | Item categorization |
-| [features/search/](./features/search/) | Global search functionality |
-| [features/realtime/](./features/realtime/) | SignalR live updates |
-| [features/ui-components/](./features/ui-components/) | UI component library |
-| [features/infrastructure/](./features/infrastructure/) | DevOps & cross-cutting concerns |
-
-### Data & Domain
-
-| Document | Purpose |
-|----------|---------|
-| [DB_SCHEMA.md](./docs/DB_SCHEMA.md) | Database schema and relationships |
-| [architecture/data-models.md](./architecture/data-models.md) | Domain model definitions |
-
-### User-Centric
-
-| Document | Purpose |
-|----------|---------|
-| [USER_PERSONAS.md](./USER_PERSONAS.md) | User types and their needs |
-| [personas/permission-matrix.md](./personas/permission-matrix.md) | Permission levels and capabilities |
-| [journeys/](./journeys/) | User journey maps and flows |
-
-### Development Guides
-
-| Document | Purpose |
-|----------|---------|
-| [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md) | How to set up and develop |
-| [API_INTEGRATION_GUIDE.md](./docs/API_INTEGRATION_GUIDE.md) | How to integrate frontend with backend |
+### **docs/** (Reference documentation)
+Documentation promoted to root level:
+- `CROSS_REPO_REFERENCES.md` → ROOT_REFERENCE section in root docs
+- `README.md` → Merged into root README.md
+- `REFERENCE_EXAMPLES.md` → Per-feature quickstart.md
 
 ---
 
-## 🔄 Workflow
+## 🚀 Next Steps for Developers
 
-### Adding a New Feature
+### **If You're New to the Project**
+1. **Start here**: [/README.md](../README.md) - Get project overview
+2. **Quick setup**: [/GETTING_STARTED.md](../GETTING_STARTED.md) - Running in 5-10 minutes
+3. **Learn workflow**: [/CONTRIBUTING.md](../CONTRIBUTING.md) - How we work with Spec Kit
+4. **Review constitution**: [/.specify/memory/constitution.md](../.specify/memory/constitution.md) - Development principles
 
-1. **Specify** the feature in this repo
-   - Update `FEATURES.md` (add to tracker)
-   - Update relevant spec docs (API_SPEC.md, COMPONENT_SPEC.md, etc.)
-   - Commit with message: `spec: Add feature X specification`
+### **If You're Continuing Development**
+1. **Review feature catalog**: [/specs/README.md](../specs/README.md) - See all features
+2. **Pick a feature**: See `specs/XXX-feature/tasks.md` for implementation tasks
+3. **Follow quickstart**: Each feature has step-by-step guide
+4. **Use Spec Kit commands**: `/speckit.specify`, `/speckit.plan`, `/speckit.tasks`
 
-2. **Implement** in code repos
-   - Backend: `ae-infinity-api`
-   - Frontend: `ae-infinity-ui`
-   - Commit with message: `feat: Implement feature X`
-
-3. **Update Implementation Status** in this repo
-   - Update `FEATURES.md` (mark as ✅ or 🟡)
-   - Update `ARCHITECTURE.md` (add to implementation details)
-   - Commit with message: `docs: Mark feature X as implemented`
-
-4. **Integration** 
-   - Connect frontend to backend
-   - Update `FEATURES.md` (mark integration complete)
-   - Commit with message: `docs: Feature X fully integrated`
-
-### Updating Existing Features
-
-1. **Update the Spec First**
-   - Modify the specification
-   - Note breaking changes
-   - Commit: `spec: Update feature X - breaking change`
-
-2. **Implement Changes**
-   - Update backend/frontend code
-   - Commit in code repos
-
-3. **Sync Documentation**
-   - Update implementation notes
-   - Commit: `docs: Sync feature X changes`
-
-### When Specs Drift from Reality
-
-If you discover the implementation doesn't match the spec:
-
-1. **Decide**: Should code change to match spec, or spec change to match code?
-2. **Document**: Add note in ARCHITECTURE.md about the deviation
-3. **Update**: Modify either spec or code to align
-4. **Commit**: Clear commit message explaining the sync
+### **If You're Specifying New Features**
+1. **Check old docs** in this folder for reference content
+2. **Run**: `/speckit.specify "feature description"`
+3. **Review generated spec**: `specs/XXX-feature/spec.md`
+4. **Consolidate old content**: Integrate relevant old docs into new spec
+5. **Generate plan**: `/speckit.plan XXX-feature`
+6. **Break down tasks**: `/speckit.tasks XXX-feature`
 
 ---
 
-## 📊 Status Indicators
+## 📞 Questions?
 
-Throughout this repository, you'll see status indicators:
-
-- ✅ **Complete** - Fully implemented, tested, and integrated
-- 🟡 **Partial** - Implemented but needs integration or using mock data
-- ❌ **Not Started** - Specified but not yet implemented
-- 🚧 **In Progress** - Currently being worked on
-- 🔜 **Planned** - Specified and prioritized for upcoming sprint
+- **About old documents**: This README or search within `old_documents/`
+- **About new structure**: See [/README.md](../README.md)
+- **About Spec Kit**: See [/CONTRIBUTING.md](../CONTRIBUTING.md)
+- **About architecture**: See [/ARCHITECTURE.md](../ARCHITECTURE.md)
+- **About specific features**: See `/specs/XXX-feature/README.md`
 
 ---
 
-## 🏗️ Repository Structure
+## 📊 Archive Statistics
 
-```
-ae-infinity-context/
-├── README.md                  # This file - start here!
-├── FEATURES.md               # Master feature tracker
-├── PROJECT_SPEC.md           # High-level project requirements
-├── ARCHITECTURE.md           # System architecture + implementation
-├── API_SPEC.md              # REST API specification
-├── COMPONENT_SPEC.md        # UI component specifications
-├── USER_PERSONAS.md         # User types and needs
-├── DEVELOPMENT_GUIDE.md     # Setup and development guide
-│
-├── architecture/            # Detailed architecture docs
-│   ├── data-models.md
-│   └── README.md
-│
-├── personas/               # User persona details
-│   ├── permission-matrix.md
-│   └── *.md
-│
-├── journeys/              # User journey maps
-│   ├── creating-first-list.md
-│   └── *.md
-│
-├── docs/                  # Additional documentation
-│   ├── API_INTEGRATION_GUIDE.md
-│   └── DB_SCHEMA.md
-│
-└── api/                   # API-specific docs
-    └── README.md
-```
+| Category | Count | Status |
+|----------|-------|--------|
+| Root markdown files | 11 | ✅ Archived |
+| Feature directories | 9 | ✅ Migrated to specs/ |
+| JSON schemas | 28 | ✅ Migrated to contracts/ |
+| User journeys | 3 | ✅ Consolidated into specs |
+| Personas | 5 | ✅ Integrated into specs |
+| OpenSpec files | 7 | ✅ Migrated to .specify/ |
+| Documentation pages | 12 | ✅ Migrated to root |
+| **Total archived files** | **75+** | ✅ Complete |
 
 ---
 
-## 🎯 Current State
+**Archive Maintained For**: Historical reference, migration verification, content consolidation
 
-**Project Version**: 1.0 (Development Phase)
+**Last Updated**: November 5, 2025
 
-### Implementation Progress
-- **Backend API**: 80% complete
-- **Frontend UI**: 85% complete
-- **Integration**: 0% complete (ready to start)
-- **Real-time**: 0% complete (SignalR not started)
-
-See [FEATURES.md](./FEATURES.md) for detailed breakdown.
-
-### What's Ready
-- ✅ Complete type system (Frontend)
-- ✅ All API service layers (Frontend)
-- ✅ All CRUD endpoints (Backend)
-- ✅ All UI pages (Frontend)
-- ✅ Authentication flow (Backend + Frontend)
-
-### What's Next
-1. **Connect frontend to backend** - Replace mock data with real API calls
-2. **Complete missing endpoints** - Registration, password reset
-3. **Add SignalR** - Real-time features
-4. **Polish** - Error handling, loading states, optimistic updates
-
----
-
-## 🤝 Contributing
-
-### For Developers
-
-1. **Always read the spec first** before implementing
-2. **Ask questions** if the spec is unclear (update spec with clarification)
-3. **Update status** when you complete implementation
-4. **Document deviations** when you must deviate from spec
-
-### For Product/Design
-
-1. **Update specs** when requirements change
-2. **Provide context** in commit messages
-3. **Version major changes** to track evolution
-4. **Link to designs** when adding UI specs
-
-### Commit Message Convention
-
-```
-spec: Add/Update/Remove feature specification
-docs: Update documentation or implementation status
-fix: Correct errors in specifications
-refactor: Reorganize documentation structure
-```
-
----
-
-## 📖 Quick Start
-
-### I'm New to This Project
-
-1. Read [PROJECT_SPEC.md](./PROJECT_SPEC.md) - Understand what we're building
-2. Read [ARCHITECTURE.md](./ARCHITECTURE.md) - Understand how it's structured
-3. Read [FEATURES.md](./FEATURES.md) - See what's implemented
-4. Read [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md) - Set up your environment
-
-### I'm Adding a New Feature
-
-1. Open [FEATURES.md](./FEATURES.md) - Add your feature to the tracker
-2. Update relevant spec files - API_SPEC.md, COMPONENT_SPEC.md, etc.
-3. Commit your spec changes
-4. Implement in code repos
-5. Come back and mark as implemented
-
-### I'm Connecting Frontend to Backend
-
-1. Read [API_INTEGRATION_GUIDE.md](./docs/API_INTEGRATION_GUIDE.md)
-2. Check [API_SPEC.md](./API_SPEC.md) for endpoint contracts
-3. Update [ARCHITECTURE.md](./ARCHITECTURE.md) as you integrate
-4. Mark features as integrated in [FEATURES.md](./FEATURES.md)
-
----
-
-## 🔗 Related Repositories
-
-- **Backend API**: [ae-infinity-api](../ae-infinity-api/) - .NET 8 Web API
-- **Frontend UI**: [ae-infinity-ui](../ae-infinity-ui/) - React + TypeScript + Vite
-
----
-
-## 📝 License
-
-Internal project for Slalom AE Immersion Workshop
-
----
-
-## 💬 Questions?
-
-- **Spec unclear?** Open an issue or submit a PR to clarify
-- **Found a bug in specs?** Submit a PR with the fix
-- **Need architectural decision?** Discuss and document in ARCHITECTURE.md
-
----
-
-**Remember**: This repo is the source of truth. When in doubt, check here first! 🎯
+**Migration Status**: ✅ Complete - All active documentation migrated to Spec Kit structure
