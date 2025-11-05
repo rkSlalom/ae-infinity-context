@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/lists-response.json",
+  "title": "ListsResponse",
+  "description": "Paginated response for GET /lists endpoint",
+  "type": "object",
+  "properties": {
+    "lists": {
+      "type": "array",
+      "description": "Array of list summaries",
+      "items": {
+        "$ref": "list-dto.json"
+      }
+    },
+    "pagination": {
+      "type": "object",
+      "description": "Pagination metadata",
+      "properties": {
+        "currentPage": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Current page number (1-indexed)"
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Number of items per page"
+        },
+        "totalPages": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of pages"
+        },
+        "totalCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of lists matching query"
+        }
+      },
+      "required": ["currentPage", "pageSize", "totalPages", "totalCount"]
+    }
+  },
+  "required": ["lists", "pagination"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "lists": [
+        {
+          "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+          "name": "Weekly Groceries",
+          "description": "Our regular weekly shopping list",
+          "ownerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "owner": {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "displayName": "John Doe",
+            "avatarUrl": null
+          },
+          "isArchived": false,
+          "archivedAt": null,
+          "createdAt": "2025-11-01T10:00:00Z",
+          "updatedAt": "2025-11-05T14:30:00Z",
+          "totalItems": 12,
+          "purchasedItems": 5,
+          "collaboratorsCount": 3
+        }
+      ],
+      "pagination": {
+        "currentPage": 1,
+        "pageSize": 20,
+        "totalPages": 1,
+        "totalCount": 1
+      }
+    }
+  ]
+}
+

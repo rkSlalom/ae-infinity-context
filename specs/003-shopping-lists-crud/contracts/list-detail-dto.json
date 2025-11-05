@@ -1,0 +1,183 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/list-detail-dto.json",
+  "title": "ListDetailDto",
+  "description": "Complete shopping list details with items and collaborators",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique list identifier"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "List name"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "maxLength": 1000,
+      "description": "Optional list description"
+    },
+    "ownerId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "User ID of the list owner"
+    },
+    "owner": {
+      "type": ["object", "null"],
+      "description": "Owner details",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "avatarUrl": {
+          "type": ["string", "null"],
+          "format": "uri"
+        }
+      },
+      "required": ["id", "displayName"]
+    },
+    "isArchived": {
+      "type": "boolean",
+      "description": "Whether the list is archived"
+    },
+    "archivedAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When the list was archived (null if active)"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "List creation timestamp"
+    },
+    "updatedAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Last modification timestamp"
+    },
+    "totalItems": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of items"
+    },
+    "purchasedItems": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of purchased items"
+    },
+    "collaboratorsCount": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of collaborators"
+    },
+    "collaborators": {
+      "type": "array",
+      "description": "List of all collaborators with their permissions",
+      "items": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "avatarUrl": {
+            "type": ["string", "null"],
+            "format": "uri"
+          },
+          "permission": {
+            "type": "string",
+            "enum": ["Owner", "Editor", "Viewer"]
+          },
+          "invitedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "acceptedAt": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          }
+        },
+        "required": ["userId", "displayName", "permission", "invitedAt"]
+      }
+    },
+    "items": {
+      "type": "array",
+      "description": "All items in the list (Feature 004)",
+      "items": {
+        "type": "object",
+        "description": "Shopping item (see Feature 004 contracts for complete schema)"
+      }
+    },
+    "userRole": {
+      "type": ["string", "null"],
+      "enum": ["Owner", "Editor", "Viewer", null],
+      "description": "Current user's permission level for this list"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "ownerId",
+    "isArchived",
+    "createdAt",
+    "totalItems",
+    "purchasedItems",
+    "collaboratorsCount",
+    "collaborators",
+    "items"
+  ],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+      "name": "Weekly Groceries",
+      "description": "Our regular weekly shopping list",
+      "ownerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "owner": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "displayName": "John Doe",
+        "avatarUrl": null
+      },
+      "isArchived": false,
+      "archivedAt": null,
+      "createdAt": "2025-11-01T10:00:00Z",
+      "updatedAt": "2025-11-05T14:30:00Z",
+      "totalItems": 2,
+      "purchasedItems": 1,
+      "collaboratorsCount": 2,
+      "collaborators": [
+        {
+          "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "displayName": "John Doe",
+          "avatarUrl": null,
+          "permission": "Owner",
+          "invitedAt": "2025-11-01T10:00:00Z",
+          "acceptedAt": "2025-11-01T10:00:00Z"
+        },
+        {
+          "userId": "9fb95g75-6828-5673-c4gd-3d184g2a01bf8",
+          "displayName": "Jane Smith",
+          "avatarUrl": null,
+          "permission": "Editor",
+          "invitedAt": "2025-11-02T14:00:00Z",
+          "acceptedAt": "2025-11-02T15:30:00Z"
+        }
+      ],
+      "items": [],
+      "userRole": "Owner"
+    }
+  ]
+}
+
