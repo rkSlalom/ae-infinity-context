@@ -19,8 +19,9 @@ Complete list items management system enabling users to add, edit, delete, reord
 - Frontend: TypeScript / React 19.1
 
 **Primary Dependencies**: 
-- Backend: ASP.NET Core 9.0, Entity Framework Core 9.0, MediatR 12.4, FluentValidation 11.9, AutoMapper 12.0, Serilog 8.0
-- Frontend: React 19.1, React Router 7.9, Vite 7.1, Tailwind CSS 3.4, React Hook Form 7.51
+- Backend: ASP.NET Core 9.0, Entity Framework Core 9.0, MediatR 12.4, FluentValidation 11.9, AutoMapper 12.0, Serilog 8.0, SignalR 9.0
+- Frontend: React 19.1, React Router 7.9, Vite 7.1, Tailwind CSS 3.4, React Hook Form 7.51, @microsoft/signalr 8.0
+- Real-time: SignalR for WebSocket-based collaborative item management
 
 **Storage**: SQLite (embedded database via Entity Framework Core 9.0, file: `app.db`)
 
@@ -79,10 +80,11 @@ Complete list items management system enabling users to add, edit, delete, reord
 - Input validation with FluentValidation (name length, quantity positive, notes max 500)
 - Parameterized queries via Entity Framework Core prevent SQL injection
 
-⚠️ **Real-time Collaboration Architecture** (Principle III)
-- **Status**: NOT IMPLEMENTED in this feature (acceptable, deferred to Feature 007)
-- **Rationale**: Feature 004 focuses on core CRUD operations, real-time sync is a separate concern
-- **Future**: SignalR integration in Feature 007 will broadcast item changes to collaborators
+✅ **Real-time Collaboration Architecture** (Principle III)
+- **Status**: IMPLEMENTED - Item updates broadcast via SignalR to all list collaborators
+- **Implementation**: SignalR hub extended for item operations (create, update, delete, purchase, reorder)
+- **Optimistic UI**: Frontend implements optimistic updates with rollback on errors
+- **Latency Target**: Real-time item updates reflected within 2 seconds (per Constitution Principle III)
 
 ✅ **OpenSpec Change Management** (Principle II)
 - This feature follows specification workflow (spec → plan → implementation)
@@ -150,7 +152,9 @@ src/
 ├── API/
 │   ├── Controllers/
 │   │   └── ListItemsController.cs       # PATCH for purchased, reorder
-│   └── Program.cs                       # DI registration
+│   ├── Hubs/
+│   │   └── ShoppingListHub.cs           # EXTEND - Add item event methods (from Feature 003)
+│   └── Program.cs                       # VERIFY - SignalR already configured in Feature 003
 ├── Application/
 │   ├── ListItems/
 │   │   ├── Commands/
@@ -183,23 +187,28 @@ src/
 src/
 ├── components/
 │   ├── items/
-│   │   ├── ItemCard.tsx                 # Individual item display
-│   │   ├── ItemForm.tsx                 # Add/Edit item form
-│   │   ├── ItemList.tsx                 # List of items with drag-drop
+│   │   ├── ItemCard.tsx                 # Individual item display + optimistic UI
+│   │   ├── ItemForm.tsx                 # Add/Edit item form + optimistic UI
+│   │   ├── ItemList.tsx                 # List of items with drag-drop + SignalR events
 │   │   ├── QuickAddInput.tsx            # Quick add with autocomplete
 │   │   ├── ItemFilters.tsx              # Category/status filters
-│   │   └── ItemPurchaseCheckbox.tsx     # Purchase status toggle
+│   │   └── ItemPurchaseCheckbox.tsx     # Purchase status toggle + optimistic UI
 │   └── common/
 │       ├── ConfirmDialog.tsx            # Delete confirmation
-│       └── AutocompleteInput.tsx        # Reusable autocomplete
+│       ├── AutocompleteInput.tsx        # Reusable autocomplete
+│       └── ConflictNotification.tsx     # NEW - Conflict warning toast
 ├── hooks/
-│   ├── useItems.ts                      # Items CRUD operations
+│   ├── useItems.ts                      # Items CRUD operations + optimistic updates
+│   ├── useItemEvents.ts                 # NEW - SignalR item event handlers
 │   ├── useItemAutocomplete.ts           # Autocomplete suggestions
-│   └── useItemDragDrop.ts               # Drag-and-drop logic
+│   ├── useItemDragDrop.ts               # Drag-and-drop logic
+│   └── useSignalR.ts                    # REUSE - From Feature 003 (connection management)
 ├── services/
-│   └── itemsService.ts                  # API client (already exists ✅)
+│   ├── itemsService.ts                  # API client (already exists ✅)
+│   └── signalrService.ts                # REUSE - From Feature 003
 └── types/
-    └── index.ts                         # TypeScript interfaces
+    ├── index.ts                         # TypeScript interfaces
+    └── signalr.ts                       # EXTEND - Add item event types
 ```
 
 **Test Files** (backend):
@@ -423,6 +432,144 @@ CREATE INDEX IX_ListItems_CreatedById ON ListItems(CreatedById);
 
 1. **Backend**: No caching for items (always fresh data to support future real-time updates)
 2. **Frontend**: React Query cache with 5-minute stale time, invalidate on mutations
+
+---
+
+## SignalR Real-time Architecture
+
+### Hub Extension
+
+**File**: `AeInfinity.Api/Hubs/ShoppingListHub.cs` (extends existing hub from Feature 003)
+
+```csharp
+public class ShoppingListHub : Hub
+{
+    // ... existing list methods from Feature 003 ...
+    
+    // Item-specific methods
+    public async Task JoinItemsView(string listId)
+    {
+        await Groups.AddToGroupAsync(Context.ConnectionId, $"list-items-{listId}");
+    }
+    
+    public async Task LeaveItemsView(string listId)
+    {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"list-items-{listId}");
+    }
+}
+```
+
+### Event Broadcasting
+
+**Item command handlers broadcast events after successful database operations:**
+
+```csharp
+// Example: CreateItemCommandHandler
+public async Task<Result<ItemResponse>> Handle(CreateItemCommand request)
+{
+    // ... create item in database ...
+    
+    // Broadcast to all list collaborators
+    await _hubContext.Clients
+        .Group($"list-items-{item.ListId}")
+        .SendAsync("ItemCreated", new {
+            listId = item.ListId,
+            item = itemDto,
+            userId = request.UserId
+        });
+    
+    return Result<ItemResponse>.Success(itemDto);
+}
+```
+
+**Events Broadcast**:
+- `ItemCreated` - After CreateItemCommand succeeds
+- `ItemUpdated` - After UpdateItemCommand succeeds
+- `ItemDeleted` - After DeleteItemCommand succeeds (soft delete)
+- `ItemPurchased` - After TogglePurchasedCommand succeeds (isPurchased = true)
+- `ItemUnpurchased` - After TogglePurchasedCommand succeeds (isPurchased = false)
+- `ItemsReordered` - After ReorderItemsCommand succeeds (batch position update)
+
+### Frontend SignalR Integration
+
+**Item Event Handlers** (`src/hooks/useItemEvents.ts`):
+```typescript
+export function useItemEvents(listId: string) {
+  const { connection } = useSignalR();
+  const queryClient = useQueryClient();
+  
+  useEffect(() => {
+    if (!connection) return;
+    
+    connection.on('ItemCreated', (data) => {
+      // Invalidate query to refetch items
+      queryClient.invalidateQueries(['items', listId]);
+      
+      // Show toast notification
+      toast.info(`${data.userId} added "${data.item.name}"`);
+    });
+    
+    connection.on('ItemPurchased', (data) => {
+      // Optimistic update in cache
+      queryClient.setQueryData(['items', listId], (old) =>
+        old.map(item => 
+          item.id === data.itemId 
+            ? { ...item, isPurchased: true, purchasedAt: data.timestamp }
+            : item
+        )
+      );
+    });
+    
+    // ... other event handlers ...
+    
+    return () => {
+      connection.off('ItemCreated');
+      connection.off('ItemPurchased');
+      // ... cleanup other handlers ...
+    };
+  }, [connection, listId]);
+}
+```
+
+**Optimistic UI Pattern for Purchase Toggle**:
+```typescript
+const togglePurchased = useMutation({
+  mutationFn: (itemId: string) => itemsService.togglePurchased(listId, itemId),
+  
+  // Optimistic update
+  onMutate: async (itemId) => {
+    await queryClient.cancelQueries(['items', listId]);
+    const previousItems = queryClient.getQueryData(['items', listId]);
+    
+    queryClient.setQueryData(['items', listId], (old) =>
+      old.map(item =>
+        item.id === itemId
+          ? { ...item, isPurchased: !item.isPurchased }
+          : item
+      )
+    );
+    
+    return { previousItems };
+  },
+  
+  // Rollback on error
+  onError: (err, itemId, context) => {
+    queryClient.setQueryData(['items', listId], context.previousItems);
+    toast.error('Failed to update item. Changes reverted.');
+  },
+  
+  // Confirm success
+  onSuccess: () => {
+    // SignalR will broadcast to other users
+  }
+});
+```
+
+**Conflict Resolution**:
+- Strategy: Last-write-wins for item edits
+- Optimistic UI: Immediate purchase toggle, rollback on error
+- User notification: Toast message "Another user updated this item"
+- Detection: Compare UpdatedAt timestamp from SignalR event with local state
 
 ---
 
@@ -650,8 +797,12 @@ CREATE INDEX IX_ListItems_CreatedById ON ListItems(CreatedById);
 | **Performance with 500+ items** | High (user experience) | Medium | Implement virtual scrolling (react-window), test early |
 | **Permission checks slow down queries** | Medium (API latency) | Low | Cache list permissions, check once per request |
 | **Autocomplete query too slow** | Medium (bad UX) | Low | Add database index on CreatedById, limit to top 10 results |
-| **Real-time conflicts** | Low (future feature) | Low | Document in Out of Scope, defer to Feature 007 |
+| **SignalR connection failures** | High (real-time broken) | Medium | Implement automatic reconnection, queue failed events, show connection status |
+| **Optimistic UI rollback complexity** | Medium (bad UX) | Medium | Use React Query for built-in optimistic updates, comprehensive error handling |
+| **Race conditions in concurrent edits** | High (data loss) | Medium | Last-write-wins with user notification, timestamp-based conflict detection |
+| **Purchase toggle conflicts** | Medium (confusion) | High | Optimistic UI with instant feedback, rollback on error, broadcast to others |
 | **Mobile drag-drop doesn't work** | High (mobile users blocked) | Medium | Test on real devices early, fallback to edit mode for position |
+| **SignalR scaling with many items** | Medium (performance) | Low | Configure SignalR for Redis backplane if >1000 concurrent users per list |
 
 ---
 
@@ -678,29 +829,41 @@ CREATE INDEX IX_ListItems_CreatedById ON ListItems(CreatedById);
 - [ ] All commands/queries implemented with MediatR
 - [ ] All validators pass FluentValidation tests
 - [ ] Repository methods implemented with EF Core
+- [ ] SignalR hub extended with item event methods (JoinItemsView, LeaveItemsView)
+- [ ] Event broadcasting added to all command handlers (ItemCreated, ItemUpdated, etc.)
 - [ ] Unit tests written and passing (90%+ coverage)
 - [ ] Integration tests written and passing (80%+ coverage)
+- [ ] SignalR integration tests for event broadcasting
 - [ ] API endpoints documented in Swagger/OpenAPI
-- [ ] Database migrations created and tested
+- [ ] Database migrations created and tested (including soft delete fields)
 - [ ] Permission checks enforced (viewer vs. editor)
 
 ### Frontend
 - [ ] All components implemented with TypeScript
 - [ ] All hooks implemented with proper error handling
+- [ ] SignalR event handlers implemented (useItemEvents hook)
+- [ ] Optimistic UI updates with rollback for all operations
+- [ ] Conflict notifications displayed for concurrent edits
+- [ ] Connection status indicator implemented
 - [ ] Component tests written and passing (80%+ coverage)
 - [ ] Hook tests written and passing (85%+ coverage)
 - [ ] Integration tests with MSW passing
+- [ ] SignalR event handling tested (mock hub connection)
 - [ ] Accessibility tested (WAVE, axe, keyboard nav)
 - [ ] Mobile tested on iOS and Android
 - [ ] Loading/error states implemented
 
 ### Integration
 - [ ] Backend API endpoints called from frontend
-- [ ] Authentication working (JWT in headers)
+- [ ] SignalR connection established and maintained
+- [ ] Real-time events broadcast and received correctly
+- [ ] Optimistic UI updates synchronize with SignalR events
+- [ ] Authentication working (JWT in headers + SignalR token)
 - [ ] Permission-based UI working (viewer restrictions)
 - [ ] Error messages displayed correctly
 - [ ] Success notifications shown
-- [ ] Performance goals met (all 10 success criteria)
+- [ ] Conflict notifications shown when concurrent edits occur
+- [ ] Performance goals met (all 10 success criteria including SC-010 real-time < 2s)
 
 ### Documentation
 - [ ] quickstart.md created with examples

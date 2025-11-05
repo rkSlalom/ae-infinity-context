@@ -27,6 +27,7 @@
 **Purpose**: Project initialization and dependency installation
 
 - [ ] T001 Install @dnd-kit packages in ae-infinity-ui/ (npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities)
+- [ ] T001a Install @microsoft/signalr in ae-infinity-ui/ (npm install @microsoft/signalr)
 - [ ] T002 [P] Install React Query in ae-infinity-ui/ if not already present (npm install @tanstack/react-query)
 - [ ] T003 [P] Verify FluentValidation and MediatR packages in ae-infinity-api/src/Application/
 - [ ] T004 Create contracts directory structure ae-infinity-api/src/Application/ListItems/Contracts/
@@ -41,9 +42,12 @@
 
 ### Backend Foundation
 
-- [ ] T005 Create ListItem entity in ae-infinity-api/src/Domain/Entities/ListItem.cs
-- [ ] T006 Create EF Core configuration in ae-infinity-api/src/Infrastructure/Persistence/Configurations/ListItemConfiguration.cs
-- [ ] T007 Create database migration for ListItems table with indexes
+- [ ] T005 Create ListItem entity with soft delete fields in ae-infinity-api/src/Domain/Entities/ListItem.cs
+- [ ] T006 Create EF Core configuration with soft delete filter in ae-infinity-api/src/Infrastructure/Persistence/Configurations/ListItemConfiguration.cs
+- [ ] T007 Create database migration for ListItems table with indexes (include IsDeleted, DeletedAt, DeletedById)
+- [ ] T007a [P] VERIFY ShoppingListHub exists from Feature 003 in ae-infinity-api/src/AeInfinity.Api/Hubs/ShoppingListHub.cs
+- [ ] T007b Extend ShoppingListHub with JoinItemsView/LeaveItemsView methods
+- [ ] T007c [P] VERIFY SignalR configured in Program.cs from Feature 003
 - [ ] T008 [P] Create IListItemRepository interface in ae-infinity-api/src/Application/Common/Interfaces/IListItemRepository.cs
 - [ ] T009 Implement ListItemRepository in ae-infinity-api/src/Infrastructure/Persistence/Repositories/ListItemRepository.cs
 - [ ] T010 [P] Create ItemResponse DTO in ae-infinity-api/src/Application/ListItems/Contracts/ItemResponse.cs
@@ -54,8 +58,13 @@
 
 - [ ] T013 [P] Define ListItem TypeScript type in ae-infinity-ui/src/types/index.ts
 - [ ] T014 [P] Define request/response TypeScript types in ae-infinity-ui/src/types/index.ts
+- [ ] T014a [P] VERIFY signalrService.ts exists from Feature 003 in ae-infinity-ui/src/services/signalrService.ts
+- [ ] T014b [P] VERIFY useSignalR hook exists from Feature 003 in ae-infinity-ui/src/hooks/useSignalR.ts
+- [ ] T014c Extend signalr.ts with item event type definitions in ae-infinity-ui/src/types/signalr.ts
+- [ ] T014d Create useItemEvents hook for item-specific SignalR handlers in ae-infinity-ui/src/hooks/useItemEvents.ts
 - [ ] T015 Update itemsService.ts with base API methods in ae-infinity-ui/src/services/itemsService.ts
 - [ ] T016 [P] Create ConfirmDialog component in ae-infinity-ui/src/components/common/ConfirmDialog.tsx
+- [ ] T016a Create ConflictNotification component in ae-infinity-ui/src/components/common/ConflictNotification.tsx
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -93,13 +102,20 @@
 
 #### Frontend Implementation
 - [ ] T029 [P] [US1] Create ItemForm component for add mode in ae-infinity-ui/src/components/items/ItemForm.tsx
-- [ ] T030 [P] [US1] Create useItems hook with createItem mutation in ae-infinity-ui/src/hooks/useItems.ts
+- [ ] T030 [P] [US1] Create useItems hook with createItem mutation and optimistic updates in ae-infinity-ui/src/hooks/useItems.ts
 - [ ] T031 [US1] Wire ItemForm to useItems hook in ae-infinity-ui/src/pages/lists/ListDetail.tsx
 - [ ] T032 [US1] Add form validation errors display in ItemForm component
 - [ ] T033 [US1] Add loading states and success/error toasts for item creation
 - [ ] T034 [US1] Run tests to verify all US1 frontend tests pass
 
-**Checkpoint**: At this point, User Story 1 should be fully functional and testable independently. Users can add items with all fields.
+#### SignalR Integration for User Story 1
+- [ ] T034a [P] [US1] Add ItemCreated event broadcasting in CreateItemCommandHandler after successful save
+- [ ] T034b [US1] Add ItemCreated event handler in useItemEvents hook: prepend new item to list
+- [ ] T034c [US1] Implement optimistic UI: add temporary item immediately, replace with real data on success
+- [ ] T034d [US1] Add rollback logic: remove optimistic item on API error
+- [ ] T034e [US1] Test real-time item creation: verify other collaborators see new item within 2 seconds
+
+**Checkpoint**: At this point, User Story 1 should be fully functional with real-time broadcasting. Users can add items with all fields, and all collaborators see updates instantly.
 
 ---
 
@@ -133,14 +149,21 @@
 - [ ] T047 [US2] Run tests to verify all US2 backend tests pass
 
 #### Frontend Implementation
-- [ ] T048 [P] [US2] Create ItemPurchaseCheckbox component in ae-infinity-ui/src/components/items/ItemPurchaseCheckbox.tsx
+- [ ] T048 [P] [US2] Create ItemPurchaseCheckbox component with optimistic UI in ae-infinity-ui/src/components/items/ItemPurchaseCheckbox.tsx
 - [ ] T049 [P] [US2] Create ItemCard component with purchased styling in ae-infinity-ui/src/components/items/ItemCard.tsx
 - [ ] T050 [US2] Add togglePurchased mutation with optimistic updates in ae-infinity-ui/src/hooks/useItems.ts
 - [ ] T051 [US2] Add items metadata summary display (X of Y purchased) in ListDetail header
 - [ ] T052 [US2] Add celebration message for all items purchased in ae-infinity-ui/src/pages/lists/ListDetail.tsx
 - [ ] T053 [US2] Run tests to verify all US2 frontend tests pass
 
-**Checkpoint**: At this point, User Stories 1 AND 2 should both work independently. Users can add items and mark them as purchased.
+#### SignalR Integration for User Story 2
+- [ ] T053a [P] [US2] Add ItemPurchased event broadcasting in TogglePurchasedCommandHandler after status change
+- [ ] T053b [US2] Add ItemPurchased event handler in useItemEvents hook: update item's isPurchased state
+- [ ] T053c [US2] Implement optimistic checkbox toggle: instant visual feedback, rollback on error
+- [ ] T053d [US2] Update metadata summary when ItemPurchased event received from other users
+- [ ] T053e [US2] Test purchase toggle conflicts: two users toggle same item simultaneously, verify last-write-wins
+
+**Checkpoint**: At this point, User Stories 1 AND 2 should both work independently with real-time sync. Users can add items and mark them as purchased, all collaborators see updates instantly.
 
 ---
 
@@ -172,12 +195,19 @@
 
 #### Frontend Implementation
 - [ ] T064 [US3] Update ItemForm component to support edit mode with pre-filled values in ae-infinity-ui/src/components/items/ItemForm.tsx
-- [ ] T065 [US3] Add updateItem mutation in useItems hook in ae-infinity-ui/src/hooks/useItems.ts
+- [ ] T065 [US3] Add updateItem mutation with optimistic updates in useItems hook in ae-infinity-ui/src/hooks/useItems.ts
 - [ ] T066 [US3] Add Edit button to ItemCard component (permission-based) in ae-infinity-ui/src/components/items/ItemCard.tsx
 - [ ] T067 [US3] Wire edit flow to open ItemForm modal with existing item data
 - [ ] T068 [US3] Run tests to verify all US3 frontend tests pass
 
-**Checkpoint**: At this point, User Stories 1, 2, AND 3 should all work independently. Users can add, mark as purchased, and edit items.
+#### SignalR Integration for User Story 3
+- [ ] T068a [P] [US3] Add ItemUpdated event broadcasting in UpdateItemCommandHandler after successful save
+- [ ] T068b [US3] Add ItemUpdated event handler in useItemEvents hook: update item in list with new data
+- [ ] T068c [US3] Add conflict detection: compare UpdatedAt timestamp from SignalR event with local state
+- [ ] T068d [US3] Show ConflictNotification toast when concurrent edit detected: "Another user edited this item. Refresh to see changes."
+- [ ] T068e [US3] Test concurrent edit scenario: two users edit same item simultaneously, verify last-write-wins with notification
+
+**Checkpoint**: At this point, User Stories 1, 2, AND 3 should all work independently with real-time sync and conflict detection. Users can add, mark as purchased, and edit items.
 
 ---
 
@@ -207,13 +237,20 @@
 - [ ] T077 [US4] Run tests to verify all US4 backend tests pass
 
 #### Frontend Implementation
-- [ ] T078 [US4] Add deleteItem mutation in useItems hook in ae-infinity-ui/src/hooks/useItems.ts
+- [ ] T078 [US4] Add deleteItem mutation with optimistic removal in useItems hook in ae-infinity-ui/src/hooks/useItems.ts
 - [ ] T079 [US4] Add Delete button to ItemCard with ConfirmDialog integration in ae-infinity-ui/src/components/items/ItemCard.tsx
 - [ ] T080 [US4] Wire delete confirmation to deleteItem mutation
 - [ ] T081 [US4] Update metadata display after item deletion
 - [ ] T082 [US4] Run tests to verify all US4 frontend tests pass
 
-**Checkpoint**: At this point, all P1 user stories (1-4) are complete. Users have full CRUD operations on items.
+#### SignalR Integration for User Story 4
+- [ ] T082a [P] [US4] Add ItemDeleted event broadcasting in DeleteItemCommandHandler after soft delete
+- [ ] T082b [US4] Add ItemDeleted event handler in useItemEvents hook: remove item from list
+- [ ] T082c [US4] Implement optimistic UI: remove item immediately, restore on error
+- [ ] T082d [US4] Update metadata summary when ItemDeleted event received from other users
+- [ ] T082e [US4] Test real-time deletion: verify other collaborators see item removed within 2 seconds
+
+**Checkpoint**: At this point, all P1 user stories (1-4) are complete with real-time sync. Users have full CRUD operations on items with instant collaboration.
 
 ---
 
@@ -248,13 +285,20 @@
 - [ ] T094 [US5] Create useItemDragDrop hook with @dnd-kit integration in ae-infinity-ui/src/hooks/useItemDragDrop.ts
 - [ ] T095 [US5] Create ItemList component with DndContext and SortableContext in ae-infinity-ui/src/components/items/ItemList.tsx
 - [ ] T096 [US5] Update ItemCard to be sortable with drag handle in ae-infinity-ui/src/components/items/ItemCard.tsx
-- [ ] T097 [US5] Add reorderItems mutation in useItems hook in ae-infinity-ui/src/hooks/useItems.ts
+- [ ] T097 [US5] Add reorderItems mutation with optimistic updates in useItems hook in ae-infinity-ui/src/hooks/useItems.ts
 - [ ] T098 [US5] Wire drag-drop sensors for touch support (mobile) in ae-infinity-ui/src/hooks/useItemDragDrop.ts
 - [ ] T099 [US5] Add visual feedback during drag (preview, drop zone) in ItemList component
 - [ ] T100 [US5] Disable drag for viewers (permission check) in ItemList component
 - [ ] T101 [US5] Run tests to verify all US5 frontend tests pass
 
-**Checkpoint**: At this point, User Stories 1-5 are complete. Users can reorder items via drag-and-drop.
+#### SignalR Integration for User Story 5
+- [ ] T101a [P] [US5] Add ItemsReordered event broadcasting in ReorderItemsCommandHandler after batch update
+- [ ] T101b [US5] Add ItemsReordered event handler in useItemEvents hook: update all item positions in list
+- [ ] T101c [US5] Implement optimistic UI: reorder items immediately on drag, rollback on error
+- [ ] T101d [US5] Show notification when another user reorders: "List was reordered by {username}"
+- [ ] T101e [US5] Test concurrent reorder: two users drag items simultaneously, verify last-write-wins
+
+**Checkpoint**: At this point, User Stories 1-5 are complete with real-time sync. Users can reorder items via drag-and-drop with instant collaboration.
 
 ---
 
@@ -391,6 +435,18 @@
 - [ ] T154 [P] Add optimistic UI rollback on errors in useItems togglePurchased
 - [ ] T155 [P] Handle 403 Forbidden errors (viewer permissions) in itemsService.ts
 - [ ] T156 Add stale data checks (edit conflicts) in UpdateItemCommandHandler
+
+### SignalR Real-time Integration & Testing
+- [ ] T156a [P] Add connection status indicator in header: "Connected", "Disconnected", "Reconnecting" badge
+- [ ] T156b [P] Test SignalR connection establishment and JWT authentication on list page load
+- [ ] T156c [P] Test automatic reconnection after network disruption (disconnect WiFi, reconnect, verify events)
+- [ ] T156d [P] Integration test: create/update/delete/purchase/reorder item in browser A, verify received in browser B within 2s
+- [ ] T156e [P] Test optimistic UI rollback: disconnect network, toggle purchase, verify rollback and error toast
+- [ ] T156f Test concurrent edit conflict notification: two users edit same item simultaneously, verify notification
+- [ ] T156g Test concurrent purchase toggle: two users toggle same item, verify last-write-wins with sync
+- [ ] T156h Test concurrent reorder: two users drag items simultaneously, verify last-write-wins with notification
+- [ ] T156i Test SignalR performance with 50+ items: verify all events broadcast within 2-second latency target
+- [ ] T156j [P] Add SignalR integration tests in backend: verify events broadcast to correct groups
 
 ### Documentation
 - [ ] T157 [P] Update API_REFERENCE.md with all item endpoints in /Users/vyacheslav.kozyrev/Projects/accelerated-engineering/source/ae-infinity-context/API_REFERENCE.md
@@ -529,11 +585,11 @@ With 2 developers:
 - Commit after each task or logical group (e.g., all DTOs, all tests)
 - Stop at any checkpoint to validate story independently
 - 80% test coverage target enforced per Constitution
-- Real-time updates deferred to Feature 007 (not in this scope)
-- MVP = User Story 1 only (8-12 hours)
-- Full P1 features = User Stories 1-4 (15-21 hours)
+- Real-time collaboration via SignalR is INCLUDED (per Constitution Principle III)
+- MVP = User Story 1 only with SignalR (10-14 hours)
+- Full P1 features = User Stories 1-4 with real-time sync (22-30 hours)
 
-**Total Tasks**: 165 tasks  
-**Total Estimated Time**: 30-41 hours (single developer, sequential)  
-**Parallel Time**: 20-25 hours (2 developers, parallel user stories)
+**Total Tasks**: 209 tasks (includes 44 SignalR/real-time tasks)
+**Total Estimated Time**: 40-55 hours (single developer, sequential)  
+**Parallel Time**: 28-38 hours (2 developers, parallel user stories)
 

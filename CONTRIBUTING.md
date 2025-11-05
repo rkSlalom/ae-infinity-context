@@ -12,7 +12,7 @@
 4. **Real-time Collaboration** - SignalR for live updates
 5. **Security by Design** - JWT auth, validation, HTTPS in production
 
-See [Constitution](./.specify/memory/constitution.md) for complete principles.
+See [Constitution](.specify/memory/constitution.md) for complete principles.
 
 ---
 

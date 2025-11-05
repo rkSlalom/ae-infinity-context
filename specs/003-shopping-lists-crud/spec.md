@@ -160,7 +160,7 @@ A user with many lists can search by list name, filter lists by status (owned/sh
 - **FR-002**: System MUST show for each list: name, description, owner name, total item count, purchased item count, last updated timestamp, and archived status
 - **FR-003**: System MUST distinguish owned lists from shared lists visually (e.g., "Owner" vs "Shared" badge)
 - **FR-004**: System MUST display an empty state message with "Create Your First List" button when user has no lists
-- **FR-005**: System MUST implement pagination for users with more than 20 lists (load 20 lists per page by default)
+- **FR-005**: System MUST implement pagination for users with more than 20 lists. Default page size is 20, configurable to 10, 20, 50, or 100 via user preference. Pagination uses cursor-based pagination (last list ID + timestamp) for consistent results during concurrent updates. Infinite scroll UI pattern loads next page when user scrolls within 200px of bottom.
 - **FR-006**: System MUST load list detail page when user clicks on a list card
 
 #### List Creation (User Story 2)
@@ -207,11 +207,23 @@ A user with many lists can search by list name, filter lists by status (owned/sh
 
 - **FR-035**: System MUST provide a search input that filters lists by name (case-insensitive, partial match)
 - **FR-036**: System MUST provide filter options: "All Lists", "Owned by me", "Shared with me"
-- **FR-037**: System MUST provide an "Include Archived" toggle to show/hide archived lists
+- **FR-037**: System MUST provide an "Include Archived" toggle to show/hide archived lists. By default, archived lists are excluded from dashboard and search results. When toggle is enabled, archived lists appear with an "Archived" badge.
 - **FR-038**: System MUST provide sort options: "Name (A-Z)", "Name (Z-A)", "Recently Updated", "Recently Created", "Most Items"
 - **FR-039**: System MUST persist search/filter/sort preferences in URL query parameters for shareable links
 - **FR-040**: System MUST display "No lists found" message when search/filter returns zero results
 - **FR-041**: System MUST debounce search input to avoid excessive API calls (500ms delay)
+- **FR-050**: Search and filter operations MUST work in combination. Example: Searching "grocery" with "Owned by me" filter + "Include Archived" enabled shows only owned, archived lists matching "grocery".
+
+#### Real-time Collaboration (All User Stories)
+
+- **FR-042**: System MUST broadcast list creation events via SignalR to all list collaborators
+- **FR-043**: System MUST broadcast list update events (name, description changes) via SignalR to all collaborators
+- **FR-044**: System MUST broadcast list deletion events via SignalR to all collaborators
+- **FR-045**: System MUST broadcast list archive/unarchive events via SignalR to all collaborators
+- **FR-046**: Frontend MUST implement optimistic UI updates for list operations with rollback on errors
+- **FR-047**: System MUST display conflict notifications when concurrent edits occur (last-write-wins with user notification). Conflict detection compares UpdatedAt timestamp from SignalR event with local state timestamp. Notification shown if timestamps differ by > 1 second.
+- **FR-048**: System MUST update list dashboard in real-time when other users create, update, or delete lists (within 2 seconds)
+- **FR-049**: System MUST detect concurrent edits within 2 seconds of the conflicting change being saved by another user
 
 ### Key Entities
 
@@ -249,7 +261,10 @@ A user with many lists can search by list name, filter lists by status (owned/sh
 - **SC-007**: List owners can delete unwanted lists with clear confirmation, preventing accidental deletions
 - **SC-008**: 90% of users understand the difference between archiving and deleting lists (measured by support ticket volume)
 - **SC-009**: Shared list collaborators see accurate list information without permission errors (99.9% success rate)
-- **SC-010**: System supports 10,000+ lists per user without performance degradation in pagination/search
+- **SC-010**: Real-time list updates (create, edit, delete, archive) are broadcast to all collaborators within 2 seconds via SignalR
+- **SC-011**: List creation API responds within 500ms under normal load (p95 latency)
+- **SC-012**: List update/delete operations complete within 300ms (p95 latency)
+- **SC-013**: System supports 10,000+ lists per user without performance degradation in pagination/search
 
 ---
 
@@ -258,13 +273,14 @@ A user with many lists can search by list name, filter lists by status (owned/sh
 1. **Authentication**: Users are already authenticated via Feature 001 (User Authentication) with valid JWT tokens
 2. **Authorization**: Permission checks (Owner, Editor, Viewer) are enforced at API layer and database query level
 3. **Data Retention**: Soft-deleted lists are retained for 30 days before permanent deletion (specified in FR-022)
-4. **Real-time Collaboration**: List updates (create, edit, delete, archive) do NOT broadcast via SignalR to other users in this feature. Users must refresh to see changes made by collaborators. Real-time synchronization is explicitly deferred to Feature 007 (Real-time Collaboration). The existing backend implementation does NOT include SignalR broadcasting for list operations.
+4. **Real-time Collaboration**: List updates (create, edit, delete, archive) ARE broadcast via SignalR to all list collaborators in real-time. Frontend implements optimistic UI updates with rollback on errors (per Constitution Principle III).
 5. **Collaborator Management**: Inviting and managing collaborators is handled in Feature 008 (Invitations & Permissions)
 6. **Items Management**: Adding, editing, and managing items within lists is handled in Feature 004 (List Items Management)
 7. **Default Sorting**: Lists are sorted by "Recently Updated" by default when user first visits dashboard
 8. **Pagination Size**: Default page size is 20 lists, configurable by user (10, 20, 50, 100)
 9. **Search Performance**: Search is client-side filtering for < 100 lists, server-side for >= 100 lists
 10. **Mobile Experience**: All list management features work on mobile devices with touch-friendly UI (responsive design)
+11. **List Name Uniqueness**: List names are NOT required to be unique per user. Users can create multiple lists with the same name (e.g., multiple "Grocery" lists for different purposes). Lists are uniquely identified by UUID, not name.
 
 ---
 
@@ -284,16 +300,15 @@ A user with many lists can search by list name, filter lists by status (owned/sh
 
 The following are explicitly NOT included in this feature and will be addressed separately:
 
-1. **Real-time synchronization** of list changes across multiple users - Deferred to Feature 007 (Real-time Collaboration)
-2. **Inviting collaborators and managing permissions** - Handled in Feature 008 (Invitations & Permissions)
-3. **List items management** (adding, editing, reordering items) - Handled in Feature 004 (List Items Management)
-4. **List templates and recurring lists** - Deferred to Feature 012 (Recurring Lists)
-5. **Exporting lists** (PDF, CSV) - Future enhancement, not in MVP
-6. **List categories or tags** - Future enhancement for advanced organization
-7. **List sharing via public link** - Requires additional security considerations, deferred
-8. **Bulk operations** (delete multiple lists, bulk archive) - Future enhancement for power users
-9. **List history/audit trail** (who changed what, when) - Handled in Feature 009 (Activity Feed)
-10. **Offline list creation** (PWA offline support) - Future enhancement for mobile experience
+1. **Inviting collaborators and managing permissions** - Handled in Feature 008 (Invitations & Permissions)
+2. **List items management** (adding, editing, reordering items) - Handled in Feature 004 (List Items Management)
+3. **List templates and recurring lists** - Deferred to Feature 012 (Recurring Lists)
+4. **Exporting lists** (PDF, CSV) - Future enhancement, not in MVP
+5. **List categories or tags** - Future enhancement for advanced organization
+6. **List sharing via public link** - Requires additional security considerations, deferred
+7. **Bulk operations** (delete multiple lists, bulk archive) - Future enhancement for power users
+8. **List history/audit trail** (who changed what, when) - Handled in Feature 009 (Activity Feed)
+9. **Offline list creation** (PWA offline support) - Future enhancement for mobile experience
 
 ---
 

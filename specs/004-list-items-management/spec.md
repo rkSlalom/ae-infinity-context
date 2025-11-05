@@ -219,45 +219,57 @@ A user viewing a large list can filter items by category or purchased status, an
 - **FR-024**: System MUST allow owners and editors to delete items
 - **FR-025**: System MUST prevent viewers from deleting items
 - **FR-026**: System MUST display confirmation dialog before deleting an item
-- **FR-027**: System MUST permanently delete items (hard delete, not soft delete for performance)
-- **FR-028**: System MUST update the list's item count and purchased count when an item is deleted
+- **FR-027**: System MUST soft-delete items (set IsDeleted=true, set DeletedAt timestamp) with 30-day retention period before permanent deletion
+- **FR-028**: System MUST update the list's item count and purchased count when an item is deleted (exclude soft-deleted items from counts)
 - **FR-029**: System MUST update the list's last updated timestamp when an item is deleted
 - **FR-030**: System MUST return 404 Not Found error if trying to access a deleted item
+- **FR-031**: System MUST cascade soft-delete items when parent list is soft-deleted
 
 #### Item Reordering (User Story 5)
 
-- **FR-031**: System MUST allow owners and editors to reorder items by dragging and dropping
-- **FR-032**: System MUST prevent viewers from reordering items
-- **FR-033**: System MUST save new item positions immediately when reordered
-- **FR-034**: System MUST support touch gestures for drag-and-drop on mobile devices
-- **FR-035**: System MUST maintain item positions across page refreshes and sessions
-- **FR-036**: System MUST allow reordering items regardless of purchased status
+- **FR-032**: System MUST allow owners and editors to reorder items by dragging and dropping
+- **FR-033**: System MUST prevent viewers from reordering items
+- **FR-034**: System MUST save new item positions immediately when reordered
+- **FR-035**: System MUST support touch gestures for drag-and-drop on mobile devices
+- **FR-036**: System MUST maintain item positions across page refreshes and sessions
+- **FR-037**: System MUST allow reordering items regardless of purchased status
 
 #### Notes and Details (User Story 6)
 
-- **FR-037**: System MUST allow adding notes field (max 500 characters) to items
-- **FR-038**: System MUST display notes icon or indicator when an item has notes
-- **FR-039**: System MUST show full notes text on hover (desktop) or tap (mobile)
-- **FR-040**: System MUST validate notes length does not exceed 500 characters
-- **FR-041**: System MUST allow clearing notes by saving an empty notes field
-- **FR-042**: System MUST display notes attribution if created by a collaborator
+- **FR-038**: System MUST allow adding notes field (max 500 characters) to items
+- **FR-039**: System MUST display notes icon or indicator when an item has notes
+- **FR-040**: System MUST show full notes text on hover (desktop) or tap (mobile)
+- **FR-041**: System MUST validate notes length does not exceed 500 characters
+- **FR-042**: System MUST allow clearing notes by saving an empty notes field
+- **FR-043**: System MUST display notes attribution if created by a collaborator
 
 #### Quick Add Autocomplete (User Story 7)
 
-- **FR-043**: System MUST provide autocomplete suggestions based on user's previous items across all lists
-- **FR-044**: System MUST rank suggestions by frequency of use (most used first)
-- **FR-045**: System MUST auto-fill item details (quantity, unit, category) when a suggestion is selected
-- **FR-046**: System MUST allow user to override auto-filled values before saving
-- **FR-047**: System MUST debounce autocomplete queries to avoid excessive API calls (300ms delay)
-- **FR-048**: System MUST show "No suggestions" if no matches found or user has no item history
+- **FR-044**: System MUST provide autocomplete suggestions based on user's previous items across all lists
+- **FR-045**: System MUST rank suggestions by weighted scoring algorithm: (frequency_count × 2) + (days_since_last_used_inverse × 1). Example: "Milk" used 10 times, last used 2 days ago scores higher than "Butter" used 8 times, last used 30 days ago. Limit results to top 10 matches.
+- **FR-046**: System MUST auto-fill item details (quantity, unit, category) when a suggestion is selected
+- **FR-047**: System MUST allow user to override auto-filled values before saving
+- **FR-048**: System MUST debounce autocomplete queries to avoid excessive API calls (300ms delay)
+- **FR-049**: System MUST show "No suggestions" if no matches found or user has no item history
 
 #### Filtering and Sorting (User Story 8)
 
-- **FR-049**: System MUST provide filter options: "All items", "Unpurchased only", "Purchased only", "By category"
-- **FR-050**: System MUST provide sort options: "Manual order (position)", "Name (A-Z)", "Name (Z-A)", "Date added", "Category"
-- **FR-051**: System MUST persist filter/sort preferences in URL query parameters or localStorage
-- **FR-052**: System MUST display "No items found" message when filters return zero results
-- **FR-053**: System MUST provide a "Clear filters" button when filters are active
+- **FR-050**: System MUST provide filter options: "All items", "Unpurchased only", "Purchased only", "By category"
+- **FR-051**: System MUST provide sort options: "Manual order (position)", "Name (A-Z)", "Name (Z-A)", "Date added", "Category"
+- **FR-052**: System MUST persist filter/sort preferences in URL query parameters or localStorage
+- **FR-053**: System MUST display "No items found" message when filters return zero results
+- **FR-054**: System MUST provide a "Clear filters" button when filters are active
+
+#### Real-time Collaboration (All User Stories)
+
+- **FR-055**: System MUST broadcast item creation events via SignalR to all list collaborators
+- **FR-056**: System MUST broadcast item update events via SignalR to all list collaborators
+- **FR-057**: System MUST broadcast item deletion events via SignalR to all list collaborators
+- **FR-058**: System MUST broadcast purchase status changes via SignalR to all list collaborators
+- **FR-059**: System MUST broadcast item reorder events via SignalR to all list collaborators
+- **FR-060**: Frontend MUST implement optimistic UI updates for all item operations with rollback on errors
+- **FR-061**: System MUST display conflict notifications when concurrent edits occur (last-write-wins)
+- **FR-062**: System MUST update item list in real-time when other collaborators make changes (within 2 seconds)
 
 ### Key Entities
 
@@ -291,7 +303,7 @@ A user viewing a large list can filter items by category or purchased status, an
 - **SC-007**: Users with large lists (100+ items) can find specific items using filters in under 5 seconds
 - **SC-008**: 90% of users successfully complete their first shopping trip using the app to track purchases
 - **SC-009**: System supports lists with 500+ items without performance degradation in scrolling or search
-- **SC-010**: Real-time purchase status updates are reflected to all collaborators within 2 seconds (when Feature 007 is implemented)
+- **SC-010**: Real-time item updates (add, edit, delete, purchase, reorder) are reflected to all collaborators within 2 seconds via SignalR
 
 ---
 
@@ -301,7 +313,7 @@ A user viewing a large list can filter items by category or purchased status, an
 2. **Authorization**: Permission checks (Owner, Editor, Viewer) are enforced at API layer for all item operations
 3. **List Existence**: List Items Management assumes Feature 003 (Shopping Lists CRUD) is fully implemented
 4. **Categories**: Category system (Feature 005) may not exist yet - items can have optional categoryId but gracefully handle missing categories
-5. **Real-time Sync**: Item changes are NOT synchronized in real-time to other users in this feature (deferred to Feature 007)
+5. **Real-time Sync**: Item changes ARE synchronized in real-time via SignalR to all list collaborators (optimistic UI with rollback on errors)
 6. **Image Upload**: Image URL field exists but image upload functionality is not implemented (future enhancement)
 7. **Default Ordering**: Items are displayed by position (manual order) by default, with purchased items optionally shown at bottom
 8. **Item Limit**: No enforced limit on items per list, but UI optimizes for lists with 10-100 items
@@ -330,18 +342,17 @@ A user viewing a large list can filter items by category or purchased status, an
 
 The following are explicitly NOT included in this feature and will be addressed separately:
 
-1. **Real-time synchronization** of item changes across multiple users - Deferred to Feature 007 (Real-time Collaboration)
-2. **Category management** (creating, editing categories) - Handled in Feature 005 (Categories System)
-3. **Image upload functionality** - Future enhancement, imageUrl field exists but upload not implemented
-4. **Barcode scanning** to add items - Future enhancement for mobile experience
-5. **Item suggestions based on AI/ML** - Handled in Feature 011 (Item Suggestions)
-6. **Purchase history and analytics** - Handled in Feature 010 (Purchase History)
-7. **Bulk item operations** (add multiple items at once, bulk delete) - Future enhancement
-8. **Item templates or presets** - Handled in Feature 012 (Recurring Lists)
-9. **Shopping mode with swipe gestures** - Future mobile enhancement
-10. **Offline item creation** (PWA offline support) - Future enhancement
-11. **Item sharing across lists** (copy/move items) - Future enhancement
-12. **Price tracking and budget management** - Future enhancement for budget-conscious users
+1. **Category management** (creating, editing categories) - Handled in Feature 005 (Categories System)
+2. **Image upload functionality** - Future enhancement, imageUrl field exists but upload not implemented
+3. **Barcode scanning** to add items - Future enhancement for mobile experience
+4. **Item suggestions based on AI/ML** - Handled in Feature 011 (Item Suggestions)
+5. **Purchase history and analytics** - Handled in Feature 010 (Purchase History)
+6. **Bulk item operations** (add multiple items at once, bulk delete) - Future enhancement
+7. **Item templates or presets** - Handled in Feature 012 (Recurring Lists)
+8. **Shopping mode with swipe gestures** - Future mobile enhancement
+9. **Offline item creation** (PWA offline support) - Future enhancement
+10. **Item sharing across lists** (copy/move items) - Future enhancement
+11. **Price tracking and budget management** - Future enhancement for budget-conscious users
 
 ---
 

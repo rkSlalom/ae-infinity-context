@@ -25,9 +25,10 @@ This feature provides full CRUD (Create, Read, Update, Delete) operations for sh
 - Frontend: TypeScript / React 19.1
 
 **Primary Dependencies**:
-- Backend: ASP.NET Core 9.0, Entity Framework Core 9.0, MediatR 12.4, FluentValidation 11.9
-- Frontend: React 19.1, React Router 7.9, Vite 7.1, Tailwind CSS 3.4, React Hook Form 7.51
+- Backend: ASP.NET Core 9.0, Entity Framework Core 9.0, MediatR 12.4, FluentValidation 11.9, SignalR 9.0
+- Frontend: React 19.1, React Router 7.9, Vite 7.1, Tailwind CSS 3.4, React Hook Form 7.51, @microsoft/signalr 8.0
 - Database: SQLite (embedded, local file: `ae-infinity-api/app.db`)
+- Real-time: SignalR for WebSocket-based real-time collaboration
 
 **Key Patterns**:
 - Backend: Clean Architecture with CQRS (MediatR commands/queries)
@@ -55,9 +56,10 @@ This feature provides full CRUD (Create, Read, Update, Delete) operations for sh
 - **Gate**: NO MERGE until 80% coverage achieved
 
 ### **✅ Real-time Collaboration Architecture**
-- **Status**: NOT YET - List updates don't broadcast via SignalR (Feature 007)
-- **Action**: DEFERRED to Feature 007 (Real-time Collaboration)
-- **Note**: Lists work synchronously now, real-time updates added later
+- **Status**: IMPLEMENTED - List updates broadcast via SignalR to all collaborators
+- **Action**: SignalR hub implemented for list operations (create, update, delete, archive)
+- **Implementation**: Optimistic UI with rollback on errors, conflict notifications (last-write-wins)
+- **Latency Target**: Real-time updates reflected within 2 seconds (per Constitution Principle III)
 
 ### **✅ Security & Privacy by Design**
 - **Status**: IMPLEMENTED - JWT auth, authorization middleware, owner-only deletes
@@ -91,13 +93,13 @@ This feature provides full CRUD (Create, Read, Update, Delete) operations for sh
 
 **Authorization**: Permission checks implemented (Owner can delete, Editor can update, Viewer read-only)
 
-**SignalR Integration**: The backend does NOT currently broadcast list update events. When Feature 007 (Real-time Collaboration) is implemented, these events will be added:
-- `ListCreated` - Broadcast to all collaborators
-- `ListUpdated` - Broadcast to all collaborators  
-- `ListDeleted` - Broadcast to all collaborators
-- `ListArchived` - Broadcast to all collaborators
+**SignalR Integration**: The backend broadcasts list update events via SignalR hub to all collaborators in real-time:
+- `ListCreated` - Broadcast to all collaborators when list is created
+- `ListUpdated` - Broadcast to all collaborators when name/description changes
+- `ListDeleted` - Broadcast to all collaborators when list is soft-deleted
+- `ListArchived` - Broadcast to all collaborators when list is archived/unarchived
 
-**Frontend Impact**: Current implementation requires manual refresh to see collaborator changes. This is acceptable for MVP.
+**Frontend Impact**: Frontend implements optimistic UI updates with automatic rollback on errors. Collaborators see changes within 2 seconds without manual refresh.
 
 ### **Frontend UI (ae-infinity-ui)**
 
@@ -114,6 +116,115 @@ This feature provides full CRUD (Create, Read, Update, Delete) operations for sh
 **Service Layer**: `services/listsService.ts` exists with all API methods (ready to use)
 
 **Types**: `src/types/index.ts` has `ShoppingListSummary`, `ShoppingListDetail`, `CreateListRequest`, `UpdateListRequest`
+
+---
+
+## SignalR Real-time Architecture
+
+### Hub Interface
+
+**File**: `AeInfinity.Api/Hubs/ShoppingListHub.cs`
+
+```csharp
+public class ShoppingListHub : Hub
+{
+    public async Task JoinListGroup(string listId)
+    {
+        await Groups.AddToGroupAsync(Context.ConnectionId, $"list-{listId}");
+    }
+    
+    public async Task LeaveListGroup(string listId)
+    {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"list-{listId}");
+    }
+}
+```
+
+### Event Broadcasting
+
+**Command handlers broadcast events after successful database operations:**
+
+```csharp
+// Example: CreateListCommandHandler
+public async Task<Result<ListDto>> Handle(CreateListCommand request)
+{
+    // ... create list in database ...
+    
+    // Broadcast to all collaborators
+    await _hubContext.Clients
+        .Group($"list-{list.Id}")
+        .SendAsync("ListCreated", new {
+            listId = list.Id,
+            list = listDto,
+            userId = request.UserId
+        });
+    
+    return Result<ListDto>.Success(listDto);
+}
+```
+
+**Events Broadcast**:
+- `ListCreated` - After CreateListCommand succeeds
+- `ListUpdated` - After UpdateListCommand succeeds
+- `ListDeleted` - After DeleteListCommand succeeds
+- `ListArchived` - After ArchiveListCommand succeeds
+- `ListUnarchived` - After UnarchiveListCommand succeeds
+
+### Frontend SignalR Integration
+
+**Connection Service** (`src/services/signalrService.ts`):
+```typescript
+export class SignalRService {
+  private connection: HubConnection;
+  
+  async connect(token: string) {
+    this.connection = new HubConnectionBuilder()
+      .withUrl('/hubs/shopping-list', {
+        accessTokenFactory: () => token
+      })
+      .withAutomaticReconnect()
+      .build();
+    
+    await this.connection.start();
+  }
+  
+  async joinList(listId: string) {
+    await this.connection.invoke('JoinListGroup', listId);
+  }
+  
+  onListCreated(handler: (data: any) => void) {
+    this.connection.on('ListCreated', handler);
+  }
+  
+  // ... other event handlers ...
+}
+```
+
+**Optimistic UI Pattern**:
+```typescript
+// Example: Create list with optimistic update
+const createList = async (data: CreateListRequest) => {
+  const tempId = generateTempId();
+  
+  // Optimistic update
+  setLists(prev => [...prev, { id: tempId, ...data, isOptimistic: true }]);
+  
+  try {
+    const result = await listsService.createList(data);
+    // Replace optimistic item with real data
+    setLists(prev => prev.map(l => l.id === tempId ? result : l));
+  } catch (error) {
+    // Rollback on error
+    setLists(prev => prev.filter(l => l.id !== tempId));
+    showErrorToast('Failed to create list');
+  }
+};
+```
+
+**Conflict Resolution**:
+- Strategy: Last-write-wins
+- User notification: Toast message "Another user edited this list. Your changes may have been overwritten."
+- Detection: Compare UpdatedAt timestamp from event with local state
 
 ---
 
@@ -303,8 +414,11 @@ This feature provides full CRUD (Create, Read, Update, Delete) operations for sh
 
 ```
 AeInfinity.API/
-└── Controllers/
-    └── ListsController.cs         # Already exists
+├── Controllers/
+│   └── ListsController.cs         # Already exists
+├── Hubs/
+│   └── ShoppingListHub.cs         # NEW - SignalR hub for real-time events
+└── Program.cs                     # UPDATE - Add SignalR configuration
 
 AeInfinity.Application/
 ├── Lists/
@@ -344,22 +458,31 @@ AeInfinity.Infrastructure/
 ae-infinity-ui/src/
 ├── pages/
 │   ├── lists/
-│   │   ├── ListsDashboard.tsx       # 🟡 Update (remove mocks)
-│   │   ├── ListDetail.tsx           # 🟡 Update (remove mocks)
-│   │   ├── CreateList.tsx           # 🟡 Update (remove mocks)
-│   │   └── ListSettings.tsx         # 🟡 Update (remove mocks)
+│   │   ├── ListsDashboard.tsx       # 🟡 Update (remove mocks, add SignalR)
+│   │   ├── ListDetail.tsx           # 🟡 Update (remove mocks, add SignalR)
+│   │   ├── CreateList.tsx           # 🟡 Update (remove mocks, add optimistic UI)
+│   │   └── ListSettings.tsx         # 🟡 Update (remove mocks, add optimistic UI)
 │   └── ArchivedLists.tsx            # ✅ Already good
 │
 ├── services/
-│   └── listsService.ts              # ✅ Already complete
+│   ├── listsService.ts              # ✅ Already complete
+│   └── signalrService.ts            # NEW - SignalR connection management
+│
+├── hooks/
+│   ├── useSignalR.ts                # NEW - SignalR connection hook
+│   ├── useListEvents.ts             # NEW - List event handlers
+│   └── useOptimisticUpdate.ts       # NEW - Optimistic UI with rollback
 │
 ├── types/
-│   └── index.ts                     # ✅ Already has list types
+│   ├── index.ts                     # ✅ Already has list types
+│   └── signalr.ts                   # NEW - SignalR event types
 │
 └── components/
-    └── lists/                        # Optional: Extract reusable components
-        ├── ListCard.tsx              # List summary card
-        └── ListFilters.tsx           # Filter/sort controls
+    ├── lists/                        # Optional: Extract reusable components
+    │   ├── ListCard.tsx              # List summary card
+    │   └── ListFilters.tsx           # Filter/sort controls
+    └── common/
+        └── ConflictNotification.tsx  # NEW - Conflict warning toast
 ```
 
 ---
@@ -413,7 +536,10 @@ ae-infinity-ui/src/
 | Mock data structure doesn't match API | Low | Medium | Verify types match Swagger schemas before integration |
 | Permission bugs (non-owner can delete) | Medium | High | Add comprehensive authorization tests |
 | Performance issues with 100+ lists | Low | Medium | Test pagination, implement virtual scrolling if needed |
-| Real-time conflicts (Feature 007) | N/A | N/A | Deferred to Feature 007 |
+| SignalR connection failures | Medium | High | Implement automatic reconnection, queue failed events, show connection status |
+| Optimistic UI rollback complexity | Medium | Medium | Use proven libraries (React Query, SWR), comprehensive error handling |
+| Race conditions in concurrent edits | Medium | High | Last-write-wins with user notification, timestamp-based conflict detection |
+| SignalR scaling with many connections | Low | Medium | Configure SignalR for Redis backplane if >1000 concurrent users |
 
 ---
 

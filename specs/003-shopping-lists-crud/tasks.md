@@ -13,15 +13,15 @@
 | Phase | Tasks | Description |
 |-------|-------|-------------|
 | Phase 1: Setup | 2 tasks | Environment verification |
-| Phase 2: Foundation | 3 tasks | Backend verification and service layer prep |
-| Phase 3: US1 - View Lists | 8 tasks | Dashboard with list viewing (P1 - MVP) |
-| Phase 4: US2 - Create Lists | 6 tasks | List creation functionality (P1 - MVP) |
-| Phase 5: US3 - Edit Lists | 5 tasks | List editing (P2) |
-| Phase 6: US4 - Delete Lists | 4 tasks | List deletion with confirmation (P2) |
-| Phase 7: US5 - Archive Lists | 6 tasks | Archive/unarchive functionality (P2) |
+| Phase 2: Foundation | 11 tasks | Backend verification, service layer prep, and SignalR infrastructure |
+| Phase 3: US1 - View Lists | 11 tasks | Dashboard with list viewing + real-time updates (P1 - MVP) |
+| Phase 4: US2 - Create Lists | 10 tasks | List creation + optimistic UI + broadcasting (P1 - MVP) |
+| Phase 5: US3 - Edit Lists | 9 tasks | List editing + conflict resolution (P2) |
+| Phase 6: US4 - Delete Lists | 7 tasks | List deletion + real-time broadcasting (P2) |
+| Phase 7: US5 - Archive Lists | 9 tasks | Archive/unarchive + real-time status updates (P2) |
 | Phase 8: US6 - Search/Filter/Sort | 7 tasks | Advanced list discovery (P3) |
-| Phase 9: Integration | 4 tasks | Cross-story integration and polish |
-| **Total** | **45 tasks** | Estimated: 2-3 days for P1+P2, +1 day for P3 |
+| Phase 9: Integration | 8 tasks | Cross-story integration, SignalR testing, and polish |
+| **Total** | **74 tasks** | Estimated: 3-4 days for P1+P2, +1 day for P3 (includes SignalR) |
 
 ---
 
@@ -48,24 +48,32 @@ This delivers:
 
 **Goal**: Verify environment and prerequisites
 
-- [ ] T001 Verify backend API is running at http://localhost:5233 and Swagger accessible
-- [ ] T002 Verify frontend is running at http://localhost:5173 and user can login with test account sarah@example.com
+- [X] T001 Verify backend API is running at http://localhost:5233 and Swagger accessible
+- [X] T002 Verify frontend is running at http://localhost:5173 and user can login with test account sarah@example.com
 
 **Deliverables**: Both servers running, authenticated user session
 
 ---
 
-### **Phase 2: Foundation** (1-2 hours)
+### **Phase 2: Foundation** (2-3 hours)
 
-**Goal**: Verify backend implementation and prepare frontend service layer
+**Goal**: Verify backend implementation, prepare frontend service layer, and setup SignalR infrastructure
 
 **BLOCKING**: These tasks must complete before user story phases
 
-- [ ] T003 [P] Verify backend tests exist for all list endpoints and achieve 80%+ coverage in ae-infinity-api
-- [ ] T004 [P] Verify listsService.ts has all required methods (getAllLists, createList, updateList, deleteList, archiveList, unarchiveList) in ae-infinity-ui/src/services/listsService.ts
-- [ ] T005 [P] Verify TypeScript types exist for ShoppingListSummary, ShoppingListDetail, CreateListRequest, UpdateListRequest in ae-infinity-ui/src/types/index.ts
+- [X] T003 [P] Verify backend tests exist for all list endpoints and achieve 80%+ coverage in ae-infinity-api
+- [ ] T003a [P] Create ShoppingListHub.cs with JoinListGroup/LeaveListGroup methods in ae-infinity-api/src/AeInfinity.Api/Hubs/ShoppingListHub.cs
+- [ ] T003b [P] Configure SignalR in Program.cs (AddSignalR, MapHub) in ae-infinity-api/src/AeInfinity.Api/Program.cs
+- [ ] T003c [P] Add IHubContext<ShoppingListHub> injection to command handlers in ae-infinity-api/src/AeInfinity.Application/
+- [X] T004 [P] Verify listsService.ts has all required methods (getAllLists, createList, updateList, deleteList, archiveList, unarchiveList) in ae-infinity-ui/src/services/listsService.ts
+- [ ] T004a [P] Install @microsoft/signalr package in ae-infinity-ui (npm install @microsoft/signalr)
+- [ ] T004b [P] Create signalrService.ts with connection management in ae-infinity-ui/src/services/signalrService.ts
+- [ ] T004c [P] Create useSignalR hook for connection context in ae-infinity-ui/src/hooks/useSignalR.ts
+- [ ] T004d [P] Create useListEvents hook for list event handlers in ae-infinity-ui/src/hooks/useListEvents.ts
+- [X] T005 [P] Verify TypeScript types exist for ShoppingListSummary, ShoppingListDetail, CreateListRequest, UpdateListRequest in ae-infinity-ui/src/types/index.ts
+- [ ] T005a [P] Create signalr.ts with event type definitions in ae-infinity-ui/src/types/signalr.ts
 
-**Deliverables**: Backend verified working, frontend service layer confirmed ready
+**Deliverables**: Backend verified working, frontend service layer confirmed ready, SignalR infrastructure in place
 
 ---
 
@@ -86,20 +94,24 @@ This delivers:
 
 **Tasks**:
 
-- [ ] T006 [US1] Replace mock data with API call in ListsDashboard.tsx: Add useEffect to call listsService.getAllLists() in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T007 [US1] Implement loading state in ListsDashboard.tsx: Add loading spinner while fetching lists in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T008 [US1] Implement error handling in ListsDashboard.tsx: Display error message if API call fails in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T009 [US1] Implement empty state in ListsDashboard.tsx: Show "No lists yet" message with create button when lists array is empty in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T010 [US1] Implement list card rendering in ListsDashboard.tsx: Map over lists array and render ListCard components with proper data in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T011 [US1] Add owner/shared badge in ListCard component: Display "Owner" or "Shared" badge based on current user vs ownerId in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T012 [US1] Implement list card click handler in ListsDashboard.tsx: Navigate to /lists/{listId} when user clicks list card in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T013 [US1] Verify US1 acceptance scenarios: Test all 5 scenarios from spec.md (view lists, empty state, navigation, owner badges, pagination)
+- [X] T006 [US1] Replace mock data with API call in ListsDashboard.tsx: Add useEffect to call listsService.getAllLists() in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T007 [US1] Implement loading state in ListsDashboard.tsx: Add loading spinner while fetching lists in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T008 [US1] Implement error handling in ListsDashboard.tsx: Display error message if API call fails in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T009 [US1] Implement empty state in ListsDashboard.tsx: Show "No lists yet" message with create button when lists array is empty in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T010 [US1] Implement list card rendering in ListsDashboard.tsx: Map over lists array and render ListCard components with proper data in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T011 [US1] Add owner/shared badge in ListCard component: Display "Owner" or "Shared" badge based on current user vs ownerId in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T012 [US1] Implement list card click handler in ListsDashboard.tsx: Navigate to /lists/{listId} when user clicks list card in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T013 [US1] Verify US1 acceptance scenarios: Test all 5 scenarios from spec.md (view lists, empty state, navigation, owner badges, pagination)
+- [ ] T013a [US1] Add SignalR connection initialization in ListsDashboard.tsx on mount
+- [ ] T013b [US1] Add useListEvents hook to handle ListCreated/ListUpdated/ListDeleted events in ListsDashboard.tsx
+- [ ] T013c [US1] Test real-time dashboard updates when another user creates/updates/deletes a list
 
 **Deliverables**:
 - Dashboard displays real lists from API
 - Loading and error states work
 - Empty state displays correctly
 - Navigation to list detail works
+- Real-time updates work when other users modify lists
 - All US1 acceptance scenarios pass
 
 ---
@@ -121,18 +133,23 @@ This delivers:
 
 **Tasks**:
 
-- [ ] T014 [US2] Implement form submission in CreateList.tsx: Add handleSubmit to call listsService.createList() in ae-infinity-ui/src/pages/lists/CreateList.tsx
-- [ ] T015 [US2] Add form validation in CreateList.tsx: Use React Hook Form to validate name (required, max 200 chars) and description (max 1000 chars) in ae-infinity-ui/src/pages/lists/CreateList.tsx
-- [ ] T016 [US2] Implement loading state in CreateList.tsx: Disable submit button and show "Creating..." while API call in progress in ae-infinity-ui/src/pages/lists/CreateList.tsx
-- [ ] T017 [US2] Implement success navigation in CreateList.tsx: Navigate to /lists/{newListId} after successful creation in ae-infinity-ui/src/pages/lists/CreateList.tsx
-- [ ] T018 [US2] Implement error handling in CreateList.tsx: Display error message if API call fails in ae-infinity-ui/src/pages/lists/CreateList.tsx
-- [ ] T019 [US2] Verify US2 acceptance scenarios: Test all 6 scenarios from spec.md (form display, successful creation, validation errors, navigation)
+- [X] T014 [US2] Implement form submission in CreateList.tsx: Add handleSubmit to call listsService.createList() in ae-infinity-ui/src/pages/lists/CreateList.tsx
+- [X] T015 [US2] Add form validation in CreateList.tsx: Use React Hook Form to validate name (required, max 200 chars) and description (max 1000 chars) in ae-infinity-ui/src/pages/lists/CreateList.tsx
+- [X] T016 [US2] Implement loading state in CreateList.tsx: Disable submit button and show "Creating..." while API call in progress in ae-infinity-ui/src/pages/lists/CreateList.tsx
+- [X] T017 [US2] Implement success navigation in CreateList.tsx: Navigate to /lists/{newListId} after successful creation in ae-infinity-ui/src/pages/lists/CreateList.tsx
+- [X] T018 [US2] Implement error handling in CreateList.tsx: Display error message if API call fails in ae-infinity-ui/src/pages/lists/CreateList.tsx
+- [X] T019 [US2] Verify US2 acceptance scenarios: Test all 6 scenarios from spec.md (form display, successful creation, validation errors, navigation)
+- [ ] T019a [US2] Add ListCreated event broadcasting in CreateListCommandHandler after successful save
+- [ ] T019b [US2] Implement optimistic UI in CreateList.tsx: show temporary list card immediately, replace with real data on success
+- [ ] T019c [US2] Add rollback logic in CreateList.tsx: remove optimistic list card on API error
+- [ ] T019d [US2] Test real-time list creation: verify other users see new list in their dashboard within 2 seconds
 
 **Deliverables**:
 - Create list form fully functional
 - Form validation works (required name, length limits)
 - Successful creation navigates to list detail
-- New list appears in dashboard
+- Optimistic UI provides instant feedback
+- New list broadcasts to all collaborators in real-time
 - All US2 acceptance scenarios pass
 
 **MVP Checkpoint**: After Phase 4, users can view and create lists - core value delivered
@@ -156,16 +173,22 @@ This delivers:
 
 **Tasks**:
 
-- [ ] T020 [US3] Implement edit form in ListSettings.tsx: Add form pre-filled with list.name and list.description in ae-infinity-ui/src/pages/lists/ListSettings.tsx
-- [ ] T021 [US3] Add form submission in ListSettings.tsx: Call listsService.updateList(listId, data) on submit in ae-infinity-ui/src/pages/lists/ListSettings.tsx
-- [ ] T022 [US3] Implement permission check in ListSettings.tsx: Hide edit button if user role is Viewer in ae-infinity-ui/src/pages/lists/ListSettings.tsx
-- [ ] T023 [US3] Add success feedback in ListSettings.tsx: Show toast "List updated successfully" and refresh list data after save in ae-infinity-ui/src/pages/lists/ListSettings.tsx
-- [ ] T024 [US3] Verify US3 acceptance scenarios: Test all 6 scenarios from spec.md (edit form, save changes, permission checks, cancel)
+- [X] T020 [US3] Implement edit form in ListSettings.tsx: Add form pre-filled with list.name and list.description in ae-infinity-ui/src/pages/lists/ListSettings.tsx
+- [X] T021 [US3] Add form submission in ListSettings.tsx: Call listsService.updateList(listId, data) on submit in ae-infinity-ui/src/pages/lists/ListSettings.tsx
+- [X] T022 [US3] Implement permission check in ListSettings.tsx: Hide edit button if user role is Viewer in ae-infinity-ui/src/pages/lists/ListSettings.tsx
+- [X] T023 [US3] Add success feedback in ListSettings.tsx: Show toast "List updated successfully" and refresh list data after save in ae-infinity-ui/src/pages/lists/ListSettings.tsx
+- [X] T024 [US3] Verify US3 acceptance scenarios: Test all 6 scenarios from spec.md (edit form, save changes, permission checks, cancel)
+- [ ] T024a [US3] Add ListUpdated event broadcasting in UpdateListCommandHandler after successful save
+- [ ] T024b [US3] Add conflict detection in useListEvents: compare UpdatedAt timestamp from SignalR event with local state
+- [ ] T024c [US3] Show conflict notification toast when concurrent edit detected: "Another user edited this list. Refresh to see changes."
+- [ ] T024d [US3] Test concurrent edit scenario: two users edit same list simultaneously, verify last-write-wins with notification
 
 **Deliverables**:
 - Edit form functional with pre-filled data
 - Changes save and update UI
 - Permission checks work (viewers can't edit)
+- Updates broadcast to all collaborators in real-time
+- Conflict notifications shown for concurrent edits
 - All US3 acceptance scenarios pass
 
 ---
@@ -187,15 +210,19 @@ This delivers:
 
 **Tasks**:
 
-- [ ] T025 [US4] Add delete button in ListSettings.tsx: Add delete button with confirmation dialog in ae-infinity-ui/src/pages/lists/ListSettings.tsx
-- [ ] T026 [US4] Implement delete handler in ListSettings.tsx: Call listsService.deleteList(listId) after confirmation in ae-infinity-ui/src/pages/lists/ListSettings.tsx
-- [ ] T027 [US4] Add permission check for delete in ListSettings.tsx: Only show delete button if user role is Owner in ae-infinity-ui/src/pages/lists/ListSettings.tsx
-- [ ] T028 [US4] Verify US4 acceptance scenarios: Test all 6 scenarios from spec.md (confirmation dialog, delete success, permission checks, cascade delete)
+- [X] T025 [US4] Add delete button in ListSettings.tsx: Add delete button with confirmation dialog in ae-infinity-ui/src/pages/lists/ListSettings.tsx
+- [X] T026 [US4] Implement delete handler in ListSettings.tsx: Call listsService.deleteList(listId) after confirmation in ae-infinity-ui/src/pages/lists/ListSettings.tsx
+- [X] T027 [US4] Add permission check for delete in ListSettings.tsx: Only show delete button if user role is Owner in ae-infinity-ui/src/pages/lists/ListSettings.tsx
+- [X] T028 [US4] Verify US4 acceptance scenarios: Test all 6 scenarios from spec.md (confirmation dialog, delete success, permission checks, cascade delete)
+- [ ] T028a [US4] Add ListDeleted event broadcasting in DeleteListCommandHandler after soft delete
+- [ ] T028b [US4] Remove deleted list from dashboard on ListDeleted SignalR event in useListEvents hook
+- [ ] T028c [US4] Test real-time deletion: verify other collaborators see list removed from dashboard within 2 seconds
 
 **Deliverables**:
 - Delete with confirmation works
 - Deleted lists removed from UI
 - Permission checks enforce owner-only deletion
+- Deletion broadcasts to all collaborators in real-time
 - All US4 acceptance scenarios pass
 
 ---
@@ -217,18 +244,22 @@ This delivers:
 
 **Tasks**:
 
-- [ ] T029 [US5] Add archive button in ListSettings.tsx: Add archive button that calls listsService.archiveList(listId) in ae-infinity-ui/src/pages/lists/ListSettings.tsx
-- [ ] T030 [US5] Add permission check for archive in ListSettings.tsx: Only show archive button if user role is Owner in ae-infinity-ui/src/pages/lists/ListSettings.tsx
-- [ ] T031 [US5] Update ListsDashboard to exclude archived by default: Pass includeArchived: false to getAllLists() in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T032 [US5] Implement ArchivedLists page integration: Replace mock data with listsService.getAllLists({ includeArchived: true }) filtered to archived only in ae-infinity-ui/src/pages/ArchivedLists.tsx
-- [ ] T033 [US5] Add unarchive button in ArchivedLists.tsx: Add unarchive button that calls listsService.unarchiveList(listId) in ae-infinity-ui/src/pages/ArchivedLists.tsx
-- [ ] T034 [US5] Verify US5 acceptance scenarios: Test all 6 scenarios from spec.md (archive, hide from dashboard, archived page, unarchive, permission checks)
+- [X] T029 [US5] Add archive button in ListSettings.tsx: Add archive button that calls listsService.archiveList(listId) in ae-infinity-ui/src/pages/lists/ListSettings.tsx
+- [X] T030 [US5] Add permission check for archive in ListSettings.tsx: Only show archive button if user role is Owner in ae-infinity-ui/src/pages/lists/ListSettings.tsx
+- [X] T031 [US5] Update ListsDashboard to exclude archived by default: Pass includeArchived: false to getAllLists() in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T032 [US5] Implement ArchivedLists page integration: Replace mock data with listsService.getAllLists({ includeArchived: true }) filtered to archived only in ae-infinity-ui/src/pages/ArchivedLists.tsx
+- [X] T033 [US5] Add unarchive button in ArchivedLists.tsx: Add unarchive button that calls listsService.unarchiveList(listId) in ae-infinity-ui/src/pages/ArchivedLists.tsx
+- [X] T034 [US5] Verify US5 acceptance scenarios: Test all 6 scenarios from spec.md (archive, hide from dashboard, archived page, unarchive, permission checks)
+- [ ] T034a [US5] Add ListArchived/ListUnarchived event broadcasting in ArchiveListCommandHandler and UnarchiveListCommandHandler
+- [ ] T034b [US5] Update dashboard filter state on archive events: move list to/from archived section in useListEvents hook
+- [ ] T034c [US5] Test real-time archive: verify other users see list moved to/from archived status within 2 seconds
 
 **Deliverables**:
 - Archive/unarchive functionality works
 - Archived lists hidden from main dashboard
 - Archived Lists page functional
 - Permission checks enforce owner-only actions
+- Archive status changes broadcast to all collaborators in real-time
 - All US5 acceptance scenarios pass
 
 ---
@@ -250,13 +281,13 @@ This delivers:
 
 **Tasks**:
 
-- [ ] T035 [P] [US6] Add search input in ListsDashboard.tsx: Add debounced search input (500ms delay) that filters lists by name in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T036 [P] [US6] Implement filter dropdown in ListsDashboard.tsx: Add filter dropdown with "All", "Owned by me", "Shared with me" options in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T037 [P] [US6] Add Include Archived toggle in ListsDashboard.tsx: Add toggle that passes includeArchived: true to API call in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T038 [P] [US6] Implement sort dropdown in ListsDashboard.tsx: Add sort dropdown with options (Name A-Z, Recently Updated, etc) that updates sortBy and sortOrder params in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T039 [US6] Implement URL query params for filters in ListsDashboard.tsx: Sync search/filter/sort state with URL query params for shareable links in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T040 [US6] Add "No results" message in ListsDashboard.tsx: Display "No lists found matching '[query]'" when search returns zero results in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T041 [US6] Verify US6 acceptance scenarios: Test all 7 scenarios from spec.md (search, filters, archived toggle, sorting, URL persistence)
+- [X] T035 [P] [US6] Add search input in ListsDashboard.tsx: Add debounced search input (500ms delay) that filters lists by name in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T036 [P] [US6] Implement filter dropdown in ListsDashboard.tsx: Add filter dropdown with "All", "Owned by me", "Shared with me" options in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T037 [P] [US6] Add Include Archived toggle in ListsDashboard.tsx: Add toggle that passes includeArchived: true to API call in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T038 [P] [US6] Implement sort dropdown in ListsDashboard.tsx: Add sort dropdown with options (Name A-Z, Recently Updated, etc) that updates sortBy and sortOrder params in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T039 [US6] Implement URL query params for filters in ListsDashboard.tsx: Sync search/filter/sort state with URL query params for shareable links in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T040 [US6] Add "No results" message in ListsDashboard.tsx: Display "No lists found matching '[query]'" when search returns zero results in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T041 [US6] Verify US6 acceptance scenarios: Test all 7 scenarios from spec.md (search, filters, archived toggle, sorting, URL persistence)
 
 **Deliverables**:
 - Search filters lists by name
@@ -274,10 +305,14 @@ This delivers:
 
 **Tasks**:
 
-- [ ] T042 [P] Add toast notifications for all list operations: Implement success/error toasts for create, update, delete, archive actions in ae-infinity-ui/src/pages/lists/
-- [ ] T043 [P] Implement loading skeletons in ListsDashboard.tsx: Replace generic spinner with skeleton loaders for list cards in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T044 Add accessibility improvements: Ensure keyboard navigation, ARIA labels, and screen reader support in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
-- [ ] T045 Verify mobile responsiveness: Test all list management pages on mobile viewports and fix layout issues in ae-infinity-ui/src/pages/lists/
+- [X] T042 [P] Add toast notifications for all list operations: Implement success/error toasts for create, update, delete, archive actions in ae-infinity-ui/src/pages/lists/
+- [X] T043 [P] Implement loading skeletons in ListsDashboard.tsx: Replace generic spinner with skeleton loaders for list cards in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T044 Add accessibility improvements: Ensure keyboard navigation, ARIA labels, and screen reader support in ae-infinity-ui/src/pages/lists/ListsDashboard.tsx
+- [X] T045 Verify mobile responsiveness: Test all list management pages on mobile viewports and fix layout issues in ae-infinity-ui/src/pages/lists/
+- [ ] T045a [P] Add connection status indicator: Show "Connected", "Disconnected", "Reconnecting" badge in header
+- [ ] T045b [P] Test SignalR reconnection: disconnect network, verify automatic reconnection with exponential backoff
+- [ ] T045c Integration test for SignalR broadcasting: create/update/delete list in one browser, verify event received in another browser within 2 seconds
+- [ ] T045d Add ConflictNotification component: reusable toast for showing concurrent edit warnings
 
 **Deliverables**:
 - User feedback (toasts) for all operations

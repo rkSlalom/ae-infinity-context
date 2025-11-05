@@ -48,6 +48,11 @@ public class ListItem
     public bool IsPurchased { get; set; } = false;
     public int Position { get; set; } = 0; // Display order (0-based)
     
+    // Soft Delete (Constitution compliant)
+    public bool IsDeleted { get; set; } = false;
+    public DateTime? DeletedAt { get; set; } // Null if not deleted
+    public Guid? DeletedById { get; set; } // User who deleted
+    
     // Timestamps
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
@@ -58,6 +63,7 @@ public class ListItem
     public Category? Category { get; set; }
     public User CreatedBy { get; set; } = null!;
     public User? PurchasedBy { get; set; }
+    public User? DeletedBy { get; set; }
 }
 ```
 
@@ -74,7 +80,8 @@ public class ListItem
 **Constraints**:
 - A list item must belong to a list (required foreign key)
 - Position must be unique within a list (enforced at application level)
-- Cannot delete a list item if list is deleted (CASCADE DELETE)
+- Soft delete cascades from parent list (when list is soft-deleted, all items are soft-deleted)
+- Query filters automatically exclude soft-deleted items (IsDeleted = false)
 
 ---
 
@@ -324,6 +331,7 @@ CREATE TABLE "ListItems" (
     "CategoryId" TEXT,
     "CreatedById" TEXT NOT NULL,
     "PurchasedById" TEXT,
+    "DeletedById" TEXT,
     
     "Name" TEXT NOT NULL CHECK(length("Name") >= 1 AND length("Name") <= 100),
     "Quantity" REAL NOT NULL DEFAULT 1 CHECK("Quantity" > 0),
@@ -334,6 +342,9 @@ CREATE TABLE "ListItems" (
     "IsPurchased" INTEGER NOT NULL DEFAULT 0,
     "Position" INTEGER NOT NULL DEFAULT 0 CHECK("Position" >= 0),
     
+    "IsDeleted" INTEGER NOT NULL DEFAULT 0,
+    "DeletedAt" TEXT,
+    
     "CreatedAt" TEXT NOT NULL,
     "UpdatedAt" TEXT NOT NULL,
     "PurchasedAt" TEXT,
@@ -341,7 +352,8 @@ CREATE TABLE "ListItems" (
     FOREIGN KEY ("ListId") REFERENCES "Lists"("Id") ON DELETE CASCADE,
     FOREIGN KEY ("CategoryId") REFERENCES "Categories"("Id") ON DELETE SET NULL,
     FOREIGN KEY ("CreatedById") REFERENCES "Users"("Id"),
-    FOREIGN KEY ("PurchasedById") REFERENCES "Users"("Id")
+    FOREIGN KEY ("PurchasedById") REFERENCES "Users"("Id"),
+    FOREIGN KEY ("DeletedById") REFERENCES "Users"("Id")
 );
 ```
 
@@ -350,20 +362,23 @@ CREATE TABLE "ListItems" (
 **Performance-critical indexes**:
 
 ```sql
--- Primary queries
-CREATE INDEX "IX_ListItems_ListId" ON "ListItems"("ListId");
+-- Primary queries (exclude soft-deleted)
+CREATE INDEX "IX_ListItems_ListId" ON "ListItems"("ListId") WHERE "IsDeleted" = 0;
+
+-- Soft delete filtering
+CREATE INDEX "IX_ListItems_IsDeleted" ON "ListItems"("IsDeleted");
 
 -- Filter by category
-CREATE INDEX "IX_ListItems_ListId_CategoryId" ON "ListItems"("ListId", "CategoryId");
+CREATE INDEX "IX_ListItems_ListId_CategoryId" ON "ListItems"("ListId", "CategoryId") WHERE "IsDeleted" = 0;
 
 -- Filter by purchased status
-CREATE INDEX "IX_ListItems_ListId_IsPurchased" ON "ListItems"("ListId", "IsPurchased");
+CREATE INDEX "IX_ListItems_ListId_IsPurchased" ON "ListItems"("ListId", "IsPurchased") WHERE "IsDeleted" = 0;
 
 -- Sort by position (default order)
-CREATE INDEX "IX_ListItems_ListId_Position" ON "ListItems"("ListId", "Position");
+CREATE INDEX "IX_ListItems_ListId_Position" ON "ListItems"("ListId", "Position") WHERE "IsDeleted" = 0;
 
 -- Autocomplete queries (find user's items)
-CREATE INDEX "IX_ListItems_CreatedById_Name" ON "ListItems"("CreatedById", "Name");
+CREATE INDEX "IX_ListItems_CreatedById_Name" ON "ListItems"("CreatedById", "Name") WHERE "IsDeleted" = 0;
 ```
 
 ---
