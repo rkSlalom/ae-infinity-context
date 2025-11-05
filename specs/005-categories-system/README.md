@@ -20,8 +20,10 @@ Item categorization system enabling users to organize shopping items using defau
 | **[spec.md](./spec.md)** | Business requirements, user scenarios, success criteria | ✅ Complete |
 | **[checklists/requirements.md](./checklists/requirements.md)** | Specification quality validation | ✅ Passed |
 | **[contracts/](./contracts/)** | JSON schemas for API contracts | ✅ Complete |
-| **plan.md** | Technical implementation plan | ⏳ Not yet created (use `/speckit.plan`) |
-| **data-model.md** | Entity definitions and relationships | ⏳ Not yet created (use `/speckit.plan`) |
+| **[plan.md](./plan.md)** | Technical implementation plan | ✅ Complete |
+| **[research.md](./research.md)** | Technical research and decisions | ✅ Complete |
+| **[data-model.md](./data-model.md)** | Entity definitions and relationships | ✅ Complete |
+| **[quickstart.md](./quickstart.md)** | Developer implementation guide | ✅ Complete |
 | **tasks.md** | Implementation task breakdown | ⏳ Not yet created (use `/speckit.tasks`) |
 
 ---

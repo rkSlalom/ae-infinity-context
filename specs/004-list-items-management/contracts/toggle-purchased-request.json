@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TogglePurchasedRequest",
+  "description": "Request body for marking an item as purchased or unpurchased",
+  "type": "object",
+  "required": ["isPurchased"],
+  "properties": {
+    "isPurchased": {
+      "type": "boolean",
+      "description": "True to mark as purchased, false to mark as unpurchased",
+      "example": true
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "isPurchased": true
+    },
+    {
+      "isPurchased": false
+    }
+  ]
+}
+
