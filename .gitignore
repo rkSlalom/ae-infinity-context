@@ -1,0 +1,118 @@
+# AE Infinity Context Repository - Git Ignore
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+*.iml
+
+# Temporary Files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
+*.log
+
+# Node.js (if using any JS tooling)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# Python (if using any Python scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.pyc
+.env
+.venv
+venv/
+ENV/
+
+# Logs
+logs/
+*.log
+
+# Test Coverage
+coverage/
+.nyc_output/
+htmlcov/
+.coverage
+.pytest_cache/
+
+# Cache Directories
+.cache/
+.parcel-cache/
+
+# Build Outputs (if generating any)
+dist/
+build/
+out/
+
+# Environment Variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Spec Kit Generated Files (if any auto-generated temp files)
+# Note: We DO want to commit .specify/ directory contents
+# Only ignoring potential temp/cache files within it
+.specify/cache/
+.specify/temp/
+
+# Keep these directories but ignore their contents if empty
+# (Git doesn't track empty directories, but listing for clarity)
+!.specify/templates/.gitkeep
+!specs/.gitkeep
+
+# Ignore sensitive information (if accidentally added)
+secrets/
+*.key
+*.pem
+*.p12
+credentials.json
+
+# Ignore large files or archives
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Ignore database files (if any test DBs get created here)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# macOS
+Icon?
+
+# Windows
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+
