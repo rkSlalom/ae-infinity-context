@@ -1,10 +1,28 @@
 # AE Infinity - Context Repository
 
 **Version**: 1.0  
-**Last Updated**: November 3, 2025  
+**Last Updated**: November 5, 2025  
 **Repository Type**: Specification & Documentation (Source of Truth)
 
 ## 🆕 Recent Updates
+
+### Working Directory Setup (2025-11-05) 🚀 NEW!
+**✅ One-command setup for agentic development!** Automated script to clone all repos and set up dependencies:
+
+```bash
+./setup-working-directory.sh
+```
+
+Creates an isolated workspace with all three repositories ready for development. Perfect for:
+- **AI agent iteration** - Safe environment for agentic development
+- **Feature experimentation** - Try approaches without affecting main repos
+- **Clean testing** - Fresh environment with all dependencies
+- **Team collaboration** - Consistent setup across developers
+
+**Quick Links**:
+- **[Quick Setup Guide](./QUICK_SETUP.md)** - Get started in 30 seconds
+- **[Full Documentation](./WORKING_DIRECTORY_GUIDE.md)** - Complete setup guide with troubleshooting
+- **[Slash Commands](./SLASH_COMMANDS_GUIDE.md)** - Cursor IDE commands for enhanced workflow
 
 ### Authentication System (2025-11-03 PM)
 **✅ Full authentication documentation now available!** The backend API has implemented JWT-based authentication. All relevant docs have been updated:
