@@ -228,14 +228,22 @@
 **Purpose**: Improvements that affect multiple user stories
 
 - [ ] T099 [P] Add performance monitoring for category API endpoints in ae-infinity-api/
-- [ ] T100 [P] Add logging for category operations (create, retrieve) in ae-infinity-api/
+- [ ] T100 [P] Add category-specific logging: log category creation with userId, categoryId, name, timestamp at Information level in ae-infinity-api/src/AeInfinity.Application/Categories/Commands/CreateCategory/CreateCategoryHandler.cs
 - [ ] T101 [P] Optimize GetCategoriesQuery with caching for defaults in ae-infinity-api/src/AeInfinity.Application/Categories/Queries/GetCategories/
 - [ ] T102 [P] Add API documentation (XML comments) to CategoriesController in ae-infinity-api/src/AeInfinity.Api/Controllers/CategoriesController.cs
 - [ ] T103 [P] Verify Swagger documentation for category endpoints is accurate
 - [ ] T104 [P] Add accessibility labels to CategoryBadge component in ae-infinity-ui/src/components/CategoryBadge.tsx
 - [ ] T105 [P] Add keyboard navigation support to CategoryPicker in ae-infinity-ui/src/components/CategoryPicker.tsx
+- [ ] T105a [P] Implement search/filter functionality in CategoryPicker when category list exceeds 20 items in ae-infinity-ui/src/components/CategoryPicker.tsx
 - [ ] T106 [P] Optimize CategoryContext to prevent unnecessary re-renders in ae-infinity-ui/src/contexts/CategoryContext.tsx
 - [ ] T107 [P] Add error boundaries for category components in ae-infinity-ui/
+- [ ] T107a [P] Verify Category entity has IsDeleted, DeletedAt, DeletedById fields in ae-infinity-api/src/AeInfinity.Core/Entities/Category.cs
+- [ ] T107b [P] Add database migration for soft delete fields (IsDeleted, DeletedAt, DeletedById) in ae-infinity-api/
+- [ ] T107c [P] Implement soft delete logic in DeleteCategoryCommand handler (if DELETE endpoint exists) in ae-infinity-api/src/AeInfinity.Application/Categories/Commands/DeleteCategory/
+- [ ] T107d [P] Add validation to prevent deletion of categories assigned to items in ae-infinity-api/
+- [ ] T107e [P] Update GetCategoriesQuery to filter out soft-deleted categories (WHERE IsDeleted = 0) in ae-infinity-api/src/AeInfinity.Application/Categories/Queries/GetCategories/GetCategoriesHandler.cs
+- [ ] T107f [P] Add backend integration test: verify soft delete prevents permanent data removal in ae-infinity-api/tests/AeInfinity.IntegrationTests/Categories/SoftDeleteTests.cs
+- [ ] T107g [P] Add backend integration test: verify deletion blocked when items reference category in ae-infinity-api/tests/AeInfinity.IntegrationTests/Categories/DeletePreventionTests.cs
 - [ ] T108 Code cleanup: Remove any mock data from categoriesService in ae-infinity-ui/src/services/categoriesService.ts
 - [ ] T109 Code cleanup: Remove unused imports and console.logs across all category files
 - [ ] T110 Run quickstart.md validation (follow all steps in quickstart.md and verify success)
@@ -383,7 +391,7 @@ With multiple developers:
 
 ## Task Count Summary
 
-- **Total Tasks**: 117
+- **Total Tasks**: 126
 - **Setup (Phase 1)**: 10 tasks
 - **Foundational (Phase 2)**: 7 tasks
 - **User Story 1**: 16 tasks (5 tests + 11 implementation)
@@ -391,12 +399,14 @@ With multiple developers:
 - **User Story 3**: 7 tasks (3 tests + 4 implementation)
 - **User Story 4**: 21 tasks (6 tests + 15 implementation)
 - **User Story 5**: 9 tasks (3 tests + 6 implementation)
-- **Polish (Phase 8)**: 19 tasks
+- **Polish (Phase 8)**: 28 tasks (includes soft delete, logging, search enhancements)
 
-**Parallel Opportunities**: 45+ tasks can be executed in parallel (marked with [P])
+**Parallel Opportunities**: 50+ tasks can be executed in parallel (marked with [P])
 
 **MVP Scope**: User Stories 1, 2, and 4 (54 tasks) - complete categories system with item integration
 
-**Estimated Timeline**: 5-8 days (per plan.md) with single developer, 3-5 days with parallel team
+**Soft Delete & Enhancements**: 9 additional tasks (T105a, T107a-T107g) for FR-021, FR-022, FR-023, FR-024 compliance
+
+**Estimated Timeline**: 6-9 days (per plan.md updated with soft delete) with single developer, 4-6 days with parallel team
 
 

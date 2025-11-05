@@ -128,15 +128,14 @@ A user viewing a shopping list wants to filter items by category (e.g., show onl
 - **FR-001**: System MUST provide 10 default categories on initialization: Produce, Dairy, Meat, Seafood, Bakery, Frozen, Beverages, Snacks, Household, Personal Care
 - **FR-002**: System MUST automatically make default categories available on first use without user action
 - **FR-003**: System MUST allow authenticated users to create custom categories
-- **FR-004**: System MUST validate category name: 1-50 characters, required, unique per user (case-insensitive)
-- **FR-005**: System MUST validate category icon: required, must be valid emoji character (Unicode)
+- **FR-004**: System MUST validate category name: 1-50 characters, required, unique per user (case-insensitive comparison to prevent duplicates)
+- **FR-005**: System MUST validate category icon: required, must be valid Unicode 13+ emoji (single character or sequence up to 10 characters, e.g., 🥬 or 👨‍👩‍👧‍👦)
 - **FR-006**: System MUST validate category color: required, valid hex color format (#RRGGBB or #RGB)
 - **FR-007**: System MUST associate custom categories with the user who created them
 - **FR-008**: System MUST allow non-authenticated users to view default categories
 - **FR-009**: System MUST allow authenticated users to view both default and custom categories
 - **FR-010**: System MUST support filtering categories: show defaults only, or show all categories
 - **FR-011**: System MUST provide category information including: unique identifier, name, icon, color, default flag, and creator
-- **FR-012**: System MUST prevent duplicate category names per user (case-insensitive comparison)
 - **FR-013**: System MUST display validation errors when category creation fails
 - **FR-014**: System MUST confirm successful category creation and display the new category
 - **FR-015**: System MUST display category picker in item create/edit forms with icons and colors
@@ -145,19 +144,23 @@ A user viewing a shopping list wants to filter items by category (e.g., show onl
 - **FR-018**: System MUST allow users to filter list items by category
 - **FR-019**: System MUST provide "Create Category" option in category picker for custom categories
 - **FR-020**: System MUST validate category creation form before submission
-- **FR-021**: System SHOULD prevent deletion of categories assigned to items (maintain data integrity)
-- **FR-022**: System SHOULD log category creation events for audit purposes
-- **FR-023**: System SHOULD provide search/filter in category picker when list exceeds 20 categories
+- **FR-021**: System MUST prevent deletion of categories assigned to items (maintain data integrity)
+- **FR-022**: System MUST use soft delete for custom categories (IsDeleted flag, DeletedAt timestamp, DeletedById reference)
+- **FR-023**: System MUST log category creation events for audit purposes with userId, categoryId, name, and timestamp at Information level
+- **FR-024**: System MUST provide search/filter in category picker when list exceeds 20 categories
 
 ### Key Entities
 
 - **Category**: Represents a classification for shopping items
   - Unique identifier (GUID/UUID)
   - Name (1-50 characters, unique per user)
-  - Icon (emoji, single character or sequence)
+  - Icon (emoji, single character or sequence up to 10 characters, Unicode 13+)
   - Color (hex code, e.g., #4CAF50)
   - IsDefault flag (true for system categories, false for user-created)
   - Creator reference (null for default categories, userId for custom)
+  - IsDeleted flag (soft delete, default: false)
+  - DeletedAt timestamp (nullable, when category was soft deleted)
+  - DeletedById reference (nullable, user who deleted the category)
   - Relationships: Assigned to items (one-to-many)
 
 - **Default Categories**: System-provided categories seeded on initialization
@@ -193,8 +196,11 @@ A user viewing a shopping list wants to filter items by category (e.g., show onl
 - **SC-009**: 95% of category operations complete in under 300 milliseconds
 - **SC-010**: Category name uniqueness enforced - zero duplicate categories per user
 - **SC-011**: Category creation form validates all fields before submission
-- **SC-012**: Users with 50+ categories can still navigate category picker efficiently
+- **SC-012**: Users with 50+ categories can still navigate category picker efficiently with search functionality
 - **SC-013**: Items without category gracefully display "Uncategorized" or no badge
-- **SC-014**: System handles emoji sequences and special Unicode characters without errors
+- **SC-014**: System handles emoji sequences (up to 10 characters) and special Unicode 13+ characters without errors
+- **SC-015**: Category deletion prevented when items reference the category (data integrity maintained)
+- **SC-016**: Soft deleted categories do not appear in category lists but maintain referential integrity
+- **SC-017**: Category creation events logged with complete audit trail (userId, categoryId, name, timestamp)
 
 

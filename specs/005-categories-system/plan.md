@@ -7,8 +7,8 @@
 
 Item categorization system enabling users to organize shopping items using 10 default system categories and create custom categories with emoji icons and hex colors. Both backend and frontend are 100% implemented but require integration testing and verification.
 
-**Current State**: Backend 100% (all endpoints complete), Frontend 100% (all UI components ready), Integration 0%  
-**Target State**: Fully integrated categories system with verified default seeding, custom category creation, and item filtering
+**Current State**: Backend 100% (GET/POST endpoints complete, DELETE needs soft delete), Frontend 100% (UI components ready, needs search), Integration 0%  
+**Target State**: Fully integrated categories system with verified default seeding, custom category creation, soft delete, logging, search, and item filtering
 
 ---
 
@@ -220,8 +220,10 @@ ae-infinity-ui/
 
 **Icon Validation**:
 - Required
-- Must be valid Unicode character (regex: `^\p{Emoji}+$` or length check)
-- Single emoji or emoji sequence supported (e.g., 👨‍👩‍👧‍👦)
+- Must be valid Unicode 13+ emoji character or sequence
+- Maximum length: 10 characters (supports sequences like 👨‍👩‍👧‍👦)
+- Regex pattern: `^\p{Emoji}+$` or length validation: 1-10 characters
+- Emoji sequences with Zero-Width Joiners (ZWJ) are supported
 
 **Color Validation**:
 - Required
@@ -247,19 +249,26 @@ ae-infinity-ui/
 
 ### Deletion Strategy
 
-**Decision**: Prevent deletion of categories assigned to items (referential integrity)
+**Decision**: Soft delete for categories + prevent deletion if items are assigned
 
 **Rationale**:
-- Avoid orphaned category references
-- User must reassign items before deleting category
-- Simpler than cascade delete or soft delete
+- Soft delete maintains audit trail and referential integrity
+- Prevents accidental data loss
+- Allows recovery if needed
+- Prevents deletion when items reference the category (data integrity)
+- Consistent with project constitution soft delete requirements
+
+**Implementation**:
+- Add `IsDeleted`, `DeletedAt`, `DeletedById` fields to Category entity
+- Check for assigned items before allowing soft delete
+- Query filters automatically exclude soft-deleted categories (`WHERE IsDeleted = 0`)
+- FK constraint in database + validation in application layer
+- Only custom categories can be deleted (default categories are permanent)
 
 **Alternative Considered**:
-- Soft delete (rejected: adds complexity, not needed for MVP)
+- Hard delete (rejected: loses audit trail, breaks referential integrity)
 - Cascade delete (rejected: data loss risk)
 - Set null on items (rejected: loses categorization)
-
-**Implementation**: FK constraint in database + validation in application layer
 
 ---
 
@@ -270,11 +279,14 @@ ae-infinity-ui/
 **Properties**:
 - `Id` (Guid) - Primary key
 - `Name` (string, 1-50 chars) - Required, indexed for uniqueness check
-- `Icon` (string) - Emoji character
+- `Icon` (string) - Emoji character or sequence (up to 10 chars, Unicode 13+)
 - `Color` (string) - Hex color code
 - `IsDefault` (bool) - True for system categories
 - `CreatedById` (Guid?) - Nullable FK to User
 - `CreatedBy` (User) - Navigation property
+- `IsDeleted` (bool) - Soft delete flag, default: false
+- `DeletedAt` (DateTime?) - Soft delete timestamp
+- `DeletedById` (Guid?) - Nullable FK to User who deleted
 - `CreatedAt` (DateTime) - Audit timestamp
 - `UpdatedAt` (DateTime?) - Audit timestamp
 
@@ -286,13 +298,15 @@ ae-infinity-ui/
 - Unique index on `(LOWER(Name), CreatedById)` for case-insensitive uniqueness per user
 - Index on `IsDefault` for fast default category queries
 - Index on `CreatedById` for user category queries
+- Index on `IsDeleted` for filtering soft-deleted categories
 
 **Validation**:
 - Name: required, 1-50 chars, unique per user (case-insensitive)
-- Icon: required, valid Unicode emoji
+- Icon: required, valid Unicode 13+ emoji (single or sequence up to 10 characters)
 - Color: required, hex format (#RRGGBB or #RGB)
 - IsDefault: auto-set (false for user-created, true for seeded)
 - CreatedById: required for custom categories, null for defaults
+- IsDeleted: default false, set to true on soft delete (with DeletedAt and DeletedById)
 
 ---
 
@@ -355,9 +369,19 @@ public record CategoryRefDto(
   - Set `CreatedById = currentUserId`, `IsDefault = false`
   - Return created category
 
-**DELETE /api/categories/{id}** (future enhancement, not in MVP):
+**DELETE /api/categories/{id}**:
 - **Authentication**: Required (owner only)
-- **Response**: 204 No Content or 400 Bad Request (if assigned to items)
+- **Response**: 
+  - 204 No Content (soft delete successful)
+  - 400 Bad Request (if assigned to items)
+  - 403 Forbidden (cannot delete default categories)
+- **Logic**:
+  - Verify category is custom (not default)
+  - Verify user is creator (CreatedById = currentUserId)
+  - Check if any items reference the category
+  - If items exist: return 400 with error message
+  - If no items: perform soft delete (set IsDeleted=true, DeletedAt=now, DeletedById=currentUserId)
+  - Soft-deleted categories excluded from GET /categories queries
 
 ---
 
@@ -397,11 +421,18 @@ export interface GetCategoriesResponse {
 
 ### Backend Integration
 - [x] CategoriesController with GET and POST endpoints
+- [ ] CategoriesController DELETE endpoint with soft delete logic
 - [x] CQRS handlers (GetCategoriesQuery, CreateCategoryCommand)
+- [ ] CQRS handler for DeleteCategoryCommand with validation
 - [x] FluentValidation for CreateCategoryDto
 - [x] Default categories seeding in ApplicationDbContextSeed
+- [ ] Soft delete fields in Category entity (IsDeleted, DeletedAt, DeletedById)
+- [ ] Query filters for soft-deleted categories
+- [ ] Category-specific logging with audit trail
 - [ ] Integration tests for endpoints
 - [ ] Verify default category seeding on fresh database
+- [ ] Integration tests for soft delete functionality
+- [ ] Integration tests for deletion prevention when items assigned
 
 ### Frontend Integration
 - [x] categoriesService.ts with API client methods
@@ -409,8 +440,10 @@ export interface GetCategoriesResponse {
 - [x] CategoryBadge component for displaying categories
 - [x] CreateCategoryForm component
 - [ ] Connect CategoryPicker to real API (replace mock data)
+- [ ] Add search/filter functionality to CategoryPicker (when >20 categories)
 - [ ] Add category filtering to list views
 - [ ] Component tests for category UI
+- [ ] Component tests for search functionality
 
 ### End-to-End Integration
 - [ ] Test default categories load on app initialization
@@ -419,6 +452,10 @@ export interface GetCategoriesResponse {
 - [ ] Test category filtering in list views
 - [ ] Test category display on items
 - [ ] Test unauthenticated access to default categories
+- [ ] Test soft delete functionality (category removed from lists but data preserved)
+- [ ] Test deletion prevention when items assigned to category
+- [ ] Test search functionality in category picker with 20+ categories
+- [ ] Test category creation logging and audit trail
 
 ---
 
@@ -518,14 +555,22 @@ export interface GetCategoriesResponse {
 4. Test category filtering
 5. Test error handling (duplicate names, invalid input)
 
-### Phase 4: Documentation & Deployment (1 day)
+### Phase 4: Soft Delete & Enhancements (1-2 days)
+1. Implement soft delete fields in Category entity
+2. Add DELETE endpoint with soft delete logic
+3. Implement deletion prevention when items assigned
+4. Add category-specific logging
+5. Implement search in CategoryPicker
+6. Test all new functionality
+
+### Phase 5: Documentation & Deployment (1 day)
 1. Update API documentation (Swagger)
-2. Update user documentation (how to create categories)
+2. Update user documentation (how to create/delete categories)
 3. Deploy to staging environment
 4. Run smoke tests
 5. Deploy to production
 
-**Total Estimated Time**: 5-8 days
+**Total Estimated Time**: 6-9 days (updated with soft delete and enhancements)
 
 ---
 

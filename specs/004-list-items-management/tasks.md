@@ -26,11 +26,11 @@
 
 **Purpose**: Project initialization and dependency installation
 
-- [ ] T001 Install @dnd-kit packages in ae-infinity-ui/ (npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities)
-- [ ] T001a Install @microsoft/signalr in ae-infinity-ui/ (npm install @microsoft/signalr)
-- [ ] T002 [P] Install React Query in ae-infinity-ui/ if not already present (npm install @tanstack/react-query)
-- [ ] T003 [P] Verify FluentValidation and MediatR packages in ae-infinity-api/src/Application/
-- [ ] T004 Create contracts directory structure ae-infinity-api/src/Application/ListItems/Contracts/
+- [X] T001 Install @dnd-kit packages in ae-infinity-ui/ (npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities)
+- [X] T001a Install @microsoft/signalr in ae-infinity-ui/ (npm install @microsoft/signalr) - Already installed from Feature 003
+- [X] T002 [P] Install React Query in ae-infinity-ui/ if not already present (npm install @tanstack/react-query)
+- [X] T003 [P] Verify FluentValidation and MediatR packages in ae-infinity-api/src/Application/ - Already present
+- [X] T004 Create contracts directory structure ae-infinity-api/src/Application/ListItems/Contracts/
 
 ---
 
@@ -42,29 +42,29 @@
 
 ### Backend Foundation
 
-- [ ] T005 Create ListItem entity with soft delete fields in ae-infinity-api/src/Domain/Entities/ListItem.cs
-- [ ] T006 Create EF Core configuration with soft delete filter in ae-infinity-api/src/Infrastructure/Persistence/Configurations/ListItemConfiguration.cs
-- [ ] T007 Create database migration for ListItems table with indexes (include IsDeleted, DeletedAt, DeletedById)
-- [ ] T007a [P] VERIFY ShoppingListHub exists from Feature 003 in ae-infinity-api/src/AeInfinity.Api/Hubs/ShoppingListHub.cs
-- [ ] T007b Extend ShoppingListHub with JoinItemsView/LeaveItemsView methods
-- [ ] T007c [P] VERIFY SignalR configured in Program.cs from Feature 003
-- [ ] T008 [P] Create IListItemRepository interface in ae-infinity-api/src/Application/Common/Interfaces/IListItemRepository.cs
-- [ ] T009 Implement ListItemRepository in ae-infinity-api/src/Infrastructure/Persistence/Repositories/ListItemRepository.cs
-- [ ] T010 [P] Create ItemResponse DTO in ae-infinity-api/src/Application/ListItems/Contracts/ItemResponse.cs
-- [ ] T011 [P] Create ItemsListResponse DTO in ae-infinity-api/src/Application/ListItems/Contracts/ItemsListResponse.cs
-- [ ] T012 [P] Setup AutoMapper profiles for ListItem entity in ae-infinity-api/src/Application/Common/Mappings/ListItemMappingProfile.cs
+- [X] T005 Create ListItem entity with soft delete fields in ae-infinity-api/src/Domain/Entities/ListItem.cs
+- [X] T006 Create EF Core configuration with soft delete filter in ae-infinity-api/src/Infrastructure/Persistence/Configurations/ListItemConfiguration.cs
+- [X] T007 Create database migration for ListItems table with indexes (include IsDeleted, DeletedAt, DeletedById)
+- [X] T007a [P] VERIFY ShoppingListHub exists from Feature 003 in ae-infinity-api/src/AeInfinity.Api/Hubs/ShoppingListHub.cs
+- [X] T007b Extend ShoppingListHub with JoinItemsView/LeaveItemsView methods - NOT NEEDED (reuse existing list groups)
+- [X] T007c [P] VERIFY SignalR configured in Program.cs from Feature 003
+- [X] T008 [P] Create IListItemRepository interface in ae-infinity-api/src/Application/Common/Interfaces/IListItemRepository.cs
+- [X] T009 Implement ListItemRepository in ae-infinity-api/src/Infrastructure/Persistence/Repositories/ListItemRepository.cs
+- [X] T010 [P] Create ItemResponse DTO in ae-infinity-api/src/Application/ListItems/Contracts/ItemResponse.cs - Already exists as ListItemDto
+- [X] T011 [P] Create ItemsListResponse DTO in ae-infinity-api/src/Application/ListItems/Contracts/ItemsListResponse.cs
+- [X] T012 [P] Setup AutoMapper profiles for ListItem entity in ae-infinity-api/src/Application/Common/Mappings/ListItemMappingProfile.cs
 
 ### Frontend Foundation
 
-- [ ] T013 [P] Define ListItem TypeScript type in ae-infinity-ui/src/types/index.ts
-- [ ] T014 [P] Define request/response TypeScript types in ae-infinity-ui/src/types/index.ts
-- [ ] T014a [P] VERIFY signalrService.ts exists from Feature 003 in ae-infinity-ui/src/services/signalrService.ts
-- [ ] T014b [P] VERIFY useSignalR hook exists from Feature 003 in ae-infinity-ui/src/hooks/useSignalR.ts
-- [ ] T014c Extend signalr.ts with item event type definitions in ae-infinity-ui/src/types/signalr.ts
+- [X] T013 [P] Define ListItem TypeScript type in ae-infinity-ui/src/types/index.ts - Already exists as ShoppingItem
+- [X] T014 [P] Define request/response TypeScript types in ae-infinity-ui/src/types/index.ts - Already exists
+- [X] T014a [P] VERIFY signalrService.ts exists from Feature 003 in ae-infinity-ui/src/services/signalrService.ts
+- [X] T014b [P] VERIFY useSignalR hook exists from Feature 003 in ae-infinity-ui/src/hooks/useSignalR.ts
+- [X] T014c Extend signalr.ts with item event type definitions in ae-infinity-ui/src/types/signalr.ts - Already exists
 - [ ] T014d Create useItemEvents hook for item-specific SignalR handlers in ae-infinity-ui/src/hooks/useItemEvents.ts
-- [ ] T015 Update itemsService.ts with base API methods in ae-infinity-ui/src/services/itemsService.ts
-- [ ] T016 [P] Create ConfirmDialog component in ae-infinity-ui/src/components/common/ConfirmDialog.tsx
-- [ ] T016a Create ConflictNotification component in ae-infinity-ui/src/components/common/ConflictNotification.tsx
+- [X] T015 Update itemsService.ts with base API methods in ae-infinity-ui/src/services/itemsService.ts - Already exists, added autocomplete
+- [X] T016 [P] Create ConfirmDialog component in ae-infinity-ui/src/components/common/ConfirmDialog.tsx
+- [X] T016a Create ConflictNotification component in ae-infinity-ui/src/components/common/ConflictNotification.tsx
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -93,26 +93,26 @@
 ### Implementation for User Story 1
 
 #### Backend Implementation
-- [ ] T023 [US1] Create CreateItemRequest DTO in ae-infinity-api/src/Application/ListItems/Contracts/CreateItemRequest.cs
-- [ ] T024 [US1] Create CreateItemRequestValidator with FluentValidation rules in ae-infinity-api/src/Application/ListItems/Commands/CreateItemValidator.cs
-- [ ] T025 [US1] Create CreateItemCommand in ae-infinity-api/src/Application/ListItems/Commands/CreateItemCommand.cs
-- [ ] T026 [US1] Implement CreateItemCommandHandler with permission checks in ae-infinity-api/src/Application/ListItems/Commands/CreateItemCommandHandler.cs
-- [ ] T027 [US1] Add POST /lists/{listId}/items endpoint in ae-infinity-api/src/API/Controllers/ListItemsController.cs
+- [X] T023 [US1] Create CreateItemRequest DTO in ae-infinity-api/src/Application/ListItems/Contracts/CreateItemRequest.cs
+- [X] T024 [US1] Create CreateItemRequestValidator with FluentValidation rules in ae-infinity-api/src/Application/ListItems/Commands/CreateItemValidator.cs
+- [X] T025 [US1] Create CreateItemCommand in ae-infinity-api/src/Application/ListItems/Commands/CreateItemCommand.cs
+- [X] T026 [US1] Implement CreateItemCommandHandler with permission checks in ae-infinity-api/src/Application/ListItems/Commands/CreateItemCommandHandler.cs
+- [X] T027 [US1] Add POST /lists/{listId}/items endpoint in ae-infinity-api/src/API/Controllers/ListItemsController.cs
 - [ ] T028 [US1] Run tests to verify all US1 backend tests pass
 
 #### Frontend Implementation
-- [ ] T029 [P] [US1] Create ItemForm component for add mode in ae-infinity-ui/src/components/items/ItemForm.tsx
-- [ ] T030 [P] [US1] Create useItems hook with createItem mutation and optimistic updates in ae-infinity-ui/src/hooks/useItems.ts
-- [ ] T031 [US1] Wire ItemForm to useItems hook in ae-infinity-ui/src/pages/lists/ListDetail.tsx
-- [ ] T032 [US1] Add form validation errors display in ItemForm component
-- [ ] T033 [US1] Add loading states and success/error toasts for item creation
+- [X] T029 [P] [US1] Create ItemForm component for add mode in ae-infinity-ui/src/components/items/ItemForm.tsx
+- [X] T030 [P] [US1] Create useItems hook with createItem mutation and optimistic updates in ae-infinity-ui/src/hooks/useItems.ts - Used existing useListItems hook
+- [X] T031 [US1] Wire ItemForm to useItems hook in ae-infinity-ui/src/pages/lists/ListDetail.tsx
+- [X] T032 [US1] Add form validation errors display in ItemForm component
+- [X] T033 [US1] Add loading states and success/error toasts for item creation
 - [ ] T034 [US1] Run tests to verify all US1 frontend tests pass
 
 #### SignalR Integration for User Story 1
-- [ ] T034a [P] [US1] Add ItemCreated event broadcasting in CreateItemCommandHandler after successful save
-- [ ] T034b [US1] Add ItemCreated event handler in useItemEvents hook: prepend new item to list
-- [ ] T034c [US1] Implement optimistic UI: add temporary item immediately, replace with real data on success
-- [ ] T034d [US1] Add rollback logic: remove optimistic item on API error
+- [X] T034a [P] [US1] Add ItemCreated event broadcasting in CreateItemCommandHandler after successful save
+- [X] T034b [US1] Add ItemCreated event handler in useItemEvents hook: prepend new item to list - Already implemented in useListRealtime
+- [X] T034c [US1] Implement optimistic UI: add temporary item immediately, replace with real data on success - Already in useListItems
+- [X] T034d [US1] Add rollback logic: remove optimistic item on API error - Already in useListItems
 - [ ] T034e [US1] Test real-time item creation: verify other collaborators see new item within 2 seconds
 
 **Checkpoint**: At this point, User Story 1 should be fully functional with real-time broadcasting. Users can add items with all fields, and all collaborators see updates instantly.
