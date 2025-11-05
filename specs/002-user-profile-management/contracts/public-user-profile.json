@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/public-user-profile.json",
+  "title": "PublicUserProfile",
+  "description": "Limited user information for public profiles (privacy-respecting view for collaborators)",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique user identifier"
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "User's display name"
+    },
+    "avatarUrl": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "URL to user's avatar image"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Account creation timestamp (UTC)"
+    }
+  },
+  "required": ["id", "displayName", "createdAt"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "displayName": "John Doe",
+      "avatarUrl": "https://example.com/avatars/john.jpg",
+      "createdAt": "2025-01-01T10:00:00Z"
+    }
+  ],
+  "x-privacy-note": "This DTO excludes email, full statistics, and other sensitive data. Use only for displaying collaborator information."
+}
+
