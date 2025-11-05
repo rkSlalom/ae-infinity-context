@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/user-basic.json",
+  "title": "UserBasicDto",
+  "description": "Minimal user information for nested references",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique user identifier"
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 1,
+      "description": "User's display name"
+    },
+    "avatarUrl": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "URL to user's avatar image"
+    }
+  },
+  "required": ["id", "displayName"],
+  "additionalProperties": false
+}
+

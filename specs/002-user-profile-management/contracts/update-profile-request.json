@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/update-profile-request.json",
+  "title": "UpdateProfileRequest",
+  "description": "Request payload for updating user profile (display name and avatar)",
+  "type": "object",
+  "properties": {
+    "displayName": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 100,
+      "description": "User's new display name (supports Unicode/emojis)",
+      "examples": ["John Doe", "Jane Smith 🎉", "María García"]
+    },
+    "avatarUrl": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "maxLength": 500,
+      "description": "URL to user's avatar image (null to clear avatar)",
+      "examples": [
+        "https://example.com/avatars/john.jpg",
+        "https://gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+        null
+      ]
+    }
+  },
+  "required": ["displayName"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "displayName": "John Doe",
+      "avatarUrl": "https://example.com/avatars/john.jpg"
+    },
+    {
+      "displayName": "Jane Smith",
+      "avatarUrl": null
+    }
+  ]
+}
+

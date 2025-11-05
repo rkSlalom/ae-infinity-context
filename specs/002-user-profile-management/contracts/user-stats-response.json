@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/user-stats-response.json",
+  "title": "UserStatsResponse",
+  "description": "User activity and engagement statistics",
+  "type": "object",
+  "properties": {
+    "totalListsOwned": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of shopping lists owned by the user"
+    },
+    "totalListsShared": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of lists shared with the user (as collaborator)"
+    },
+    "totalItemsCreated": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of items created by the user across all lists"
+    },
+    "totalItemsPurchased": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of items marked as purchased by the user"
+    },
+    "totalActiveCollaborations": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of active (non-archived) collaborative lists"
+    },
+    "lastActivityAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp of user's most recent activity (UTC)"
+    }
+  },
+  "required": [
+    "totalListsOwned",
+    "totalListsShared",
+    "totalItemsCreated",
+    "totalItemsPurchased",
+    "totalActiveCollaborations"
+  ],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "totalListsOwned": 5,
+      "totalListsShared": 12,
+      "totalItemsCreated": 87,
+      "totalItemsPurchased": 54,
+      "totalActiveCollaborations": 8,
+      "lastActivityAt": "2025-11-05T14:22:00Z"
+    },
+    {
+      "totalListsOwned": 0,
+      "totalListsShared": 0,
+      "totalItemsCreated": 0,
+      "totalItemsPurchased": 0,
+      "totalActiveCollaborations": 0,
+      "lastActivityAt": null
+    }
+  ]
+}
+

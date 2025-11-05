@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ae-infinity.local/schemas/login-response.json",
+  "title": "LoginResponse",
+  "description": "Authentication response with JWT token and user details",
+  "type": "object",
+  "properties": {
+    "token": {
+      "type": "string",
+      "description": "JWT bearer token for authentication"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Token expiration timestamp"
+    },
+    "user": {
+      "type": "object",
+      "description": "Authenticated user details",
+      "$ref": "user.json"
+    }
+  },
+  "required": ["token", "expiresAt", "user"],
+  "additionalProperties": false
+}
+
