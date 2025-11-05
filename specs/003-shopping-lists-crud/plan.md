@@ -91,6 +91,14 @@ This feature provides full CRUD (Create, Read, Update, Delete) operations for sh
 
 **Authorization**: Permission checks implemented (Owner can delete, Editor can update, Viewer read-only)
 
+**SignalR Integration**: The backend does NOT currently broadcast list update events. When Feature 007 (Real-time Collaboration) is implemented, these events will be added:
+- `ListCreated` - Broadcast to all collaborators
+- `ListUpdated` - Broadcast to all collaborators  
+- `ListDeleted` - Broadcast to all collaborators
+- `ListArchived` - Broadcast to all collaborators
+
+**Frontend Impact**: Current implementation requires manual refresh to see collaborator changes. This is acceptable for MVP.
+
 ### **Frontend UI (ae-infinity-ui)**
 
 **🟡 PARTIALLY IMPLEMENTED** - UI exists with mock data

@@ -5,6 +5,18 @@
 **Status**: Draft  
 **Input**: User description: "003 - Shopping Lists CRUD"
 
+## Implementation Note *(constitution exception)*
+
+**Backend Pre-Implementation**: This feature's backend API was implemented before this specification was written, which deviates from Constitution Principle I (Specification-First Development). This spec serves as:
+
+1. **Verification artifact** - Documents existing API behavior and contracts
+2. **Integration guide** - Provides frontend developers with complete API reference
+3. **Testing baseline** - Acceptance scenarios verify backend matches expected behavior
+
+**Constitution Compliance**: This deviation is documented and accepted as a legacy exception. All future features MUST follow specification-first development.
+
+**Action Required**: Before frontend integration, Task T003 must verify backend test coverage ≥80% per Constitution Principle V (TDD).
+
 ---
 
 ## User Scenarios & Testing *(mandatory)*
@@ -174,7 +186,7 @@ A user with many lists can search by list name, filter lists by status (owned/sh
 
 - **FR-020**: System MUST allow only list owners to delete lists
 - **FR-021**: System MUST display confirmation dialog before deleting a list, warning about permanent deletion of list and all items
-- **FR-022**: System MUST soft-delete lists (set DeletedAt timestamp) to allow potential recovery
+- **FR-022**: System MUST soft-delete lists (set DeletedAt timestamp) with 30-day retention period before permanent deletion. Automated cleanup process removes soft-deleted records older than 30 days.
 - **FR-023**: System MUST cascade delete all items within a deleted list
 - **FR-024**: System MUST remove deleted lists from all user dashboards immediately
 - **FR-025**: System MUST redirect user to main dashboard after successful deletion
@@ -245,8 +257,8 @@ A user with many lists can search by list name, filter lists by status (owned/sh
 
 1. **Authentication**: Users are already authenticated via Feature 001 (User Authentication) with valid JWT tokens
 2. **Authorization**: Permission checks (Owner, Editor, Viewer) are enforced at API layer and database query level
-3. **Data Retention**: Soft-deleted lists are retained for 30 days before permanent deletion (implementation detail, not in spec)
-4. **Real-time Collaboration**: List updates are NOT synchronized in real-time to other users in this feature (deferred to Feature 007)
+3. **Data Retention**: Soft-deleted lists are retained for 30 days before permanent deletion (specified in FR-022)
+4. **Real-time Collaboration**: List updates (create, edit, delete, archive) do NOT broadcast via SignalR to other users in this feature. Users must refresh to see changes made by collaborators. Real-time synchronization is explicitly deferred to Feature 007 (Real-time Collaboration). The existing backend implementation does NOT include SignalR broadcasting for list operations.
 5. **Collaborator Management**: Inviting and managing collaborators is handled in Feature 008 (Invitations & Permissions)
 6. **Items Management**: Adding, editing, and managing items within lists is handled in Feature 004 (List Items Management)
 7. **Default Sorting**: Lists are sorted by "Recently Updated" by default when user first visits dashboard

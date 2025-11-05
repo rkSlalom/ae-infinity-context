@@ -344,12 +344,12 @@ All technical decisions are clear from constitution and feature 001:
 
 ### API Endpoints
 
-| Method | Endpoint | Auth | Request | Response | Status Codes |
-|--------|----------|------|---------|----------|--------------|
-| GET | /api/users/me | JWT | - | UserDto (existing from 001) | 200, 401, 404 |
-| PATCH | /api/users/me | JWT | UpdateProfileDto | UserDto | 200, 400, 401, 403 |
-| GET | /api/users/me/stats | JWT | - | UserStatsDto | 200, 401 |
-| GET | /api/users/{userId} | JWT | - | PublicUserProfileDto | 200, 401, 404 |
+| Method | Endpoint | Auth | Request | Response | Status Codes | Notes |
+|--------|----------|------|---------|----------|--------------|-------|
+| GET | /api/users/me | JWT | - | UserDto (existing from 001) | 200, 401, 404 | - |
+| PATCH | /api/users/me | JWT | UpdateProfileDto | UserDto | 200, 400, 401, 403 | - |
+| GET | /api/users/me/stats | JWT | - | UserStatsDto | 200, 401 | Separate endpoint for independent caching |
+| GET | /api/users/{userId} | JWT | - | PublicUserProfileDto | 200, 401, 404 | - |
 
 **Note**: GET /users/me already exists from feature 001. GET /users/me/stats could be embedded in /users/me response or separate endpoint for better caching.
 

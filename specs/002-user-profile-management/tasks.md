@@ -218,7 +218,7 @@ Phase 7 (Polish - Performance, Monitoring)
 
 - [ ] T029 [US3] Create GetUserStatsQueryHandler in ae-infinity-api/AeInfinity.Application/Users/Queries/GetUserStats/GetUserStatsQueryHandler.cs (check cache first, if miss: calculate statistics via LINQ queries, cache for 5 minutes, return UserStatsDto)
 
-- [ ] T030 [US3] Add GET /users/me/stats endpoint to ae-infinity-api/AeInfinity.API/Controllers/UsersController.cs (extract UserId from JWT, query statistics, return 200 with UserStatsDto) OR embed stats in GET /users/me response
+- [ ] T030 [US3] Add GET /users/me/stats endpoint to ae-infinity-api/AeInfinity.API/Controllers/UsersController.cs (extract UserId from JWT, query statistics, return 200 with UserStatsDto as dedicated endpoint for independent caching and graceful degradation)
 
 - [ ] T031 [US3] Add cache invalidation to relevant command handlers (CreateListCommand, CreateItemCommand, MarkItemPurchasedCommand) to call _cacheService.RemoveAsync($"user-stats:{userId}") after successful operations
 

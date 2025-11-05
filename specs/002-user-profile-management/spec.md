@@ -120,7 +120,7 @@ When viewing collaborators on shared lists, a user wants to click on a collabora
 - **FR-006**: System MUST validate avatar URL format when provided (valid URI with max 500 characters), but allow null values (null clears existing avatar)
 - **FR-007**: System MUST accept displayName with Unicode characters including emojis (character count, not byte length)
 - **FR-008**: System MUST enforce authorization: users can only update their own profile (not other users')
-- **FR-009**: System MUST provide user activity statistics via dedicated endpoint or embedded in profile response
+- **FR-009**: System MUST provide user activity statistics via dedicated endpoint GET /api/users/me/stats (separate from profile endpoint for independent caching and graceful degradation)
 - **FR-010**: System MUST calculate statistics:
   - **totalListsOwned**: Count of lists where user is owner
   - **totalListsShared**: Count of lists where user is collaborator (not owner)
@@ -128,7 +128,7 @@ When viewing collaborators on shared lists, a user wants to click on a collabora
   - **totalItemsPurchased**: Sum of purchase events by user (each time user marks any item as purchased, regardless if same item marked multiple times)
   - **totalActiveCollaborations**: Count of non-archived lists where user is collaborator
 - **FR-011**: System MUST track lastActivityAt timestamp for user engagement metrics (computed as maximum of: User.lastLoginAt, User.updatedAt, max createdAt across user's lists and items)
-- **FR-012**: System MUST update statistics in near-real-time (statistics cached for up to 5 minutes, invalidated on user actions)
+- **FR-012**: System MUST cache statistics with 5-minute TTL (Time To Live), with immediate cache invalidation when user performs actions that affect their own statistics (create list, add item, mark purchased)
 - **FR-013**: Frontend MUST display editable profile form with current values pre-populated
 - **FR-014**: Frontend MUST show validation errors inline next to the relevant form field
 - **FR-015**: Frontend MUST display loading indicator while profile data is being fetched
